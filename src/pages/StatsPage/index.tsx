@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useRecords } from "../hooks/useRecords";
+import { useRecords } from "../../hooks/useRecords";
 import {
   LineChart,
   Line,
@@ -39,7 +39,6 @@ function formatDateShort(ymd: string) {
   return `${parseInt(d)}/${parseInt(m)}`;
 }
 
-// Aggregate daily counts grouped by week for a single month
 function getWeeklyDailyCounts(
   records: { date: string; name: string }[],
   monthKey: string
@@ -50,12 +49,10 @@ function getWeeklyDailyCounts(
     dayCounts.set(r.date, (dayCounts.get(r.date) ?? 0) + 1);
   }
 
-  // Determine weeks
   const year = parseInt(monthKey.split("-")[0]);
   const month = parseInt(monthKey.split("-")[1]) - 1;
   const lastDay = new Date(year, month + 1, 0);
 
-  // Get ISO week number
   function getWeekNumber(d: Date) {
     const temp = new Date(d.valueOf());
     const dayNum = (temp.getDay() + 6) % 7;
@@ -68,7 +65,6 @@ function getWeeklyDailyCounts(
     return Math.ceil((firstThursday - temp.valueOf()) / 604800000) + 1;
   }
 
-  // Group days by week number (relative)
   const weekGroups = new Map<
     number,
     { label: string; data: { day: string; count: number }[] }
@@ -95,7 +91,6 @@ export default function StatsPage() {
   const { records, loading, error } = useRecords();
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
-  // Person frequency (always computed from all records for pie chart)
   const personData = useMemo(() => {
     const count = new Map<string, number>();
     for (const r of records) {
@@ -106,7 +101,6 @@ export default function StatsPage() {
       .sort((a, b) => b.value - a.value);
   }, [records]);
 
-  // Monthly stats
   const monthStats = useMemo(() => {
     const monthMap = new Map<string, Set<string>>();
     for (const r of records) {
@@ -124,13 +118,10 @@ export default function StatsPage() {
       .sort((a, b) => a.month.localeCompare(b.month));
   }, [records]);
 
-  // Line chart data
   const lineChartData = useMemo(() => {
     if (selectedMonth) {
-      // Single month: weekly comparison
       return getWeeklyDailyCounts(records, selectedMonth);
     } else {
-      // Multi-month: monthly comparison
       return monthStats.map((m) => ({
         label: formatMonth(m.month),
         month: m.month,
@@ -139,7 +130,6 @@ export default function StatsPage() {
     }
   }, [records, monthStats, selectedMonth]);
 
-  // Detailed view for selected month
   const monthDetail = useMemo(() => {
     if (!selectedMonth) return null;
     const dayRecords = records.filter((r) => r.date.startsWith(selectedMonth));
@@ -178,7 +168,6 @@ export default function StatsPage() {
     <div className="page stats-page">
       <h1>📊 Thống Kê</h1>
 
-      {/* Overview cards */}
       <div className="stats-grid">
         <div className="stat-card">
           <span className="stat-number">{records.length}</span>
@@ -196,7 +185,6 @@ export default function StatsPage() {
         </div>
       </div>
 
-      {/* Line Chart */}
       <div className="card chart-card">
         <h2>
           {selectedMonth
@@ -224,7 +212,6 @@ export default function StatsPage() {
         </div>
 
         {selectedMonth ? (
-          // Weekly breakdown for single month
           (lineChartData as ReturnType<typeof getWeeklyDailyCounts>).map(
             (week) => (
               <div key={week.label} className="week-chart">
@@ -275,7 +262,6 @@ export default function StatsPage() {
         )}
       </div>
 
-      {/* Pie Chart: Person distribution */}
       <div className="card chart-card">
         <h2>🧑‍🤝‍🧑 So sánh người trực</h2>
         <ResponsiveContainer width="100%" height={320}>
@@ -301,7 +287,6 @@ export default function StatsPage() {
         </ResponsiveContainer>
       </div>
 
-      {/* Month detail when selected */}
       {selectedMonth && monthDetail && (
         <div className="card">
           <h2>📅 Lịch trực {formatMonth(selectedMonth)}</h2>
@@ -323,7 +308,6 @@ export default function StatsPage() {
         </div>
       )}
 
-      {/* Month list */}
       {!selectedMonth && (
         <div className="card">
           <h2>🗓️ Các tháng</h2>

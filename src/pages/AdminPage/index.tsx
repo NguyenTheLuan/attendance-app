@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { uploadImage } from "../cloudinary";
-import DateSelector, { getDateString } from "../components/DateSelector";
-import ImageUploader from "../components/ImageUploader";
+import { useState, useCallback } from "react";
+import { uploadImage } from "../../cloudinary";
+import DateSelector, { getDateString } from "../../components/DateSelector";
+import ImageUploader from "../../components/ImageUploader";
+import { addRecord } from "../../db";
+import type { AttendanceRecord } from "../../types";
 
 export default function AdminPage() {
   const [name, setName] = useState("");
@@ -16,8 +18,6 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const { add } = useSimpleAdd();
-
   const dateStr = getDateString(dateType, customDate);
 
   function handleFileChange(f: File | null) {
@@ -31,6 +31,13 @@ export default function AdminPage() {
     }
   }
 
+  const handleAdd = useCallback(
+    async (data: Omit<AttendanceRecord, "id" | "createdAt">) => {
+      await addRecord(data);
+    },
+    []
+  );
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !file) {
@@ -41,7 +48,7 @@ export default function AdminPage() {
     setMessage("");
     try {
       const imageUrl = await uploadImage(file);
-      await add({ name: name.trim(), imageUrl, date: dateStr });
+      await handleAdd({ name: name.trim(), imageUrl, date: dateStr });
       setName("");
       setFile(null);
       setPreview(null);
@@ -96,19 +103,4 @@ export default function AdminPage() {
       </form>
     </div>
   );
-}
-
-// Small inline hook to just add records without needing DayGroup/records UI
-import { useCallback } from "react";
-import { addRecord } from "../db";
-import type { AttendanceRecord } from "../types";
-
-function useSimpleAdd() {
-  const add = useCallback(
-    async (data: Omit<AttendanceRecord, "id" | "createdAt">) => {
-      await addRecord(data);
-    },
-    []
-  );
-  return { add };
 }

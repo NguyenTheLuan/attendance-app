@@ -1,5 +1,5 @@
-import type { AttendanceRecord } from "../types";
-import PersonCard from "./PersonCard";
+import type { AttendanceRecord } from "../../types";
+import PersonCard from "../PersonCard";
 
 interface DayGroupProps {
   date: string;

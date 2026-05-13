@@ -1,4 +1,4 @@
-import type { AttendanceRecord } from "../types";
+import type { AttendanceRecord } from "../../types";
 
 function formatDate(ymd: string) {
   const [y, m, d] = ymd.split("-");
@@ -6,7 +6,6 @@ function formatDate(ymd: string) {
 }
 
 export function exportRecordsToCsv(records: AttendanceRecord[]): void {
-  // Group by date
   const grouped = records.reduce<Record<string, AttendanceRecord[]>>(
     (acc, r) => {
       (acc[r.date] ??= []).push(r);
@@ -15,13 +14,10 @@ export function exportRecordsToCsv(records: AttendanceRecord[]): void {
     {}
   );
 
-  // Build CSV rows
   const rows: string[][] = [];
 
-  // Header
   rows.push(["Ngày", "Tên người trực", "Ảnh URL"]);
 
-  // Sort dates descending
   const sortedDates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 
   for (const date of sortedDates) {
@@ -30,12 +26,10 @@ export function exportRecordsToCsv(records: AttendanceRecord[]): void {
     }
   }
 
-  // Convert to CSV string
   const csvContent = rows
     .map((row) =>
       row
         .map((cell) => {
-          // Escape quotes and wrap in quotes if contains comma or quotes
           const escaped = cell.replace(/"/g, '""');
           return /[",\n]/.test(cell) ? `"${escaped}"` : escaped;
         })
@@ -43,7 +37,6 @@ export function exportRecordsToCsv(records: AttendanceRecord[]): void {
     )
     .join("\n");
 
-  // Create download
   const blob = new Blob(["\uFEFF" + csvContent], {
     type: "text/csv;charset=utf-8;",
   });

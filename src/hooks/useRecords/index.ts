@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAllRecords, addRecord, deleteRecordById } from "../db";
-import type { AttendanceRecord } from "../types";
+import { getAllRecords, addRecord, deleteRecordById } from "../../db";
+import type { AttendanceRecord } from "../../types";
 
 export function useRecords() {
   const [records, setRecords] = useState<AttendanceRecord[]>([]);

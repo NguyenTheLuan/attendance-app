@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useRecords } from "../hooks/useRecords";
-import DayGroup from "../components/DayGroup";
-import { exportRecordsToCsv } from "../utils/exportCsv";
+import { useRecords } from "../../hooks/useRecords";
+import DayGroup from "../../components/DayGroup";
+import { exportRecordsToCsv } from "../../utils/exportCsv";
 
 export default function ViewPage() {
   const [search, setSearch] = useState("");
   const { records, loading, error } = useRecords();
 
-  // Filter logic
   const searchLower = search.toLowerCase().trim();
   const filteredRecords = searchLower
     ? records.filter((r) => r.name.toLowerCase().includes(searchLower))

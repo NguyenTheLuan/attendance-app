@@ -1,4 +1,4 @@
-import type { AttendanceRecord } from "../types";
+import type { AttendanceRecord } from "../../types";
 
 interface PersonCardProps {
   record: AttendanceRecord;
