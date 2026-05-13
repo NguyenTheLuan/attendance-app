@@ -1,6 +1,3 @@
-import { useEffect, useRef } from "react";
-import "./styles.css";
-
 interface ConfirmDialogProps {
   open: boolean;
   title: string;
@@ -20,33 +17,17 @@ export default function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const el = dialogRef.current;
-    if (!el) return;
-    if (open && !el.open) el.showModal();
-    else if (!open && el.open) el.close();
-  }, [open]);
-
-  useEffect(() => {
-    const el = dialogRef.current;
-    if (!el) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    };
-    el.addEventListener("keydown", handler);
-    return () => el.removeEventListener("keydown", handler);
-  }, [onCancel]);
-
   if (!open) return null;
 
   return (
-    <dialog ref={dialogRef} className="confirm-dialog">
-      <div className="confirm-dialog-content">
+    <div className="confirm-overlay" onClick={onCancel}>
+      <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
+        <div className="confirm-icon">
+          <span>⚠️</span>
+        </div>
         <h3>{title}</h3>
         <p>{message}</p>
-        <div className="confirm-dialog-actions">
+        <div className="confirm-actions">
           <button className="btn-cancel" onClick={onCancel}>
             {cancelLabel}
           </button>
@@ -55,6 +36,6 @@ export default function ConfirmDialog({
           </button>
         </div>
       </div>
-    </dialog>
+    </div>
   );
 }

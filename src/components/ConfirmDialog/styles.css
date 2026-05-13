@@ -1,48 +1,61 @@
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
 .confirm-dialog {
-  border: none;
-  border-radius: 16px;
-  padding: 0;
-  max-width: 400px;
-  width: 90vw;
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 28px 24px;
+  max-width: 380px;
+  width: 100%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.2s ease-out;
-}
-
-.confirm-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.confirm-dialog-content {
-  padding: 28px;
   text-align: center;
+  animation: scaleIn 0.2s ease-out;
 }
 
-.confirm-dialog-content h3 {
-  font-size: 20px;
+.confirm-icon {
+  font-size: 40px;
   margin-bottom: 12px;
+  line-height: 1;
+}
+
+.confirm-dialog h3 {
+  font-size: 18px;
   color: #1a1a2e;
+  margin-bottom: 8px;
 }
 
-.confirm-dialog-content p {
+.confirm-dialog p {
   color: #666;
-  margin-bottom: 24px;
   font-size: 15px;
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
-.confirm-dialog-actions {
+.confirm-actions {
   display: flex;
   gap: 12px;
   justify-content: center;
 }
 
-.confirm-dialog-actions button {
-  padding: 10px 24px;
-  border-radius: 10px;
+.confirm-actions button {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 12px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  font-family: inherit;
 }
 
 .btn-cancel {
@@ -66,7 +79,16 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
@@ -75,15 +97,20 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .confirm-dialog {
-    background: #1a1a2e;
+  .confirm-overlay {
+    background: rgba(0, 0, 0, 0.7);
   }
 
-  .confirm-dialog-content h3 {
+  .confirm-dialog {
+    background: #1a1a2e;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .confirm-dialog h3 {
     color: #e0e0e0;
   }
 
-  .confirm-dialog-content p {
+  .confirm-dialog p {
     color: #aaa;
   }
 
