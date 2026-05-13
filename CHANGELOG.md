@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3] - 2026-05-13
+
+### 📝 Documentation
+- docs: replace detailed commit message guide with simplified commit rules
+
+
+---
+
 ## [0.0.2] - 2026-05-13
 
 ### ✨ Features
