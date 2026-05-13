@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Field from "~/components/Field";
 
 const PASSWORD = "123456";
 
@@ -28,19 +29,17 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       <div className="card form" style={{ maxWidth: 360, margin: "40px auto" }}>
         <h2>🔐 Đăng nhập</h2>
         <form onSubmit={handleSubmit}>
-          <label className="field">
-            <span>Mật khẩu</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError(false);
-              }}
-              placeholder="Nhập mật khẩu..."
-              autoFocus
-            />
-          </label>
+          <Field
+            label="Mật khẩu"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError(false);
+            }}
+            placeholder="Nhập mật khẩu..."
+            autoFocus
+          />
           {error && (
             <p className="msg err">❌ Sai mật khẩu, vui lòng thử lại.</p>
           )}
