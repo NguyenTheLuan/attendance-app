@@ -330,6 +330,62 @@ body {
   color: #e94560;
 }
 
+/* View mode tabs (all / month) */
+.view-mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.view-mode-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  color: #888;
+  font-family: inherit;
+}
+
+.view-mode-tab:hover {
+  border-color: #e94560;
+  color: #e94560;
+}
+
+.view-mode-tab.active {
+  background: #e94560;
+  color: #fff;
+  border-color: #e94560;
+}
+
+.month-select-row {
+  margin-bottom: 12px;
+}
+
+.month-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  background: #fff;
+  color: #333;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.month-select:focus {
+  border-color: #e94560;
+}
+
 .view-actions {
   display: flex;
   gap: 10px;
@@ -470,6 +526,29 @@ body {
   .btn-export:hover {
     border-color: #e94560;
     color: #e94560;
+  }
+
+  .view-mode-tab {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+    color: #999;
+  }
+
+  .view-mode-tab:hover {
+    border-color: #e94560;
+    color: #e94560;
+  }
+
+  .view-mode-tab.active {
+    background: #e94560;
+    color: #fff;
+    border-color: #e94560;
+  }
+
+  .month-select {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+    color: #e0e0e0;
   }
 }
 

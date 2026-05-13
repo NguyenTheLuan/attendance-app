@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRecords } from "~/hooks/useRecords";
 import DayGroup from "~/components/DayGroup";
 import EditModal from "~/components/EditModal";
@@ -11,18 +11,53 @@ interface ViewPageProps {
   isLoggedIn: boolean;
 }
 
+type ViewMode = "all" | "month";
+
 export default function ViewPage({ isLoggedIn }: ViewPageProps) {
   const [search, setSearch] = useState("");
+  const [viewMode, setViewMode] = useState<ViewMode>("all");
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [editingRecord, setEditingRecord] = useState<AttendanceRecord | null>(
     null
   );
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { records, loading, error, load } = useRecords();
 
+  // Get available months from records
+  const months = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of records) {
+      const m = r.date.slice(0, 7); // "YYYY-MM"
+      set.add(m);
+    }
+    return Array.from(set).sort((a, b) => b.localeCompare(a));
+  }, [records]);
+
+  // Auto-select first month when switching to month view
+  const currentMonth = useMemo(() => {
+    if (viewMode === "month") {
+      return selectedMonth || months[0] || "";
+    }
+    return "";
+  }, [viewMode, selectedMonth, months]);
+
   const searchLower = search.toLowerCase().trim();
-  const filteredRecords = searchLower
-    ? records.filter((r) => r.name.toLowerCase().includes(searchLower))
-    : records;
+
+  const filteredRecords = useMemo(() => {
+    let result = records;
+
+    // Filter by month
+    if (viewMode === "month" && currentMonth) {
+      result = result.filter((r) => r.date.startsWith(currentMonth));
+    }
+
+    // Filter by search
+    if (searchLower) {
+      result = result.filter((r) => r.name.toLowerCase().includes(searchLower));
+    }
+
+    return result;
+  }, [records, viewMode, currentMonth, searchLower]);
 
   const grouped = filteredRecords.reduce<Record<string, typeof records>>(
     (acc, r) => {
@@ -57,31 +92,73 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
 
   return (
     <div className="page view-page">
-      <h1>📋 Lịch Trực Nhật</h1>
+      <h1>Xem Khu phố 3 - 6</h1>
       <p className="subtitle">Danh sách người trực theo ngày</p>
 
       {loading && <p className="loading">⏳ Đang tải...</p>}
       {error && <p className="msg err">{error}</p>}
 
       {!loading && (
-        <div className="view-actions">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="🔍 Tìm theo tên..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          {records.length > 0 && (
+        <>
+          <div className="view-mode-tabs">
             <button
-              className="btn-export"
-              onClick={() => exportRecordsToCsv(records)}
-              title="Xuất CSV"
+              className={`view-mode-tab ${viewMode === "all" ? "active" : ""}`}
+              onClick={() => setViewMode("all")}
             >
-              📥 Xuất CSV
+              📋 Tất cả
             </button>
+            <button
+              className={`view-mode-tab ${
+                viewMode === "month" ? "active" : ""
+              }`}
+              onClick={() => {
+                setViewMode("month");
+                if (!selectedMonth && months[0]) setSelectedMonth(months[0]);
+              }}
+            >
+              📅 Theo tháng
+            </button>
+          </div>
+
+          {viewMode === "month" && months.length > 0 && (
+            <div className="month-select-row">
+              <select
+                className="month-select"
+                value={currentMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                {months.map((m) => {
+                  const [y, mo] = m.split("-");
+                  const label = `Tháng ${parseInt(mo, 10)}/${y}`;
+                  return (
+                    <option key={m} value={m}>
+                      {label}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
           )}
-        </div>
+
+          <div className="view-actions">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="🔍 Tìm theo tên..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {records.length > 0 && (
+              <button
+                className="btn-export"
+                onClick={() => exportRecordsToCsv(records)}
+                title="Xuất CSV"
+              >
+                📥 Xuất CSV
+              </button>
+            )}
+          </div>
+        </>
       )}
 
       {!loading && !error && Object.keys(grouped).length === 0 && (
