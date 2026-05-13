@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
-import { useRecords } from "../../hooks/useRecords";
-import StatCards from "../../components/stats/StatCards";
-import MonthList from "../../components/stats/MonthList";
-import MonthDetail from "../../components/stats/MonthDetail";
-import MonthOverviewChart from "../../components/stats/MonthOverviewChart";
-import PieChartSection from "../../components/stats/PieChartSection";
+import { useRecords } from "~/hooks/useRecords";
+import StatCards from "~/components/stats/StatCards";
+import MonthList from "~/components/stats/MonthList";
+import MonthDetail from "~/components/stats/MonthDetail";
+import MonthOverviewChart from "~/components/stats/MonthOverviewChart";
+import PieChartSection from "~/components/stats/PieChartSection";
 import WeeklyChart, {
   getWeeklyDailyCounts,
-} from "../../components/stats/WeeklyChart";
-import { exportRecordsToCsv } from "../../utils/exportCsv";
+} from "~/components/stats/WeeklyChart";
+import { exportRecordsToCsv } from "~/utils/exportCsv";
 
 export default function StatsPage() {
   const { records, loading, error } = useRecords();

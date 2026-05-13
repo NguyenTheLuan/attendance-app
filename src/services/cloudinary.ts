@@ -1,9 +1,15 @@
-const CLOUD_NAME = "dfg24ozsf";
-const UPLOAD_PRESET = "attendance_unsigned";
-const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { app } from "~/services/firebase";
+
+const storage = getStorage(app);
 
 /**
- * Compress an image file before uploading to reduce Cloudinary storage usage and cost.
+ * Compress an image file before uploading to reduce storage usage.
  * Resizes to max 800px on the longest edge and reduces JPEG quality to 70%.
  */
 function compressImage(
@@ -17,7 +23,6 @@ function compressImage(
 
     img.onload = () => {
       URL.revokeObjectURL(url);
-
       const canvas = document.createElement("canvas");
       let { width, height } = img;
 
@@ -53,26 +58,10 @@ function compressImage(
 
 export async function uploadImage(file: File): Promise<string> {
   const compressed = await compressImage(file);
-  const compressedFile = new File(
-    [compressed],
-    file.name.replace(/\.[^.]+$/, ".jpg"),
-    { type: "image/jpeg" }
-  );
+  const fileName = `${Date.now()}_${file.name.replace(/\.[^.]+$/, ".jpg")}`;
+  const storageRef = ref(storage, `attendance_images/${fileName}`);
 
-  const formData = new FormData();
-  formData.append("file", compressedFile);
-  formData.append("upload_preset", UPLOAD_PRESET);
-
-  const response = await fetch(CLOUDINARY_URL, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Upload failed: ${response.status} ${errText}`);
-  }
-
-  const data = await response.json();
-  return data.secure_url as string;
+  const snapshot = await uploadBytesResumable(storageRef, compressed);
+  const downloadUrl = await getDownloadURL(snapshot.ref);
+  return downloadUrl;
 }
