@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.12] - 2026-05-13
+
+### Other
+- Persist login state via localStorage so F5 doesn't log out
+
+
+---
+
 ## [0.0.11] - 2026-05-13
 
 ### ♻️ Refactoring
