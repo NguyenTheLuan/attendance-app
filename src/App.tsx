@@ -13,40 +13,34 @@ export default function App() {
   return (
     <HashRouter>
       <ErrorBoundary>
-        {isLoggedIn && (
-          <nav className="navbar">
-            <NavLink
-              to="/admin"
-              className={({ isActive }) =>
-                `nav-link${isActive ? " active" : ""}`
-              }
-            >
-              ✏️ Nhập điểm danh
-            </NavLink>
-            <NavLink
-              to="/view"
-              className={({ isActive }) =>
-                `nav-link${isActive ? " active" : ""}`
-              }
-            >
-              👁️ Xem lịch trực
-            </NavLink>
-            <NavLink
-              to="/stats"
-              className={({ isActive }) =>
-                `nav-link${isActive ? " active" : ""}`
-              }
-            >
-              📊 Thống kê
-            </NavLink>
+        <nav className="navbar">
+          <NavLink
+            to={isLoggedIn ? "/admin" : "/login"}
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+          >
+            ✏️ Nhập điểm danh
+          </NavLink>
+          <NavLink
+            to="/view"
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+          >
+            👁️ Xem lịch trực
+          </NavLink>
+          <NavLink
+            to="/stats"
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+          >
+            📊 Thống kê
+          </NavLink>
+          {isLoggedIn && (
             <button
               className="nav-link logout-btn"
               onClick={() => setIsLoggedIn(false)}
             >
               🚪 Thoát
             </button>
-          </nav>
-        )}
+          )}
+        </nav>
         <main>
           <Routes>
             <Route
