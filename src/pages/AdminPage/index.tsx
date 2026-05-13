@@ -79,7 +79,7 @@ export default function AdminPage() {
 
   return (
     <div className="page">
-      <h1>📋 Điểm Danh Trực Nhật</h1>
+      <h1>📋 Điểm Danh Trực</h1>
 
       <form className="card form" onSubmit={handleSubmit}>
         <h2>➕ Thêm người trực</h2>
