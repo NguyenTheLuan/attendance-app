@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 import type { AttendanceRecord } from "~/types";
 
@@ -19,9 +20,10 @@ export function getWeeklyDailyCounts(
   month: string
 ): WeekData[] {
   const monthRecords = records.filter((r) => r.date.startsWith(month));
-  const daysInMonth: string[] = [];
   const [y, m] = month.split("-").map(Number);
   const lastDay = new Date(y, m, 0).getDate();
+
+  const daysInMonth: string[] = [];
   for (let d = 1; d <= lastDay; d++) {
     const dateStr = `${month}-${String(d).padStart(2, "0")}`;
     daysInMonth.push(dateStr);
@@ -47,6 +49,28 @@ export function getWeeklyDailyCounts(
   return weeks;
 }
 
+/**
+ * Flatten weeks into a single dataset with prefix labels
+ * so they render as one unified chart.
+ */
+function flattenWeeks(weeks: WeekData[]) {
+  const result: { label: string; count: number; _color: string }[] = [];
+  const weekColors = ["#e94560", "#4a6fa5", "#2ecc71", "#f39c12", "#9b59b6"];
+
+  weeks.forEach((week, wi) => {
+    const color = weekColors[wi % weekColors.length];
+    week.days.forEach((day) => {
+      result.push({
+        label: `${week.weekLabel.slice(-1)}/${day.name}`,
+        count: day.count,
+        _color: color,
+      });
+    });
+  });
+
+  return result;
+}
+
 interface WeeklyChartProps {
   weeks: WeekData[];
 }
@@ -54,23 +78,36 @@ interface WeeklyChartProps {
 export default function WeeklyChart({ weeks }: WeeklyChartProps) {
   if (weeks.length === 0) return null;
 
+  const allDays = flattenWeeks(weeks);
+
   return (
     <div className="card">
       <h2>📅 Trực theo tuần</h2>
-      {weeks.map((week) => (
-        <div key={week.weekLabel} style={{ marginBottom: 24 }}>
-          <h4 style={{ margin: "8px 0", color: "#555" }}>{week.weekLabel}</h4>
-          <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={week.days}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" fontSize={11} />
-              <YAxis allowDecimals={false} fontSize={11} />
-              <Tooltip />
-              <Bar dataKey="count" fill="#e94560" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ))}
+      <ResponsiveContainer width="100%" height={220}>
+        <BarChart
+          data={allDays}
+          margin={{ top: 8, right: 8, bottom: 16, left: -8 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="label"
+            fontSize={10}
+            angle={-45}
+            textAnchor="end"
+            height={60}
+          />
+          <YAxis allowDecimals={false} fontSize={11} />
+          <Tooltip
+            formatter={(value: number) => [`${value} lượt`, "Số lượt"]}
+            labelFormatter={(label: string) => `Ngày ${label}`}
+          />
+          <Bar dataKey="count" radius={[3, 3, 0, 0]}>
+            {allDays.map((entry, idx) => (
+              <Cell key={idx} fill={entry._color} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }

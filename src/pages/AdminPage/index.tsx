@@ -7,6 +7,7 @@ import type { AttendanceRecord } from "~/types";
 
 export default function AdminPage() {
   const [name, setName] = useState("");
+  const [note, setNote] = useState("");
   const [dateType, setDateType] = useState<"today" | "tomorrow" | "custom">(
     "today"
   );
@@ -58,8 +59,14 @@ export default function AdminPage() {
     setMessage("");
     try {
       const imageUrl = await uploadImage(file);
-      await handleAdd({ name: name.trim(), imageUrl, date: dateStr });
+      await handleAdd({
+        name: name.trim(),
+        imageUrl,
+        date: dateStr,
+        note: note.trim() || undefined,
+      });
       setName("");
+      setNote("");
       setFile(null);
       setPreview(null);
       setMessage("✅ Đã lưu điểm danh thành công!");
@@ -101,6 +108,18 @@ export default function AdminPage() {
           onFileChange={handleFileChange}
           disabled={uploading}
         />
+
+        <label className="field">
+          <span>Ghi chú</span>
+          <textarea
+            className="field-textarea"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Ví dụ: hỗ trợ nhảy cầu Tăng Long..."
+            disabled={uploading}
+            rows={2}
+          />
+        </label>
 
         <button type="submit" className="btn-primary" disabled={uploading}>
           {uploading ? "⏳ Đang upload..." : "💾 Lưu điểm danh"}
