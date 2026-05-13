@@ -3,10 +3,14 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - "CHANGELOG.md"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -15,29 +19,98 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get commits since last tag
+        id: log
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            git log --oneline --format="- %s" $(git rev-list --max-parents=0 HEAD)..HEAD > /tmp/commits.txt
+          else
+            git log --oneline --format="- %s" "$PREV_TAG"..HEAD > /tmp/commits.txt
+          fi
+          echo "commits<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/commits.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        id: bump
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          IFS='.' read -r MAJ MIN PAT <<< "$CURRENT"
+          echo "version=$MAJ.$MIN.$((PAT + 1))" >> "$GITHUB_OUTPUT"
+
+      - name: Write CHANGELOG.md
+        run: |
+          VER="${{ steps.bump.outputs.version }}"
+          DATE=$(date '+%Y-%m-%d')
+
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+          fi
+
+          COMMITS=$(cat /tmp/commits.txt 2>/dev/null || echo "- No commits listed")
+
+          {
+            head -1 CHANGELOG.md
+            echo ""
+            echo "## [$VER] - $DATE"
+            echo ""
+            echo "### Changed"
+            echo "$COMMITS"
+            echo ""
+            echo "---"
+            echo ""
+            tail -n +2 CHANGELOG.md
+          } > CHANGELOG.md.tmp
+          mv CHANGELOG.md.tmp CHANGELOG.md
+
+      - name: Update package.json version
+        run: |
+          node -e "
+            const pkg = require('./package.json');
+            pkg.version = '${{ steps.bump.outputs.version }}';
+            require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Commit & push changelog + tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md package.json package-lock.json
+          git commit -m "chore: bump v${{ steps.bump.outputs.version }}" || echo "Nothing to commit"
+          git push origin main
+          git tag v${{ steps.bump.outputs.version }}
+          git push origin v${{ steps.bump.outputs.version }}
+
   build-and-deploy:
+    needs: update-changelog
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: "dist"
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v5
