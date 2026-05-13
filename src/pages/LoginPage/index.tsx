@@ -16,6 +16,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     setError("");
 
     if (username === "ntluan" && password === "123") {
+      localStorage.setItem("attendance_logged_in", "true");
       onLogin();
       navigate("/admin");
     } else {

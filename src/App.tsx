@@ -8,7 +8,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import "./App.css";
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    () => localStorage.getItem("attendance_logged_in") === "true"
+  );
+
+  function handleLogout() {
+    localStorage.removeItem("attendance_logged_in");
+    setIsLoggedIn(false);
+  }
 
   return (
     <HashRouter>
@@ -33,10 +40,7 @@ export default function App() {
             📊 Thống kê
           </NavLink>
           {isLoggedIn && (
-            <button
-              className="nav-link logout-btn"
-              onClick={() => setIsLoggedIn(false)}
-            >
+            <button className="nav-link logout-btn" onClick={handleLogout}>
               🚪 Thoát
             </button>
           )}
