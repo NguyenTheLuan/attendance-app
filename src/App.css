@@ -568,12 +568,22 @@ body {
   }
 
   .navbar {
-    padding: 0 8px;
+    padding: 0 4px;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .navbar::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-link {
-    padding: 12px 14px;
-    font-size: 14px;
+    padding: 12px 10px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 
