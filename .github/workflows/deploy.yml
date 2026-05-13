@@ -80,30 +80,14 @@ jobs:
       - name: Write CHANGELOG.md
         env:
           VER: ${{ steps.bump.outputs.version }}
-          DATE: ${{ github.event_name == 'push' && github.event.head_commit.timestamp || 'manual' }}
         run: |
-          DATE=$(date '+%Y-%m-%d')
-          CHANGES=$(cat /tmp/changelog_body.txt)
-
-          if [ ! -f CHANGELOG.md ]; then
-            echo "# Changelog" > CHANGELOG.md
-            echo "" >> CHANGELOG.md
-          fi
-
-          # Use Node.js for safe file manipulation
           node << 'NODESCRIPT'
             const fs = require('fs');
-            const content = fs.readFileSync('CHANGELOG.md', 'utf8');
-            const lines = content.split('\n');
-            const title = lines[0] || '# Changelog';
-            const rest = lines.slice(1).join('\n').replace(/^\s+/, '');
-
             const ver = process.env.VER;
-            const date = process.env.DATE || new Date().toISOString().slice(0, 10);
-
-            // Read changelog body from temp file
+            const date = new Date().toISOString().slice(0, 10);
             const changes = fs.readFileSync('/tmp/changelog_body.txt', 'utf8');
 
+            // Build new entry
             const entry = [
               '',
               '## [' + ver + '] - ' + date,
@@ -112,6 +96,18 @@ jobs:
               '---',
               '',
             ].join('\n');
+
+            // Read existing or start fresh
+            let existing = '# Changelog';
+            try {
+              existing = fs.readFileSync('CHANGELOG.md', 'utf8');
+            } catch (e) {
+              // File doesn't exist yet
+            }
+
+            const lines = existing.split('\n');
+            const title = lines[0];
+            const rest = lines.slice(1).join('\n').trimStart();
 
             fs.writeFileSync('CHANGELOG.md', [title, entry, rest].join('\n'));
           NODESCRIPT
