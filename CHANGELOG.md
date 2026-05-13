@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.0.13] - 2026-05-13
+
+### ✨ Features
+- feat: Dialog xác nhận xóa đẹp thay vì window.confirm
+- feat: Thêm ghi chú (note) và cải tiến StatsPage với 2 chế độ xem
+- feat: add admin edit/delete records on ViewPage via click-to-edit modal
+- feat: refactor attendance stats to use new MonthList and MonthDetail components
+
+### 🐛 Bug Fixes
+- fix: ConfirmDialog cho cả PersonCard và EditModal, fix scroll
+- fix: Cải thiện dark mode cho tooltip chart và tăng kích thước PieChart
+- fix: login navigate to /admin after success & add missing stat-card css
+- fix: correct firebase project id to attendance-app-d215e
+- fix: restore cloudinary config to working cloud name and upload preset with image compression
+
+### ♻️ Refactoring
+- refactor: replace remaining relative imports with tilde alias in statspage
+
+### 🔧 Maintenance
+- chore: add agent.md with project overview and ai instructions
+- chore: add commitlint + husky to enforce conventional commit format
+
+### Other
+- Persist login state via localStorage so F5 doesn't log out
+
+
+---
+
 ## [0.0.12] - 2026-05-13
 
 ### ✨ Features
