@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.2] - 2026-05-13
+
+### ✨ Features
+- feat: add commit message generation rules and guidelines
+
+### 🔧 Maintenance
+- ci: update deploy workflow to generate categorized changelog and use Node.js for safer file operations
+
+### Other
+- � ci(deploy): improve changelog with categorized commits per Conventional Commits
+
+
+---
+
 ## [0.0.1] - 2026-05-13
 
 ### Changed
