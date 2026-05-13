@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.4] - 2026-05-13
+
+### 📝 Documentation
+- docs: remove default Vite template README, use CHANGELOG.md as project info
+
+
+---
+
 ## [0.0.3] - 2026-05-13
 
 ### 📝 Documentation
