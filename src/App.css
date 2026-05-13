@@ -919,8 +919,23 @@ body {
     color: #ccc !important;
   }
 
+  .recharts-default-tooltip .recharts-tooltip-item {
+    color: #ddd !important;
+  }
+
+  .recharts-default-tooltip .recharts-tooltip-item-name,
+  .recharts-default-tooltip .recharts-tooltip-item-separator,
+  .recharts-default-tooltip .recharts-tooltip-item-value {
+    color: #ddd !important;
+  }
+
   .recharts-legend-item-text {
     color: #ccc !important;
+  }
+
+  /* Fix hover tooltip text color */
+  .recharts-tooltip-cursor {
+    fill: rgba(255, 255, 255, 0.05);
   }
 }
 
