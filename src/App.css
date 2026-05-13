@@ -653,3 +653,204 @@ body {
     min-width: 60px;
   }
 }
+
+/* ===== Login Page ===== */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+}
+
+.login-card h1 {
+  margin-bottom: 8px;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  margin-left: auto;
+  font-family: inherit;
+}
+
+.logout-btn:hover {
+  color: #ff6b81;
+  border-bottom-color: #ff6b81;
+}
+
+/* ===== Charts ===== */
+.chart-card h2 {
+  margin-bottom: 16px;
+}
+
+.chart-month-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.chart-month-btn {
+  padding: 6px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chart-month-btn:hover {
+  border-color: #e94560;
+}
+
+.chart-month-btn.active {
+  background: #e94560;
+  color: #fff;
+  border-color: #e94560;
+}
+
+.recharts-wrapper .recharts-cartesian-grid-horizontal line,
+.recharts-wrapper .recharts-cartesian-grid-vertical line {
+  stroke: #e0e0e0;
+}
+
+.recharts-text {
+  fill: #666;
+}
+
+/* Month detail */
+.month-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.month-detail-day .day-title {
+  margin-bottom: 10px;
+}
+
+.month-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.month-detail-person {
+  background: #fafafa;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.month-detail-person img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.month-detail-person span {
+  display: block;
+  padding: 6px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.month-item.clickable {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.month-item.clickable:hover {
+  background: #f0f0f0;
+}
+
+/* Week chart */
+.week-chart {
+  margin-bottom: 16px;
+}
+
+.week-label {
+  font-size: 14px;
+  color: #888;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* Dark mode for charts & new components */
+@media (prefers-color-scheme: dark) {
+  .chart-month-btn {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+    color: #ccc;
+  }
+
+  .chart-month-btn.active {
+    background: #e94560;
+    color: #fff;
+    border-color: #e94560;
+  }
+
+  .recharts-wrapper .recharts-cartesian-grid-horizontal line,
+  .recharts-wrapper .recharts-cartesian-grid-vertical line {
+    stroke: #2a2a3e;
+  }
+
+  .recharts-text {
+    fill: #999;
+  }
+
+  .month-detail-person {
+    background: #222240;
+  }
+
+  .month-detail-person span {
+    color: #ccc;
+  }
+
+  .month-item.clickable:hover {
+    background: #2a2a3e;
+  }
+
+  .recharts-tooltip-wrapper .recharts-default-tooltip {
+    background: #1a1a2e !important;
+    border: 1px solid #2a2a3e !important;
+  }
+
+  .recharts-default-tooltip .recharts-tooltip-label {
+    color: #ccc !important;
+  }
+
+  .recharts-legend-item-text {
+    color: #ccc !important;
+  }
+}
+
+/* Mobile for charts */
+@media (max-width: 480px) {
+  .month-detail-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .chart-month-select {
+    gap: 4px;
+  }
+
+  .chart-month-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+}
