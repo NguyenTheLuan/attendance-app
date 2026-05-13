@@ -221,10 +221,70 @@ body {
 }
 
 /* History */
+.history {
+  margin-top: 24px;
+}
+
 .history h2 {
-  margin-bottom: 16px;
+  margin: 0;
   font-size: 20px;
   color: #333;
+}
+
+.history-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.history-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fff;
+  color: #333;
+}
+
+.search-input:focus {
+  border-color: #e94560;
+}
+
+.btn-export {
+  padding: 10px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-export:hover {
+  border-color: #e94560;
+  color: #e94560;
+}
+
+.view-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 /* Day group */
@@ -331,6 +391,23 @@ body {
 
   .empty {
     color: #888;
+  }
+
+  .search-input {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+    color: #e0e0e0;
+  }
+
+  .btn-export {
+    background: #2a2a3e;
+    border-color: #3a3a4e;
+    color: #ccc;
+  }
+
+  .btn-export:hover {
+    border-color: #e94560;
+    color: #e94560;
   }
 }
 

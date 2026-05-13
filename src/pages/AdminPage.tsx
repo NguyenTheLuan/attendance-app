@@ -1,60 +1,40 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { uploadImage } from "../cloudinary";
-import { addRecord, getAllRecords, deleteRecordById } from "../db";
-import type { AttendanceRecord } from "../types";
-
-function getTodayStr() {
-  const d = new Date();
-  return d.toISOString().split("T")[0];
-}
-
-function getTomorrowStr() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().split("T")[0];
-}
-
-function formatDate(ymd: string) {
-  const [y, m, d] = ymd.split("-");
-  return `${d}/${m}/${y}`;
-}
+import { useRecords } from "../hooks/useRecords";
+import DayGroup from "../components/DayGroup";
+import DateSelector, { getDateString } from "../components/DateSelector";
+import ImageUploader from "../components/ImageUploader";
+import ConfirmDialog from "../components/ConfirmDialog";
+import { exportRecordsToCsv } from "../utils/exportCsv";
 
 export default function AdminPage() {
   const [name, setName] = useState("");
   const [dateType, setDateType] = useState<"today" | "tomorrow" | "custom">(
     "today"
   );
-  const [customDate, setCustomDate] = useState(getTodayStr());
+  const [customDate, setCustomDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
-  const [records, setRecords] = useState<AttendanceRecord[]>([]);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
-  const dateStr =
-    dateType === "today"
-      ? getTodayStr()
-      : dateType === "tomorrow"
-      ? getTomorrowStr()
-      : customDate;
+  const { records, loading, add, remove } = useRecords();
 
-  const loadRecords = useCallback(async () => {
-    const data = await getAllRecords();
-    setRecords(data);
-  }, []);
+  const dateStr = getDateString(dateType, customDate);
 
-  useEffect(() => {
-    loadRecords();
-  }, [loadRecords]);
-
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (!f) return;
+  function handleFileChange(f: File | null) {
     setFile(f);
-    const reader = new FileReader();
-    reader.onloadend = () => setPreview(reader.result as string);
-    reader.readAsDataURL(f);
+    if (f) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(f);
+    } else {
+      setPreview(null);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -67,13 +47,11 @@ export default function AdminPage() {
     setMessage("");
     try {
       const imageUrl = await uploadImage(file);
-      await addRecord({ name: name.trim(), imageUrl, date: dateStr });
+      await add({ name: name.trim(), imageUrl, date: dateStr });
       setName("");
       setFile(null);
       setPreview(null);
-      if (fileRef.current) fileRef.current.value = "";
       setMessage("✅ Đã lưu điểm danh thành công!");
-      loadRecords();
     } catch {
       setMessage("❌ Lỗi khi lưu. Thử lại nhé.");
     } finally {
@@ -81,12 +59,20 @@ export default function AdminPage() {
     }
   }
 
-  async function handleDelete(id: string) {
-    await deleteRecordById(id);
-    loadRecords();
+  async function handleConfirmDelete() {
+    if (confirmDelete) {
+      await remove(confirmDelete);
+      setConfirmDelete(null);
+    }
   }
 
-  const grouped = records.reduce<Record<string, AttendanceRecord[]>>(
+  // Filter logic
+  const searchLower = search.toLowerCase().trim();
+  const filteredRecords = searchLower
+    ? records.filter((r) => r.name.toLowerCase().includes(searchLower))
+    : records;
+
+  const grouped = filteredRecords.reduce<Record<string, typeof records>>(
     (acc, r) => {
       (acc[r.date] ??= []).push(r);
       return acc;
@@ -112,53 +98,19 @@ export default function AdminPage() {
           />
         </label>
 
-        <label className="field">
-          <span>Ngày trực</span>
-          <div className="row">
-            <button
-              type="button"
-              className={dateType === "today" ? "active" : ""}
-              onClick={() => setDateType("today")}
-            >
-              Hôm nay
-            </button>
-            <button
-              type="button"
-              className={dateType === "tomorrow" ? "active" : ""}
-              onClick={() => setDateType("tomorrow")}
-            >
-              Mai
-            </button>
-            <button
-              type="button"
-              className={dateType === "custom" ? "active" : ""}
-              onClick={() => setDateType("custom")}
-            >
-              Ngày khác
-            </button>
-          </div>
-          {dateType === "custom" && (
-            <input
-              type="date"
-              value={customDate}
-              onChange={(e) => setCustomDate(e.target.value)}
-              disabled={uploading}
-            />
-          )}
-        </label>
+        <DateSelector
+          dateType={dateType}
+          customDate={customDate}
+          onDateTypeChange={setDateType}
+          onCustomDateChange={setCustomDate}
+          disabled={uploading}
+        />
 
-        <label className="field">
-          <span>Ảnh người trực</span>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleFileChange}
-            disabled={uploading}
-          />
-          {preview && <img src={preview} alt="Preview" className="preview" />}
-        </label>
+        <ImageUploader
+          preview={preview}
+          onFileChange={handleFileChange}
+          disabled={uploading}
+        />
 
         <button type="submit" className="btn-primary" disabled={uploading}>
           {uploading ? "⏳ Đang upload..." : "💾 Lưu điểm danh"}
@@ -171,31 +123,57 @@ export default function AdminPage() {
       </form>
 
       <div className="history">
-        <h2>📅 Lịch sử điểm danh</h2>
-        {Object.keys(grouped).length === 0 && <p>Chưa có dữ liệu điểm danh.</p>}
+        <div className="history-header">
+          <h2>📅 Lịch sử điểm danh</h2>
+          <div className="history-actions">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="🔍 Tìm theo tên..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {records.length > 0 && (
+              <button
+                className="btn-export"
+                onClick={() => exportRecordsToCsv(records)}
+                title="Xuất CSV"
+              >
+                📥 Xuất CSV
+              </button>
+            )}
+          </div>
+        </div>
+
+        {loading && <p className="loading">⏳ Đang tải...</p>}
+
+        {!loading && Object.keys(grouped).length === 0 && (
+          <p>
+            {search ? "Không tìm thấy kết quả." : "Chưa có dữ liệu điểm danh."}
+          </p>
+        )}
+
         {Object.entries(grouped)
           .sort(([a], [b]) => b.localeCompare(a))
           .map(([date, items]) => (
-            <div key={date} className="card day-group">
-              <h3 className="day-title">📌 {formatDate(date)}</h3>
-              <div className="grid">
-                {items.map((r) => (
-                  <div key={r.id} className="person-card">
-                    <img src={r.imageUrl} alt={r.name} />
-                    <p>{r.name}</p>
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(r.id)}
-                      title="Xóa"
-                    >
-                      🗑
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <DayGroup
+              key={date}
+              date={date}
+              records={items}
+              onDelete={(id) => setConfirmDelete(id)}
+            />
           ))}
       </div>
+
+      <ConfirmDialog
+        open={confirmDelete !== null}
+        title="Xác nhận xóa"
+        message="Bạn có chắc chắn muốn xóa mục điểm danh này?"
+        confirmLabel="Xóa"
+        cancelLabel="Hủy"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmDelete(null)}
+      />
     </div>
   );
 }
