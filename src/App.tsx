@@ -6,6 +6,7 @@ import StatsPage from "~/pages/StatsPage";
 import LoginPage from "~/pages/LoginPage";
 import ErrorBoundary from "~/components/ErrorBoundary";
 import "~/App.css";
+import "~/components/ConfirmDialog/styles.css";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(

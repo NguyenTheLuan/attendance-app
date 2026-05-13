@@ -98,8 +98,8 @@ export default function WeeklyChart({ weeks }: WeeklyChartProps) {
           />
           <YAxis allowDecimals={false} fontSize={11} />
           <Tooltip
-            formatter={(value: number) => [`${value} lượt`, "Số lượt"]}
-            labelFormatter={(label: string) => `Ngày ${label}`}
+            formatter={(value) => [`${value} lượt`, "Số lượt"]}
+            labelFormatter={(label) => `Ngày ${label}`}
           />
           <Bar dataKey="count" radius={[3, 3, 0, 0]}>
             {allDays.map((entry, idx) => (
