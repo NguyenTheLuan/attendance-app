@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.9] - 2026-05-13
+
+### Other
+- ♿️ fix(nav): show navbar always with 3 menu items, login required only for entry
+
+
+---
+
 ## [0.0.8] - 2026-05-13
 
 ### Other
