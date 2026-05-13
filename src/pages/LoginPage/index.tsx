@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PASSWORD = "123456";
 
@@ -7,6 +8,7 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
@@ -15,6 +17,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     if (password === PASSWORD) {
       localStorage.setItem("attendance_logged_in", "true");
       onLogin();
+      navigate("/admin");
     } else {
       setError(true);
     }
