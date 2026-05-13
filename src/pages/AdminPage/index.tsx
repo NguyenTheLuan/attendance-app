@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
-import { uploadImage } from "../../cloudinary";
-import DateSelector, { getDateString } from "../../components/DateSelector";
+import { uploadImage } from "../../services/cloudinary";
+import DateSelector from "../../components/DateSelector";
 import ImageUploader from "../../components/ImageUploader";
-import { addRecord } from "../../db";
+import { addRecord } from "../../services/db";
 import type { AttendanceRecord } from "../../types";
 
 export default function AdminPage() {
@@ -17,6 +17,16 @@ export default function AdminPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+
+  function getDateString(
+    type: "today" | "tomorrow" | "custom",
+    custom: string
+  ) {
+    if (type === "custom") return custom;
+    const d = new Date();
+    if (type === "tomorrow") d.setDate(d.getDate() + 1);
+    return d.toISOString().split("T")[0];
+  }
 
   const dateStr = getDateString(dateType, customDate);
 

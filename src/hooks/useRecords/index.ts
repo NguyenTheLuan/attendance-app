@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAllRecords, addRecord, deleteRecordById } from "../../db";
+import { getAllRecords, addRecord, deleteRecordById } from "../../services/db";
 import type { AttendanceRecord } from "../../types";
 
 export function useRecords() {

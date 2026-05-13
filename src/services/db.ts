@@ -8,7 +8,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { AttendanceRecord } from "./types";
+import type { AttendanceRecord } from "../types";
 
 const COLLECTION = "records";
 

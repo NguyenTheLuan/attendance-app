@@ -1,16 +1,12 @@
 import type { AttendanceRecord } from "../../types";
 import PersonCard from "../PersonCard";
+import { formatDate } from "../../utils/formatDate";
 
 interface DayGroupProps {
   date: string;
   records: AttendanceRecord[];
   onDelete?: (id: string) => void;
   viewOnly?: boolean;
-}
-
-function formatDate(ymd: string) {
-  const [y, m, d] = ymd.split("-");
-  return `${d}/${m}/${y}`;
 }
 
 export default function DayGroup({

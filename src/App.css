@@ -530,6 +530,7 @@ body {
   background: #fafafa;
   border-radius: 10px;
   font-size: 14px;
+  flex-wrap: wrap;
 }
 
 .month-name {

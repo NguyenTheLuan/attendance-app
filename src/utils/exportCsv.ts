@@ -1,9 +1,5 @@
-import type { AttendanceRecord } from "../../types";
-
-function formatDate(ymd: string) {
-  const [y, m, d] = ymd.split("-");
-  return `${d}/${m}/${y}`;
-}
+import type { AttendanceRecord } from "../types";
+import { formatDate } from "./formatDate";
 
 export function exportRecordsToCsv(records: AttendanceRecord[]): void {
   const grouped = records.reduce<Record<string, AttendanceRecord[]>>(
