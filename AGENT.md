@@ -1,4 +1,10 @@
-# CLAUDE.md — AI Assistant Instructions
+# AI Assistant Instructions
+
+## 🚨 Critical: Before Every CODE
+
+1. **READ `.clinerules/code-style.md`** carefully
+2. **READ `.clinerules/react-vibe.md`** carefully
+3. Analyze requirement and make plan
 
 ## 🚨 Critical: Before Every Commit
 
