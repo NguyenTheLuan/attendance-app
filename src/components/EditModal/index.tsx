@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { uploadImage } from "~/services/cloudinary";
 import type { AttendanceRecord } from "~/types";
-import ConfirmDialog from "~/components/ConfirmDialog";
 
 interface EditModalProps {
   record: AttendanceRecord;
@@ -27,7 +26,6 @@ export default function EditModal({
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -128,7 +126,10 @@ export default function EditModal({
           </button>
           <button
             className="btn-delete"
-            onClick={() => setConfirmOpen(true)}
+            onClick={() => {
+              onDelete(record.id);
+              onClose();
+            }}
             disabled={saving}
           >
             🗑 Xóa
@@ -138,19 +139,6 @@ export default function EditModal({
           </button>
         </div>
       </div>
-
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Xóa lượt trực"
-        message="Bạn có chắc muốn xóa lượt trực này? Hành động này không thể hoàn tác."
-        confirmLabel="Xóa"
-        cancelLabel="Hủy"
-        onConfirm={() => {
-          onDelete(record.id);
-          onClose();
-        }}
-        onCancel={() => setConfirmOpen(false)}
-      />
     </div>
   );
 }

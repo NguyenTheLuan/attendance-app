@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRecords } from "~/hooks/useRecords";
 import DayGroup from "~/components/DayGroup";
 import EditModal from "~/components/EditModal";
+import ConfirmDialog from "~/components/ConfirmDialog";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { deleteRecordById, updateRecordById } from "~/services/db";
 import type { AttendanceRecord } from "~/types";
@@ -15,6 +16,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
   const [editingRecord, setEditingRecord] = useState<AttendanceRecord | null>(
     null
   );
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { records, loading, error, load } = useRecords();
 
   const searchLower = search.toLowerCase().trim();
@@ -30,11 +32,15 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     {}
   );
 
-  async function handleDelete(id: string) {
-    if (window.confirm("Bạn có chắc muốn xóa lượt trực này?")) {
-      await deleteRecordById(id);
-      await load();
-    }
+  function handleDeleteClick(id: string) {
+    setDeleteTargetId(id);
+  }
+
+  async function handleDelete() {
+    if (!deleteTargetId) return;
+    await deleteRecordById(deleteTargetId);
+    await load();
+    setDeleteTargetId(null);
   }
 
   async function handleUpdate(data: {
@@ -96,7 +102,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
             date={date}
             records={items}
             viewOnly={!isLoggedIn}
-            onDelete={isLoggedIn ? handleDelete : undefined}
+            onDelete={isLoggedIn ? handleDeleteClick : undefined}
             onEdit={isLoggedIn ? setEditingRecord : undefined}
           />
         ))}
@@ -105,10 +111,20 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
         <EditModal
           record={editingRecord}
           onSave={handleUpdate}
-          onDelete={handleDelete}
+          onDelete={handleDeleteClick}
           onClose={() => setEditingRecord(null)}
         />
       )}
+
+      <ConfirmDialog
+        open={deleteTargetId !== null}
+        title="Xóa lượt trực"
+        message="Bạn có chắc muốn xóa lượt trực này? Hành động này không thể hoàn tác."
+        confirmLabel="Xóa"
+        cancelLabel="Hủy"
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteTargetId(null)}
+      />
     </div>
   );
 }
