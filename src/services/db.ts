@@ -3,12 +3,13 @@ import {
   addDoc,
   getDocs,
   deleteDoc,
+  updateDoc,
   doc,
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "./firebase";
-import type { AttendanceRecord } from "../types";
+import { db } from "~/services/firebase";
+import type { AttendanceRecord } from "~/types";
 
 const COLLECTION = "records";
 
@@ -33,4 +34,11 @@ export async function getAllRecords(): Promise<AttendanceRecord[]> {
 
 export async function deleteRecordById(id: string) {
   await deleteDoc(doc(db, COLLECTION, id));
+}
+
+export async function updateRecordById(
+  id: string,
+  data: { name: string; date: string; imageUrl: string }
+) {
+  await updateDoc(doc(db, COLLECTION, id), data);
 }

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { HashRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
-import AdminPage from "./pages/AdminPage";
-import ViewPage from "./pages/ViewPage";
-import StatsPage from "./pages/StatsPage";
-import LoginPage from "./pages/LoginPage";
-import ErrorBoundary from "./components/ErrorBoundary";
-import "./App.css";
+import AdminPage from "~/pages/AdminPage";
+import ViewPage from "~/pages/ViewPage";
+import StatsPage from "~/pages/StatsPage";
+import LoginPage from "~/pages/LoginPage";
+import ErrorBoundary from "~/components/ErrorBoundary";
+import "~/App.css";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -71,7 +71,7 @@ export default function App() {
               path="/view"
               element={
                 <ErrorBoundary>
-                  <ViewPage />
+                  <ViewPage isLoggedIn={isLoggedIn} />
                 </ErrorBoundary>
               }
             />

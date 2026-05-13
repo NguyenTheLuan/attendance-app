@@ -1,5 +1,5 @@
-import type { AttendanceRecord } from "../types";
-import { formatDate } from "./formatDate";
+import type { AttendanceRecord } from "~/types";
+import { formatDate } from "~/utils/formatDate";
 
 export function exportRecordsToCsv(records: AttendanceRecord[]): void {
   const grouped = records.reduce<Record<string, AttendanceRecord[]>>(

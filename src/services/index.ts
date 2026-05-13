@@ -1,3 +1,3 @@
-export { db } from "./firebase";
-export { addRecord, getAllRecords, deleteRecordById } from "./db";
-export { uploadImage } from "./cloudinary";
+export { db } from "~/services/firebase";
+export { addRecord, getAllRecords, deleteRecordById } from "~/services/db";
+export { uploadImage } from "~/services/cloudinary";

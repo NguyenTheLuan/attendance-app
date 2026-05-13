@@ -1,11 +1,21 @@
 import { useState } from "react";
-import { useRecords } from "../../hooks/useRecords";
-import DayGroup from "../../components/DayGroup";
-import { exportRecordsToCsv } from "../../utils/exportCsv";
+import { useRecords } from "~/hooks/useRecords";
+import DayGroup from "~/components/DayGroup";
+import EditModal from "~/components/EditModal";
+import { exportRecordsToCsv } from "~/utils/exportCsv";
+import { deleteRecordById, updateRecordById } from "~/services/db";
+import type { AttendanceRecord } from "~/types";
 
-export default function ViewPage() {
+interface ViewPageProps {
+  isLoggedIn: boolean;
+}
+
+export default function ViewPage({ isLoggedIn }: ViewPageProps) {
   const [search, setSearch] = useState("");
-  const { records, loading, error } = useRecords();
+  const [editingRecord, setEditingRecord] = useState<AttendanceRecord | null>(
+    null
+  );
+  const { records, loading, error, load } = useRecords();
 
   const searchLower = search.toLowerCase().trim();
   const filteredRecords = searchLower
@@ -19,6 +29,24 @@ export default function ViewPage() {
     },
     {}
   );
+
+  async function handleDelete(id: string) {
+    if (window.confirm("Bạn có chắc muốn xóa lượt trực này?")) {
+      await deleteRecordById(id);
+      await load();
+    }
+  }
+
+  async function handleUpdate(data: {
+    name: string;
+    date: string;
+    imageUrl: string;
+  }) {
+    if (!editingRecord) return;
+    await updateRecordById(editingRecord.id, data);
+    await load();
+    setEditingRecord(null);
+  }
 
   return (
     <div className="page view-page">
@@ -62,8 +90,24 @@ export default function ViewPage() {
       {Object.entries(grouped)
         .sort(([a], [b]) => b.localeCompare(a))
         .map(([date, items]) => (
-          <DayGroup key={date} date={date} records={items} viewOnly />
+          <DayGroup
+            key={date}
+            date={date}
+            records={items}
+            viewOnly={!isLoggedIn}
+            onDelete={isLoggedIn ? handleDelete : undefined}
+            onEdit={isLoggedIn ? setEditingRecord : undefined}
+          />
         ))}
+
+      {editingRecord && (
+        <EditModal
+          record={editingRecord}
+          onSave={handleUpdate}
+          onDelete={handleDelete}
+          onClose={() => setEditingRecord(null)}
+        />
+      )}
     </div>
   );
 }

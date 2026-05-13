@@ -1,6 +1,6 @@
-import type { AttendanceRecord } from "../../types";
-import { formatDateShort } from "../../utils/formatDate";
-import { formatMonth } from "../../utils/formatDate";
+import PersonCard from "~/components/PersonCard";
+import { formatDate } from "~/utils/formatDate";
+import type { AttendanceRecord } from "~/types";
 
 interface MonthDetailProps {
   selectedMonth: string;
@@ -13,22 +13,17 @@ export default function MonthDetail({
 }: MonthDetailProps) {
   return (
     <div className="card">
-      <h2>📅 Lịch trực {formatMonth(selectedMonth)}</h2>
-      <div className="month-detail-list">
-        {monthDetail.map(([date, items]) => (
-          <div key={date} className="month-detail-day">
-            <h3 className="day-title">📌 {formatDateShort(date)}</h3>
-            <div className="month-detail-grid">
-              {items.map((r) => (
-                <div key={r.id} className="month-detail-person">
-                  <img src={r.imageUrl} alt={r.name} loading="lazy" />
-                  <span>{r.name}</span>
-                </div>
-              ))}
-            </div>
+      <h2>� Chi tiết tháng {selectedMonth}</h2>
+      {monthDetail.map(([date, items]) => (
+        <div key={date} className="day-group" style={{ marginBottom: 16 }}>
+          <h3 className="day-title">📌 {formatDate(date)}</h3>
+          <div className="grid">
+            {items.map((r) => (
+              <PersonCard key={r.id} record={r} viewOnly />
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }

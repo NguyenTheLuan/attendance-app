@@ -1,92 +1,76 @@
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import type { AttendanceRecord } from "~/types";
 
-/**
- * Get daily counts grouped by week for a given month.
- */
+export interface WeekData {
+  weekLabel: string;
+  days: { name: string; count: number }[];
+}
+
 export function getWeeklyDailyCounts(
-  records: { date: string; name: string }[],
-  monthKey: string
-) {
-  const monthRecords = records.filter((r) => r.date.startsWith(monthKey));
-  const dayCounts = new Map<string, number>();
-  for (const r of monthRecords) {
-    dayCounts.set(r.date, (dayCounts.get(r.date) ?? 0) + 1);
+  records: AttendanceRecord[],
+  month: string
+): WeekData[] {
+  const monthRecords = records.filter((r) => r.date.startsWith(month));
+  const daysInMonth: string[] = [];
+  const [y, m] = month.split("-").map(Number);
+  const lastDay = new Date(y, m, 0).getDate();
+  for (let d = 1; d <= lastDay; d++) {
+    const dateStr = `${month}-${String(d).padStart(2, "0")}`;
+    daysInMonth.push(dateStr);
   }
 
-  const year = parseInt(monthKey.split("-")[0]);
-  const month = parseInt(monthKey.split("-")[1]) - 1;
-  const lastDay = new Date(year, month + 1, 0);
+  const dailyCounts = daysInMonth.map((d) => ({
+    date: d,
+    count: monthRecords.filter((r) => r.date === d).length,
+  }));
 
-  function getWeekNumber(d: Date) {
-    const temp = new Date(d.valueOf());
-    const dayNum = (temp.getDay() + 6) % 7;
-    temp.setDate(temp.getDate() - dayNum + 3);
-    const firstThursday = temp.valueOf();
-    temp.setMonth(0, 1);
-    if (temp.getDay() !== 4) {
-      temp.setMonth(0, 1 + ((4 - temp.getDay() + 7) % 7));
-    }
-    return Math.ceil((firstThursday - temp.valueOf()) / 604800000) + 1;
-  }
-
-  const weekGroups = new Map<
-    number,
-    { label: string; data: { day: string; count: number }[] }
-  >();
-
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateObj = new Date(year, month, d);
-    const ymd = `${monthKey}-${String(d).padStart(2, "0")}`;
-    const wn = getWeekNumber(dateObj);
-    if (!weekGroups.has(wn)) {
-      const weekNum = weekGroups.size + 1;
-      weekGroups.set(wn, { label: `Tuần ${weekNum}`, data: [] });
-    }
-    weekGroups.get(wn)!.data.push({
-      day: `${parseInt(String(d))}/${parseInt(monthKey.split("-")[1])}`,
-      count: dayCounts.get(ymd) ?? 0,
+  const weeks: WeekData[] = [];
+  for (let d = 1; d <= lastDay; d += 7) {
+    const weekDates = daysInMonth.slice(d - 1, d + 6);
+    const weekNum = Math.ceil(d / 7);
+    weeks.push({
+      weekLabel: `Tuần ${weekNum}`,
+      days: weekDates.map((wd) => ({
+        name: wd.slice(-2),
+        count: dailyCounts.find((dc) => dc.date === wd)?.count ?? 0,
+      })),
     });
   }
-
-  return Array.from(weekGroups.values());
+  return weeks;
 }
 
 interface WeeklyChartProps {
-  weeks: ReturnType<typeof getWeeklyDailyCounts>;
+  weeks: WeekData[];
 }
 
 export default function WeeklyChart({ weeks }: WeeklyChartProps) {
+  if (weeks.length === 0) return null;
+
   return (
-    <>
+    <div className="card">
+      <h2>📅 Trực theo tuần</h2>
       {weeks.map((week) => (
-        <div key={week.label} className="week-chart">
-          <h3 className="week-label">{week.label}</h3>
+        <div key={week.weekLabel} style={{ marginBottom: 24 }}>
+          <h4 style={{ margin: "8px 0", color: "#555" }}>{week.weekLabel}</h4>
           <ResponsiveContainer width="100%" height={180}>
-            <LineChart data={week.data}>
+            <BarChart data={week.days}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" fontSize={12} />
-              <YAxis allowDecimals={false} fontSize={12} />
+              <XAxis dataKey="name" fontSize={11} />
+              <YAxis allowDecimals={false} fontSize={11} />
               <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="count"
-                stroke="#e94560"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                name="Lượt trực"
-              />
-            </LineChart>
+              <Bar dataKey="count" fill="#e94560" radius={[4, 4, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       ))}
-    </>
+    </div>
   );
 }

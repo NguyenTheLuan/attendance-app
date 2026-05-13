@@ -1,5 +1,5 @@
-import { formatMonth } from "../../utils/formatDate";
-import type { MonthStats } from "../../types";
+import { formatMonth } from "~/utils/formatDate";
+import type { MonthStats } from "~/types";
 
 interface MonthListProps {
   months: MonthStats[];

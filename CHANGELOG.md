@@ -1,51 +1,66 @@
 # Changelog
 
+## [0.0.12] - 2026-05-13
+
+### ✨ Features
+
+- feat: admin edit/delete records on ViewPage via click-to-edit modal
+- feat: EditModal component for editing name, date, imageUrl + delete record
+- feat: clickable image in PersonCard to trigger edit modal
+
+### ♻️ Refactoring
+
+- refactor: hardcode Firebase & Cloudinary API config (no .env needed)
+- refactor: clean up ViewPage layout, fix TypeScript types
+
+---
+
 ## [0.0.11] - 2026-05-13
 
 ### ♻️ Refactoring
+
 - Refactor: move flat files into folder/index pattern for pages, components, hooks, utils
-
-
----
 
 ## [0.0.10] - 2026-05-13
 
 ### ✨ Features
+
 - feat: add React best practices documentation for component architecture and coding standards
 
 ### Other
-- � fix(login): add CSS for input[type=password]
 
+- � fix(login): add CSS for input[type=password]
 
 ---
 
 ## [0.0.9] - 2026-05-13
 
 ### Other
-- ♿️ fix(nav): show navbar always with 3 menu items, login required only for entry
 
+- ♿️ fix(nav): show navbar always with 3 menu items, login required only for entry
 
 ---
 
 ## [0.0.8] - 2026-05-13
 
 ### Other
-- � fix(stats): fix TS errors - unused vars, possibly undefined percent
 
+- � fix(stats): fix TS errors - unused vars, possibly undefined percent
 
 ---
 
 ## [0.0.7] - 2026-05-13
 
 ### Other
-- � ci(deploy): auto-create GitHub Release with changelog notes when tagging
 
+- � ci(deploy): auto-create GitHub Release with changelog notes when tagging
 
 ---
 
 ## [0.0.6] - 2026-05-13
 
 ### Other
+
 - � chore: bump version to v0.0.5
 - � docs: add comprehensive README with features, tech stack, and setup guide
 - ✨ feat: add login page, stats charts with recharts, and admin improvements
@@ -63,7 +78,6 @@
 - 🐛 fix: add 404.html for SPA routing on GitHub Pages
 - 🐛 fix(deploy): use gh-pages branch for deployment
 - ♻️ refactor: extract reusable components, add search, CSV export, error boundary
-
 
 ---
 

@@ -1,58 +1,51 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+const PASSWORD = "123456";
 
 interface LoginPageProps {
   onLogin: () => void;
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
-
-    if (username === "ntluan" && password === "123") {
+    if (password === PASSWORD) {
       localStorage.setItem("attendance_logged_in", "true");
       onLogin();
-      navigate("/admin");
     } else {
-      setError("❌ Sai tài khoản hoặc mật khẩu");
+      setError(true);
     }
   }
 
   return (
-    <div className="page login-page">
-      <div className="card login-card">
-        <h1>🔐 Đăng nhập</h1>
-        <p className="subtitle">
-          Chỉ quản trị viên mới có quyền nhập điểm danh
-        </p>
+    <div className="page">
+      <div className="card form" style={{ maxWidth: 360, margin: "40px auto" }}>
+        <h2>🔐 Đăng nhập</h2>
         <form onSubmit={handleSubmit}>
-          <label className="field">
-            <span>Tài khoản</span>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Nhập tài khoản..."
-              autoFocus
-            />
-          </label>
           <label className="field">
             <span>Mật khẩu</span>
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError(false);
+              }}
               placeholder="Nhập mật khẩu..."
+              autoFocus
             />
           </label>
-          {error && <p className="msg err">{error}</p>}
-          <button type="submit" className="btn-primary">
+          {error && (
+            <p className="msg err">❌ Sai mật khẩu, vui lòng thử lại.</p>
+          )}
+          <button
+            type="submit"
+            className="btn-primary"
+            style={{ marginTop: 8 }}
+          >
             Đăng nhập
           </button>
         </form>

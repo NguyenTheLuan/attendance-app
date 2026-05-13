@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
-import { uploadImage } from "../../services/cloudinary";
-import DateSelector from "../../components/DateSelector";
-import ImageUploader from "../../components/ImageUploader";
-import { addRecord } from "../../services/db";
-import type { AttendanceRecord } from "../../types";
+import { uploadImage } from "~/services/cloudinary";
+import DateSelector from "~/components/DateSelector";
+import ImageUploader from "~/components/ImageUploader";
+import { addRecord } from "~/services/db";
+import type { AttendanceRecord } from "~/types";
 
 export default function AdminPage() {
   const [name, setName] = useState("");
