@@ -134,6 +134,16 @@ jobs:
           git tag "v${VER}"
           git push origin "v${VER}"
 
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VER: ${{ steps.bump.outputs.version }}
+        run: |
+          gh release create "v${VER}" \
+            --title "v${VER}" \
+            --notes "$(cat /tmp/changelog_body.txt)" \
+            --target main
+
   build-and-deploy:
     needs: update-changelog
     runs-on: ubuntu-latest
