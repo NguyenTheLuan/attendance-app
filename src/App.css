@@ -95,6 +95,7 @@ body {
 }
 
 .field input[type="text"],
+.field input[type="password"],
 .field input[type="date"] {
   padding: 12px 14px;
   border: 2px solid #e0e0e0;
@@ -105,6 +106,7 @@ body {
 }
 
 .field input[type="text"]:focus,
+.field input[type="password"]:focus,
 .field input[type="date"]:focus {
   border-color: #e94560;
 }
@@ -369,6 +371,7 @@ body {
   }
 
   .field input[type="text"],
+  .field input[type="password"],
   .field input[type="date"] {
     background: #2a2a3e;
     border-color: #3a3a4e;
