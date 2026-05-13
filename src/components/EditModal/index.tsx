@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { uploadImage } from "~/services/cloudinary";
 import type { AttendanceRecord } from "~/types";
+import Toast from "~/components/Toast";
 
 interface EditModalProps {
   record: AttendanceRecord;
@@ -20,6 +21,10 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -50,11 +55,13 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
       });
       onClose();
     } catch {
-      alert("Lỗi khi lưu. Thử lại nhé.");
+      setToast({ message: "Lỗi khi lưu. Thử lại nhé.", type: "error" });
     } finally {
       setSaving(false);
     }
   }
+
+  const closeToast = useCallback(() => setToast(null), []);
 
   const currentPreview = preview || record.imageUrl;
 
@@ -140,6 +147,10 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
           </button>
         </div>
       </div>
+
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
+      )}
     </div>
   );
 }

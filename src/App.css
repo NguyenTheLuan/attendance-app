@@ -1406,3 +1406,59 @@ body {
     color: #aaa;
   }
 }
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 3000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+  max-width: 90vw;
+  white-space: nowrap;
+}
+
+.toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-error {
+  background: #ff4757;
+  color: #fff;
+}
+
+.toast-success {
+  background: #2ed573;
+  color: #fff;
+}
+
+.toast-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.toast-message {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-color-scheme: dark) {
+  .toast-error {
+    background: #c0392b;
+  }
+
+  .toast-success {
+    background: #27ae60;
+  }
+}
