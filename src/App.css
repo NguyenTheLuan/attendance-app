@@ -872,6 +872,71 @@ body {
   font-size: 14px;
 }
 
+/* Pie chart layout: chart left, person list right */
+.pie-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.pie-chart-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.pie-person-list {
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.pie-person-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #fafafa;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.pie-person-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pie-person-name {
+  font-weight: 600;
+  color: #1a1a2e;
+  flex: 1;
+}
+
+.pie-person-count {
+  font-weight: 600;
+  color: #e94560;
+}
+
+.pie-person-pct {
+  color: #888;
+  font-size: 13px;
+  min-width: 48px;
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .pie-layout {
+    flex-direction: column;
+  }
+  .pie-person-list {
+    flex: none;
+    width: 100%;
+  }
+}
+
 /* Stats dark mode */
 @media (prefers-color-scheme: dark) {
   .stat-card {
@@ -913,6 +978,18 @@ body {
 
   .top-name {
     color: #ccc;
+  }
+
+  .pie-person-item {
+    background: #222240;
+  }
+
+  .pie-person-name {
+    color: #ccc;
+  }
+
+  .pie-person-pct {
+    color: #999;
   }
 }
 
