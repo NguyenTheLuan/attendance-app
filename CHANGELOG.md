@@ -1,8 +1,17 @@
 # Changelog
 
+## [0.0.14] - 2026-05-14
+
+### 🔧 Maintenance
+
+- 🔧 chore: bump version to v0.0.14
+
+---
+
 ## [0.0.13] - 2026-05-13
 
 ### ✨ Features
+
 - feat: simplify pie chart - show person name + pct directly on chart, remove person list on right
 - feat: pie chart section now uses 2-col layout - chart left, person list right
 - feat: responsive navbar with drawer on mobile
@@ -15,6 +24,7 @@
 - feat: refactor attendance stats to use new MonthList and MonthDetail components
 
 ### 🐛 Bug Fixes
+
 - fix: use text-overflow ellipsis instead of scroll for person-note
 - fix: add max-height for .person-note to prevent content overflow
 - fix: update HTML title to shortened form
@@ -26,22 +36,25 @@
 - fix: restore cloudinary config to working cloud name and upload preset with image compression
 
 ### ♻️ Refactoring
+
 - refactor: move code splitting & DRY rules to code-style.md (English), simplify reusability.md
 - refactor: extract Field component, reuse ImageUploader in EditModal
 - refactor: replace remaining relative imports with tilde alias in statspage
 
 ### 📝 Documentation
+
 - docs: add rules about code splitting and using map/filter when iterating >3 times
 
 ### 🔧 Maintenance
+
 - chore: remove stray orphan file 'e'
 - chore: update AGENT.md with English-only rule and improve navbar mobile styling
 - chore: add agent.md with project overview and ai instructions
 - chore: add commitlint + husky to enforce conventional commit format
 
 ### Other
-- Persist login state via localStorage so F5 doesn't log out
 
+- Persist login state via localStorage so F5 doesn't log out
 
 ---
 
