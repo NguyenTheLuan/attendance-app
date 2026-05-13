@@ -47,7 +47,6 @@ Mỗi file/component chỉ nên làm **một việc duy nhất**. Nếu một fi
 ```
 
 **Quy tắc cụ thể:**
-
 - Mỗi component không quá ~100 dòng JSX return
 - Mỗi custom hook nên chỉ quản lý một loại state/logic
 - Utility functions → tách vào `src/utils/`
@@ -76,7 +75,6 @@ const links = [
 ```
 
 **Áp dụng cho:**
-
 - Nav links, tabs, buttons lặp
 - Danh sách items, cards, grid cells
 - Form fields, options, select choices
@@ -109,8 +107,4 @@ src/
     exportCsv.ts
   types/
     index.ts           # AttendanceRecord, ...
-```
-
-```
-
 ```
