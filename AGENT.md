@@ -4,7 +4,8 @@
 
 1. **READ `.clinerules/code-style.md`** carefully
 2. **READ `.clinerules/react-vibe.md`** carefully
-3. Analyze requirement and make plan
+3. **READ `.clinerules/reusability.md`** — always reuse Field, DateSelector, ImageUploader, Toast etc.
+4. Analyze requirement and make plan
 
 ## 🚨 Critical: Before Every Commit
 

@@ -1,6 +1,8 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { uploadImage } from "~/services/cloudinary";
 import type { AttendanceRecord } from "~/types";
+import Field from "~/components/Field";
+import ImageUploader from "~/components/ImageUploader";
 import Toast from "~/components/Toast";
 
 interface EditModalProps {
@@ -25,10 +27,8 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
     message: string;
     type: "success" | "error";
   } | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0] ?? null;
+  function handleFileChange(f: File | null) {
     setFile(f);
     if (f) {
       const reader = new FileReader();
@@ -72,65 +72,41 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
 
         <div className="edit-layout">
           <div className="edit-image-col">
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleFileChange}
+            <ImageUploader
+              preview={currentPreview}
+              onFileChange={handleFileChange}
               disabled={saving}
-              hidden
             />
-            {currentPreview ? (
-              <img
-                src={currentPreview}
-                alt="Preview"
-                className="edit-image clickable-img"
-                onClick={() => fileRef.current?.click()}
-              />
-            ) : (
-              <button
-                type="button"
-                className="upload-btn"
-                onClick={() => fileRef.current?.click()}
-              >
-                📷 Chọn ảnh
-              </button>
-            )}
           </div>
 
           <div className="edit-form-col">
-            <label className="field field-row">
-              <span>Tên người trực</span>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={saving}
-              />
-            </label>
+            <Field
+              label="Tên người trực"
+              row
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={saving}
+            />
 
-            <label className="field field-row">
-              <span>Ngày trực</span>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                disabled={saving}
-              />
-            </label>
+            <Field
+              label="Ngày trực"
+              row
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              disabled={saving}
+            />
 
-            <label className="field">
-              <span>Ghi chú</span>
-              <textarea
-                className="field-textarea"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Ví dụ: hỗ trợ..."
-                disabled={saving}
-                rows={3}
-              />
-            </label>
+            <Field
+              as="textarea"
+              label="Ghi chú"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Ví dụ: hỗ trợ..."
+              disabled={saving}
+              rows={3}
+            />
           </div>
         </div>
 

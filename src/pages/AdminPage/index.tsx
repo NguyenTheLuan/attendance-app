@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { uploadImage } from "~/services/cloudinary";
+import Field from "~/components/Field";
 import DateSelector from "~/components/DateSelector";
 import ImageUploader from "~/components/ImageUploader";
 import { addRecord } from "~/services/db";
@@ -84,16 +85,14 @@ export default function AdminPage() {
       <form className="card form" onSubmit={handleSubmit}>
         <h2>➕ Thêm người trực</h2>
 
-        <label className="field">
-          <span>Tên người trực</span>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Nhập tên..."
-            disabled={uploading}
-          />
-        </label>
+        <Field
+          label="Tên người trực"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nhập tên..."
+          disabled={uploading}
+        />
 
         <DateSelector
           dateType={dateType}
@@ -109,17 +108,15 @@ export default function AdminPage() {
           disabled={uploading}
         />
 
-        <label className="field">
-          <span>Ghi chú</span>
-          <textarea
-            className="field-textarea"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Ví dụ: hỗ trợ..."
-            disabled={uploading}
-            rows={2}
-          />
-        </label>
+        <Field
+          as="textarea"
+          label="Ghi chú"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Ví dụ: hỗ trợ..."
+          disabled={uploading}
+          rows={2}
+        />
 
         <button type="submit" className="btn-primary" disabled={uploading}>
           {uploading ? "⏳ Đang upload..." : "💾 Lưu điểm danh"}
