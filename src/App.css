@@ -293,6 +293,8 @@ body {
   font-style: italic;
   line-height: 1.4;
   word-break: break-word;
+  max-height: 60px;
+  overflow-y: auto;
 }
 
 /* Date buttons */
