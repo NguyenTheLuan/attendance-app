@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.8] - 2026-05-13
+
+### Other
+- � fix(stats): fix TS errors - unused vars, possibly undefined percent
+
+
+---
+
 ## [0.0.7] - 2026-05-13
 
 ### Other
