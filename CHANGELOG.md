@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.0.13] - 2026-05-13
+
+### ✨ Features
+- feat: simplify pie chart - show person name + pct directly on chart, remove person list on right
+- feat: pie chart section now uses 2-col layout - chart left, person list right
+- feat: responsive navbar with drawer on mobile
+- feat: replace alert() with Toast component for save error
+- feat: improve ImageUploader with drag & drop UI and update title
+- feat: add All/Month view modes and change title to Xem Khu pho 3-6
+- feat: Dialog xác nhận xóa đẹp thay vì window.confirm
+- feat: Thêm ghi chú (note) và cải tiến StatsPage với 2 chế độ xem
+- feat: add admin edit/delete records on ViewPage via click-to-edit modal
+- feat: refactor attendance stats to use new MonthList and MonthDetail components
+
+### 🐛 Bug Fixes
+- fix: use text-overflow ellipsis instead of scroll for person-note
+- fix: add max-height for .person-note to prevent content overflow
+- fix: update HTML title to shortened form
+- fix: improve Edit Modal layout
+- fix: ConfirmDialog cho cả PersonCard và EditModal, fix scroll
+- fix: Cải thiện dark mode cho tooltip chart và tăng kích thước PieChart
+- fix: login navigate to /admin after success & add missing stat-card css
+- fix: correct firebase project id to attendance-app-d215e
+- fix: restore cloudinary config to working cloud name and upload preset with image compression
+
+### ♻️ Refactoring
+- refactor: move code splitting & DRY rules to code-style.md (English), simplify reusability.md
+- refactor: extract Field component, reuse ImageUploader in EditModal
+- refactor: replace remaining relative imports with tilde alias in statspage
+
+### 📝 Documentation
+- docs: add rules about code splitting and using map/filter when iterating >3 times
+
+### 🔧 Maintenance
+- chore: remove stray orphan file 'e'
+- chore: update AGENT.md with English-only rule and improve navbar mobile styling
+- chore: add agent.md with project overview and ai instructions
+- chore: add commitlint + husky to enforce conventional commit format
+
+### Other
+- Persist login state via localStorage so F5 doesn't log out
+
+
+---
+
 ## [0.0.12] - 2026-05-13
 
 ### ✨ Features
