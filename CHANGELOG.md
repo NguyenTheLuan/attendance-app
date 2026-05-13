@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.7] - 2026-05-13
+
+### Other
+- � ci(deploy): auto-create GitHub Release with changelog notes when tagging
+
+
+---
+
 ## [0.0.6] - 2026-05-13
 
 ### Other
