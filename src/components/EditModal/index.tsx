@@ -10,16 +10,10 @@ interface EditModalProps {
     imageUrl: string;
     note?: string;
   }) => Promise<void>;
-  onDelete: (id: string) => void;
   onClose: () => void;
 }
 
-export default function EditModal({
-  record,
-  onSave,
-  onDelete,
-  onClose,
-}: EditModalProps) {
+export default function EditModal({ record, onSave, onClose }: EditModalProps) {
   const [name, setName] = useState(record.name);
   const [date, setDate] = useState(record.date);
   const [note, setNote] = useState(record.note ?? "");
@@ -66,55 +60,72 @@ export default function EditModal({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div className="modal modal-edit" onClick={(e) => e.stopPropagation()}>
         <h3>✏️ Chỉnh sửa thông tin</h3>
 
-        <label className="field">
-          <span>Tên người trực</span>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            disabled={saving}
-          />
-        </label>
+        <div className="edit-layout">
+          <div className="edit-image-col">
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileChange}
+              disabled={saving}
+              hidden
+            />
+            {currentPreview ? (
+              <img
+                src={currentPreview}
+                alt="Preview"
+                className="edit-image clickable-img"
+                onClick={() => fileRef.current?.click()}
+              />
+            ) : (
+              <button
+                type="button"
+                className="upload-btn"
+                onClick={() => fileRef.current?.click()}
+              >
+                📷 Chọn ảnh
+              </button>
+            )}
+          </div>
 
-        <label className="field">
-          <span>Ngày trực</span>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            disabled={saving}
-          />
-        </label>
+          <div className="edit-form-col">
+            <label className="field field-row">
+              <span>Tên người trực</span>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={saving}
+              />
+            </label>
 
-        <label className="field">
-          <span>Ảnh người trực</span>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleFileChange}
-            disabled={saving}
-          />
-          {currentPreview && (
-            <img src={currentPreview} alt="Preview" className="preview" />
-          )}
-        </label>
+            <label className="field field-row">
+              <span>Ngày trực</span>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                disabled={saving}
+              />
+            </label>
 
-        <label className="field">
-          <span>Ghi chú</span>
-          <textarea
-            className="field-textarea"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Ví dụ: hỗ trợ nhảy cầu Tăng Long..."
-            disabled={saving}
-            rows={2}
-          />
-        </label>
+            <label className="field">
+              <span>Ghi chú</span>
+              <textarea
+                className="field-textarea"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Ví dụ: hỗ trợ..."
+                disabled={saving}
+                rows={3}
+              />
+            </label>
+          </div>
+        </div>
 
         <div className="modal-actions">
           <button
@@ -123,16 +134,6 @@ export default function EditModal({
             disabled={saving || !name.trim()}
           >
             {saving ? "⏳ Đang lưu..." : "💾 Lưu"}
-          </button>
-          <button
-            className="btn-delete"
-            onClick={() => {
-              onDelete(record.id);
-              onClose();
-            }}
-            disabled={saving}
-          >
-            🗑 Xóa
           </button>
           <button className="btn-cancel" onClick={onClose} disabled={saving}>
             ❌ Hủy

@@ -115,7 +115,7 @@ export default function AdminPage() {
             className="field-textarea"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="Ví dụ: hỗ trợ nhảy cầu Tăng Long..."
+            placeholder="Ví dụ: hỗ trợ..."
             disabled={uploading}
             rows={2}
           />

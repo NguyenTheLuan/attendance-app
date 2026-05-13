@@ -111,7 +111,6 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
         <EditModal
           record={editingRecord}
           onSave={handleUpdate}
-          onDelete={handleDeleteClick}
           onClose={() => setEditingRecord(null)}
         />
       )}
