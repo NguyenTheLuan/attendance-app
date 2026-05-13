@@ -1,35 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
-import { getAllRecords } from "../db";
-import type { AttendanceRecord } from "../types";
-
-function formatDate(ymd: string) {
-  const [y, m, d] = ymd.split("-");
-  return `${d}/${m}/${y}`;
-}
+import { useState } from "react";
+import { useRecords } from "../hooks/useRecords";
+import DayGroup from "../components/DayGroup";
+import { exportRecordsToCsv } from "../utils/exportCsv";
 
 export default function ViewPage() {
-  const [records, setRecords] = useState<AttendanceRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const { records, loading, error } = useRecords();
 
-  const load = useCallback(async () => {
-    try {
-      setError("");
-      setLoading(true);
-      const data = await getAllRecords();
-      setRecords(data);
-    } catch {
-      setError("Không thể tải dữ liệu. Vui lòng thử lại sau.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Filter logic
+  const searchLower = search.toLowerCase().trim();
+  const filteredRecords = searchLower
+    ? records.filter((r) => r.name.toLowerCase().includes(searchLower))
+    : records;
 
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  const grouped = records.reduce<Record<string, AttendanceRecord[]>>(
+  const grouped = filteredRecords.reduce<Record<string, typeof records>>(
     (acc, r) => {
       (acc[r.date] ??= []).push(r);
       return acc;
@@ -45,26 +29,41 @@ export default function ViewPage() {
       {loading && <p className="loading">⏳ Đang tải...</p>}
       {error && <p className="msg err">{error}</p>}
 
+      {!loading && (
+        <div className="view-actions">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="🔍 Tìm theo tên..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {records.length > 0 && (
+            <button
+              className="btn-export"
+              onClick={() => exportRecordsToCsv(records)}
+              title="Xuất CSV"
+            >
+              📥 Xuất CSV
+            </button>
+          )}
+        </div>
+      )}
+
       {!loading && !error && Object.keys(grouped).length === 0 && (
         <div className="card empty">
-          <p>📭 Chưa có lịch trực nào được điểm danh.</p>
+          <p>
+            {search
+              ? "🔍 Không tìm thấy kết quả."
+              : "📭 Chưa có lịch trực nào được điểm danh."}
+          </p>
         </div>
       )}
 
       {Object.entries(grouped)
         .sort(([a], [b]) => b.localeCompare(a))
         .map(([date, items]) => (
-          <div key={date} className="card day-group">
-            <h3 className="day-title">📌 {formatDate(date)}</h3>
-            <div className="grid">
-              {items.map((r) => (
-                <div key={r.id} className="person-card view-card">
-                  <img src={r.imageUrl} alt={r.name} />
-                  <p>{r.name}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <DayGroup key={date} date={date} records={items} viewOnly />
         ))}
     </div>
   );
