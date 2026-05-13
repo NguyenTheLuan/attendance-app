@@ -10,8 +10,9 @@
 
 1. **READ `.clinerules/commit-rule.md`** before writing any commit message
 2. Format MUST be: `<emoji> <type>(<scope>): <description>`
-3. If commit fails lint → fix the message, do NOT skip the hook
-4. NEVER push without asking user first
+3. **COMMIT MESSAGES MUST BE IN ENGLISH ONLY.** Vietnamese is strictly prohibited.
+4. If commit fails lint → fix the message, do NOT skip the hook
+5. NEVER push without asking user first
 
 ## Commands Reference
 
