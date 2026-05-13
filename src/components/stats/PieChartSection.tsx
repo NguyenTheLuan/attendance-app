@@ -31,7 +31,7 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
   return (
     <div className="card">
       <h2>� Phân bố theo người</h2>
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={500}>
         <PieChart>
           <Pie
             data={data}
@@ -39,7 +39,7 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
             nameKey="name"
             cx="50%"
             cy="50%"
-            outerRadius={120}
+            outerRadius={180}
             label={({ name, value }) => `${name}: ${value}`}
           >
             {data.map((_, i) => (
