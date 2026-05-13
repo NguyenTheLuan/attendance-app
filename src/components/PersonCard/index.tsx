@@ -23,6 +23,7 @@ export default function PersonCard({
         className={onEdit ? "clickable-img" : ""}
       />
       <p>{record.name}</p>
+      {record.note && <p className="person-note">{record.note}</p>}
       {!viewOnly && onDelete && (
         <button
           className="btn-delete"

@@ -10,8 +10,11 @@ import WeeklyChart, {
 } from "~/components/stats/WeeklyChart";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 
+type ViewMode = "month-compare" | "weekly";
+
 export default function StatsPage() {
   const { records, loading, error } = useRecords();
+  const [viewMode, setViewMode] = useState<ViewMode>("month-compare");
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const monthList = useMemo(() => {
@@ -28,7 +31,7 @@ export default function StatsPage() {
         uniquePeople: names.size,
         names: Array.from(names),
       }))
-      .sort((a, b) => b.month.localeCompare(a.month));
+      .sort((a, b) => a.month.localeCompare(b.month));
   }, [records]);
 
   const uniquePeople = useMemo(
@@ -64,7 +67,7 @@ export default function StatsPage() {
 
   return (
     <div className="page stats-page">
-      <h1>📊 Thống Kê Trực Nhật</h1>
+      <h1>📊 Thống kê lịch trực khu phố 3 - 6</h1>
 
       {loading && <p className="loading">⏳ Đang tải...</p>}
       {error && <p className="msg err">{error}</p>}
@@ -94,23 +97,60 @@ export default function StatsPage() {
             </div>
           )}
 
-          {monthList.length > 0 && <MonthOverviewChart months={monthList} />}
-
-          <div className="stats-content">
-            <MonthList months={monthList} onSelectMonth={setSelectedMonth} />
-
-            {selectedMonth && (
-              <>
-                <WeeklyChart weeks={weeks} />
-                <MonthDetail
-                  selectedMonth={selectedMonth}
-                  monthDetail={monthDetail}
-                />
-              </>
-            )}
+          {/* View mode toggle */}
+          <div className="chart-tabs">
+            <button
+              className={`chart-tab ${
+                viewMode === "month-compare" ? "active" : ""
+              }`}
+              onClick={() => {
+                setViewMode("month-compare");
+                setSelectedMonth(null);
+              }}
+            >
+              📈 So sánh theo tháng
+            </button>
+            <button
+              className={`chart-tab ${viewMode === "weekly" ? "active" : ""}`}
+              onClick={() => {
+                setViewMode("weekly");
+                setSelectedMonth(null);
+              }}
+            >
+              🗓️ Theo tuần
+            </button>
           </div>
 
-          {pieData.length > 0 && <PieChartSection data={pieData} />}
+          {viewMode === "month-compare" && monthList.length > 0 && (
+            <MonthOverviewChart months={monthList} />
+          )}
+
+          {viewMode === "weekly" && (
+            <>
+              <MonthList months={monthList} onSelectMonth={setSelectedMonth} />
+
+              {selectedMonth && weeks.length > 0 && (
+                <WeeklyChart weeks={weeks} />
+              )}
+
+              {selectedMonth && monthDetail.length === 0 && (
+                <div className="card empty">
+                  <p>Chưa có dữ liệu trực cho tháng này.</p>
+                </div>
+              )}
+            </>
+          )}
+
+          {selectedMonth && viewMode === "weekly" && monthDetail.length > 0 && (
+            <MonthDetail
+              selectedMonth={selectedMonth}
+              monthDetail={monthDetail}
+            />
+          )}
+
+          {viewMode === "month-compare" && pieData.length > 0 && (
+            <PieChartSection data={pieData} />
+          )}
         </>
       )}
     </div>

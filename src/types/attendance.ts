@@ -3,5 +3,6 @@ export interface AttendanceRecord {
   name: string;
   imageUrl: string;
   date: string; // YYYY-MM-DD
+  note?: string;
   createdAt: number;
 }

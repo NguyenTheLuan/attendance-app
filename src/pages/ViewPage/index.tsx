@@ -41,6 +41,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     name: string;
     date: string;
     imageUrl: string;
+    note?: string;
   }) {
     if (!editingRecord) return;
     await updateRecordById(editingRecord.id, data);
