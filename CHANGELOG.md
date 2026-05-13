@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.11] - 2026-05-13
+
+### ♻️ Refactoring
+- Refactor: move flat files into folder/index pattern for pages, components, hooks, utils
+
+
+---
+
 ## [0.0.10] - 2026-05-13
 
 ### ✨ Features
