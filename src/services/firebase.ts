@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDYoBH6R9qugWMRV6MfDm7kOp_ZkPq5oFY",
-  authDomain: "attendance-app-7e7e2.firebaseapp.com",
-  projectId: "attendance-app-7e7e2",
-  storageBucket: "attendance-app-7e7e2.firebasestorage.app",
-  messagingSenderId: "1054785986717",
-  appId: "1:1054785986717:web:3e387f5a7e6bf2d3f44a9f",
+  apiKey: "AIzaSyDzQdLWaL9igZ3YYSzCkt0ANWkvUEYWKnM",
+  authDomain: "attendance-app-d215e.firebaseapp.com",
+  projectId: "attendance-app-d215e",
+  storageBucket: "attendance-app-d215e.firebasestorage.app",
+  messagingSenderId: "31107838129",
+  appId: "1:31107838129:web:905a38215ab9bc9fe53290",
 };
 
 const app = initializeApp(firebaseConfig);
