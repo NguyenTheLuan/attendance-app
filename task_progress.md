@@ -1,9 +1,0 @@
-- [x] Read and analyze the current project
-- [x] Extract reusable components (PersonCard, DayGroup, DateSelector, ImageUploader)
-- [x] Add custom hooks (useRecords, useLocalStorage)
-- [x] Add confirmation dialog on delete
-- [x] Add search/filter functionality
-- [x] Add export data feature (CSV)
-- [x] Add error boundary
-- [x] Improve accessibility
-- [x] Build and deploy to GitHub Pages
