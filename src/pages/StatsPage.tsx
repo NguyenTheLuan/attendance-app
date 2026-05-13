@@ -35,7 +35,7 @@ function formatMonth(ym: string) {
 }
 
 function formatDateShort(ymd: string) {
-  const [y, m, d] = ymd.split("-");
+  const [_y, m, d] = ymd.split("-");
   return `${parseInt(d)}/${parseInt(m)}`;
 }
 
@@ -53,7 +53,6 @@ function getWeeklyDailyCounts(
   // Determine weeks
   const year = parseInt(monthKey.split("-")[0]);
   const month = parseInt(monthKey.split("-")[1]) - 1;
-  const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
 
   // Get ISO week number
@@ -289,7 +288,7 @@ export default function StatsPage() {
               cy="50%"
               outerRadius={100}
               label={({ name, percent }) =>
-                `${name} (${(percent * 100).toFixed(0)}%)`
+                `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`
               }
             >
               {personData.map((_, i) => (
