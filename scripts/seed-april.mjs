@@ -1,8 +1,6 @@
 /**
- * Seed attendance records into Firestore via REST API.
- * Run: node scripts/seed-data.mjs
- *
- * After seeding, update image URLs via the app's edit modal (click avatar).
+ * Seed April 2026 attendance records into Firestore.
+ * Run: node scripts/seed-april.mjs
  */
 
 const API_KEY = "AIzaSyDzQdLWaL9igZ3YYSzCkt0ANWkvUEYWKnM";
@@ -10,8 +8,9 @@ const BASE =
   "https://firestore.googleapis.com/v1/projects/attendance-app-d215e/databases/(default)/documents/records";
 
 const records = [
-  // ========== THÁNG 4 ==========
-  // 01-03/04 -> empty
+  // 01/04 -> empty
+  // 02/04 -> empty
+  // 03/04 -> empty
   { date: "2026-04-04", name: "Đỗ Ngọc Trọng" },
   { date: "2026-04-05", name: "Nguyễn Thế Luân" },
   { date: "2026-04-06", name: "Trần Phạm Long Vũ" },
@@ -90,55 +89,23 @@ const records = [
     name: "Đỗ Ngọc Trọng",
     note: "Phường 6h30-21h - trực chiến ~ 19h-1h",
   },
-
-  // ========== THÁNG 5 ==========
-  { date: "2026-05-01", name: "Trần Phạm Long Vũ", note: "Khu Phó" },
-  { date: "2026-05-01", name: "Huỳnh Ngọc Cẩn", note: "Phường" },
-  { date: "2026-05-02", name: "Nguyễn Thế Luân" },
-  { date: "2026-05-03", name: "Nguyễn Thế Luân" },
-  { date: "2026-05-04", name: "Võ Minh Phi" },
-  { date: "2026-05-05", name: "Võ Minh Phi" },
-  { date: "2026-05-06", name: "Đỗ Ngọc Trọng" },
-  { date: "2026-05-06", name: "Huỳnh Ngọc Cẩn" },
-  { date: "2026-05-07", name: "Đỗ Ngọc Trọng" },
-  { date: "2026-05-07", name: "Huỳnh Ngọc Cẩn", note: "vắng" },
-  { date: "2026-05-08", name: "Võ Minh Phi" },
-  { date: "2026-05-09", name: "Trần Phạm Long Vũ" },
-  { date: "2026-05-10", name: "Nguyễn Thế Luân" },
-  { date: "2026-05-11", name: "Đỗ Ngọc Trọng" },
-  { date: "2026-05-12", name: "Đỗ Ngọc Trọng" },
-  { date: "2026-05-12", name: "Huỳnh Ngọc Cẩn", note: "vắng" },
-  { date: "2026-05-13", name: "Võ Minh Phi" },
-  { date: "2026-05-14", name: "Huỳnh Ngọc Cẩn", note: "vắng" },
-  { date: "2026-05-14", name: "Trần Phạm Long Vũ" },
-  { date: "2026-05-15", name: "Nguyễn Thế Luân" },
-  { date: "2026-05-16", name: "Võ Minh Phi" },
-  { date: "2026-05-17", name: "Trần Phạm Long Vũ" },
 ];
 
-function toFields(data) {
-  return Object.fromEntries(
-    Object.entries(data).map(([k, v]) => {
-      if (typeof v === "number") return [k, { integerValue: String(v) }];
-      return [k, { stringValue: String(v) }];
-    })
-  );
-}
+const now = Date.now();
 
 async function main() {
-  console.log(`Seeding ${records.length} records...\n`);
-  const now = Date.now();
+  console.log(`Seeding ${records.length} April records...\n`);
 
   for (let i = 0; i < records.length; i++) {
     const r = records[i];
     const body = {
-      fields: toFields({
-        name: r.name,
-        date: r.date,
-        imageUrl: "",
-        note: r.note ?? "",
-        createdAt: now + i,
-      }),
+      fields: {
+        name: { stringValue: r.name },
+        date: { stringValue: r.date },
+        imageUrl: { stringValue: "" },
+        note: { stringValue: r.note ?? "" },
+        createdAt: { integerValue: String(now + i) },
+      },
     };
 
     const res = await fetch(`${BASE}?key=${API_KEY}`, {
@@ -165,14 +132,7 @@ async function main() {
     }
   }
 
-  console.log(
-    `\n✅ Done! All ${records.length} records (${
-      records.filter((r) => r.date.startsWith("2026-04")).length
-    } April + ${
-      records.filter((r) => r.date.startsWith("2026-05")).length
-    } May) seeded.`
-  );
-  console.log("Update image URLs via the app's edit modal (click avatar).");
+  console.log("\n✅ Done! All April records seeded.");
 }
 
 main().catch((err) => {
