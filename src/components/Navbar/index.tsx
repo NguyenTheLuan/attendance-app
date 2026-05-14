@@ -44,17 +44,17 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
           className={linkClass}
           onClick={handleNavClick}
         >
-          ✏️ Nhập điểm danh
+          <span className="nav-icon">✏️</span> Nhập điểm danh
         </NavLink>
         <NavLink to="/view" className={linkClass} onClick={handleNavClick}>
-          👁️ Xem lịch trực
+          <span className="nav-icon">👁️</span> Xem lịch trực
         </NavLink>
         <NavLink to="/stats" className={linkClass} onClick={handleNavClick}>
-          📊 Thống kê
+          <span className="nav-icon">📊</span> Thống kê
         </NavLink>
         {isLoggedIn && (
           <button className="nav-link logout-btn" onClick={onLogout}>
-            🚪 Thoát
+            <span className="nav-icon">🚪</span> Thoát
           </button>
         )}
       </div>
@@ -76,7 +76,7 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
       {/* Drawer */}
       <div ref={menuRef} className={`navbar-drawer ${open ? "open" : ""}`}>
         <div className="navbar-drawer-header">
-          <h3>🍜 Menu</h3>
+          <h3>Menu</h3>
           <button
             className="navbar-drawer-close"
             onClick={() => setOpen(false)}
@@ -89,13 +89,13 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
           className={linkClass}
           onClick={handleNavClick}
         >
-          ✏️ Nhập điểm danh
+          Nhập điểm danh
         </NavLink>
         <NavLink to="/view" className={linkClass} onClick={handleNavClick}>
-          👁️ Xem lịch trực
+          Xem lịch trực
         </NavLink>
         <NavLink to="/stats" className={linkClass} onClick={handleNavClick}>
-          📊 Thống kê
+          Thống kê
         </NavLink>
         {isLoggedIn && (
           <>
@@ -107,7 +107,7 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
                 setOpen(false);
               }}
             >
-              🚪 Thoát
+              Thoát
             </button>
           </>
         )}
