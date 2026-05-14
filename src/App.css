@@ -846,13 +846,6 @@ body {
 /* ===========================
    Stats
    =========================== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
 .stat-card {
   background: var(--bg-card);
   border-radius: var(--radius);
@@ -1002,15 +995,16 @@ body {
 
 /* Stat cards (flex variant) */
 .stat-cards {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  flex-wrap: wrap;
   margin-bottom: 20px;
 }
 
-.stat-cards .stat-card {
-  flex: 1;
-  min-width: 140px;
+@media (max-width: 400px) {
+  .stat-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ===========================
@@ -1136,12 +1130,23 @@ body {
 
 .login-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 360px;
+  margin: 40px auto;
   padding: 32px;
 }
 
 .login-card h1 {
   margin-bottom: 8px;
+}
+
+.login-btn {
+  margin-top: 8px;
+}
+
+.stats-export-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
 }
 
 /* ===========================
@@ -1226,16 +1231,15 @@ body {
     display: flex;
   }
 
+  .nav-icon {
+    display: none;
+  }
+
   .nav-link {
     padding: 12px 10px;
     font-size: 13px;
     white-space: nowrap;
     flex-shrink: 0;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
   }
 
   .stat-card {
