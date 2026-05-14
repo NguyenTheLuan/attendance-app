@@ -4,6 +4,7 @@ import DayGroup from "~/components/DayGroup";
 import EditModal from "~/components/EditModal";
 import ConfirmDialog from "~/components/ConfirmDialog";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
+import { groupByDate } from "~/utils/groupByDate";
 import { deleteRecordById, updateRecordById } from "~/services/db";
 import type { AttendanceRecord } from "~/types";
 
@@ -59,13 +60,8 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     return result;
   }, [records, viewMode, currentMonth, searchLower]);
 
-  const grouped = filteredRecords.reduce<Record<string, typeof records>>(
-    (acc, r) => {
-      (acc[r.date] ??= []).push(r);
-      return acc;
-    },
-    {}
-  );
+  const groupedEntries = groupByDate(filteredRecords);
+  const grouped = Object.fromEntries(groupedEntries);
 
   function handleDeleteClick(id: string) {
     setDeleteTargetId(id);
@@ -148,7 +144,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            {records.length > 0 && (
+            {isLoggedIn && records.length > 0 && (
               <button
                 className="btn-export"
                 onClick={() => exportRecordsToCsv(records)}
@@ -171,18 +167,16 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
         </div>
       )}
 
-      {Object.entries(grouped)
-        .sort(([a], [b]) => b.localeCompare(a))
-        .map(([date, items]) => (
-          <DayGroup
-            key={date}
-            date={date}
-            records={items}
-            viewOnly={!isLoggedIn}
-            onDelete={isLoggedIn ? handleDeleteClick : undefined}
-            onEdit={isLoggedIn ? setEditingRecord : undefined}
-          />
-        ))}
+      {groupedEntries.map(([date, items]) => (
+        <DayGroup
+          key={date}
+          date={date}
+          records={items}
+          viewOnly={!isLoggedIn}
+          onDelete={isLoggedIn ? handleDeleteClick : undefined}
+          onEdit={isLoggedIn ? setEditingRecord : undefined}
+        />
+      ))}
 
       {editingRecord && (
         <EditModal
