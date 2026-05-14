@@ -26,7 +26,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="page">
-      <div className="card form" style={{ maxWidth: 360, margin: "40px auto" }}>
+      <div className="login-card card form">
         <h2>🔐 Đăng nhập</h2>
         <form onSubmit={handleSubmit}>
           <Field
@@ -43,11 +43,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           {error && (
             <p className="msg err">❌ Sai mật khẩu, vui lòng thử lại.</p>
           )}
-          <button
-            type="submit"
-            className="btn-primary"
-            style={{ marginTop: 8 }}
-          >
+          <button type="submit" className="btn-primary login-btn">
             Đăng nhập
           </button>
         </form>
