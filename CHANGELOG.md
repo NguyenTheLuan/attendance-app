@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.0.18] - 2026-05-14
+
+### ✨ Features
+- feat(scripts): add seed-data script for May 2026 attendance records
+- feat(App): pass isLoggedIn prop to StatsPage
+
+### 🐛 Bug Fixes
+- fix(ViewPage): show export CSV only when logged in, use groupByDate utility
+- fix(StatsPage): show export CSV only when logged in, accept isLoggedIn prop
+- fix(LoginPage): change fallback icon from � to �
+- fix(AdminPage): remove capture='environment', allow gallery selection
+- fix(Navbar): hide export CSV button when not logged in
+
+### ♻️ Refactoring
+- refactor(MonthDetail): use PersonImage component for consistent avatar display
+- refactor(DayGroup): extract groupByDate import, improve day grouping styles
+- refactor: extract groupByDate utility from ViewPage
+
+### 💄 Styling
+- style(PersonImage): add dedicated styles for fallback and avatar
+- style(App.css): add CSS variables for light/dark mode, rewrite styles
+
+
+---
+
 ## [0.0.17] - 2026-05-14
 
 ### ✨ Features
