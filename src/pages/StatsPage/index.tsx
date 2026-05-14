@@ -9,10 +9,15 @@ import WeeklyChart, {
   getWeeklyDailyCounts,
 } from "~/components/stats/WeeklyChart";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
+import { groupByDate } from "~/utils/groupByDate";
+
+interface StatsPageProps {
+  isLoggedIn: boolean;
+}
 
 type ViewMode = "month-compare" | "weekly";
 
-export default function StatsPage() {
+export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const { records, loading, error } = useRecords();
   const [viewMode, setViewMode] = useState<ViewMode>("month-compare");
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
@@ -41,13 +46,8 @@ export default function StatsPage() {
 
   const monthDetail = useMemo(() => {
     if (!selectedMonth) return [];
-    const grouped = records
-      .filter((r) => r.date.startsWith(selectedMonth))
-      .reduce<Record<string, typeof records>>((acc, r) => {
-        (acc[r.date] ??= []).push(r);
-        return acc;
-      }, {});
-    return Object.entries(grouped).sort(([a], [b]) => b.localeCompare(a));
+    const filtered = records.filter((r) => r.date.startsWith(selectedMonth));
+    return groupByDate(filtered);
   }, [records, selectedMonth]);
 
   const pieData = useMemo(() => {
@@ -80,14 +80,8 @@ export default function StatsPage() {
             totalMonths={monthList.length}
           />
 
-          {records.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginBottom: 16,
-              }}
-            >
+          {isLoggedIn && records.length > 0 && (
+            <div className="stats-export-row">
               <button
                 className="btn-export"
                 onClick={() => exportRecordsToCsv(records)}
