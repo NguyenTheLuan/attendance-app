@@ -568,6 +568,29 @@ body {
   flex-wrap: wrap;
 }
 
+/* ===========================
+   View Page - Sticky Header
+   =========================== */
+.view-sticky-header {
+  position: sticky;
+  top: 56px; /* navbar height */
+  z-index: 50;
+  background: var(--bg-page);
+  padding: 12px 0 4px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+  .view-sticky-header {
+    top: 48px;
+    padding: 8px 0 4px;
+  }
+}
+
+.view-scroll-content {
+  padding-top: 4px;
+}
+
 /* View mode tabs */
 .view-mode-tabs {
   display: flex;

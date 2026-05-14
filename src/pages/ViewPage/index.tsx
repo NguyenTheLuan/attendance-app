@@ -95,7 +95,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
       {error && <p className="msg err">{error}</p>}
 
       {!loading && (
-        <>
+        <div className="view-sticky-header">
           <div className="view-mode-tabs">
             <button
               className={`view-mode-tab ${viewMode === "all" ? "active" : ""}`}
@@ -154,7 +154,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
               </button>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {!loading && !error && Object.keys(grouped).length === 0 && (
@@ -167,16 +167,18 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
         </div>
       )}
 
-      {groupedEntries.map(([date, items]) => (
-        <DayGroup
-          key={date}
-          date={date}
-          records={items}
-          viewOnly={!isLoggedIn}
-          onDelete={isLoggedIn ? handleDeleteClick : undefined}
-          onEdit={isLoggedIn ? setEditingRecord : undefined}
-        />
-      ))}
+      <div className="view-scroll-content">
+        {groupedEntries.map(([date, items]) => (
+          <DayGroup
+            key={date}
+            date={date}
+            records={items}
+            viewOnly={!isLoggedIn}
+            onDelete={isLoggedIn ? handleDeleteClick : undefined}
+            onEdit={isLoggedIn ? setEditingRecord : undefined}
+          />
+        ))}
+      </div>
 
       {editingRecord && (
         <EditModal
