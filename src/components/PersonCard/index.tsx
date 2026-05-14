@@ -1,4 +1,6 @@
+import PersonImage from "~/components/PersonImage";
 import type { AttendanceRecord } from "~/types";
+import "./styles.css";
 
 interface PersonCardProps {
   record: AttendanceRecord;
@@ -15,15 +17,17 @@ export default function PersonCard({
 }: PersonCardProps) {
   return (
     <div className={`person-card ${viewOnly ? "view-card" : ""}`}>
-      <img
+      <PersonImage
         src={record.imageUrl}
         alt={record.name}
-        loading="lazy"
+        square={!viewOnly}
+        className={viewOnly ? "" : "person-card-image"}
         onClick={onEdit ? () => onEdit(record) : undefined}
-        className={onEdit ? "clickable-img" : ""}
       />
-      <p>{record.name}</p>
-      {record.note && <p className="person-note">{record.note}</p>}
+      <div className="person-info">
+        <strong className="person-name">{record.name}</strong>
+        {record.note && <p className="person-note">{record.note}</p>}
+      </div>
       {!viewOnly && onDelete && (
         <button
           className="btn-delete"
