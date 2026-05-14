@@ -21,6 +21,8 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const isAbsent = note.toLowerCase().includes("vắng");
+
   function getDateString(
     type: "today" | "tomorrow" | "custom",
     custom: string
@@ -53,14 +55,21 @@ export default function AdminPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim() || !file) {
-      setMessage("Vui lòng nhập tên và chọn ảnh");
+    if (!name.trim()) {
+      setMessage("Vui lòng nhập tên");
+      return;
+    }
+    if (!isAbsent && !file) {
+      setMessage("Vui lòng chọn ảnh");
       return;
     }
     setUploading(true);
     setMessage("");
     try {
-      const imageUrl = await uploadImage(file);
+      let imageUrl = "";
+      if (!isAbsent && file) {
+        imageUrl = await uploadImage(file);
+      }
       await handleAdd({
         name: name.trim(),
         imageUrl,
@@ -106,18 +115,26 @@ export default function AdminPage() {
           disabled={uploading}
         />
 
-        <ImageUploader
-          preview={preview}
-          onFileChange={handleFileChange}
-          disabled={uploading}
-        />
+        {!isAbsent && (
+          <ImageUploader
+            preview={preview}
+            onFileChange={handleFileChange}
+            disabled={uploading}
+          />
+        )}
 
         <Field
           as="textarea"
           label="Ghi chú"
           value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Ví dụ: hỗ trợ..."
+          onChange={(e) => {
+            setNote(e.target.value);
+            setFile(null);
+            setPreview(null);
+          }}
+          placeholder={
+            isAbsent ? "Ví dụ: vắng (không cần ảnh)" : "Ví dụ: hỗ trợ..."
+          }
           disabled={uploading}
           rows={2}
         />

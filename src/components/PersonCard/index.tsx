@@ -7,6 +7,7 @@ interface PersonCardProps {
   onDelete?: (id: string) => void;
   onEdit?: (record: AttendanceRecord) => void;
   viewOnly?: boolean;
+  hideImages?: boolean;
 }
 
 export default function PersonCard({
@@ -14,16 +15,19 @@ export default function PersonCard({
   onDelete,
   onEdit,
   viewOnly = false,
+  hideImages = false,
 }: PersonCardProps) {
   return (
     <div className={`person-card ${viewOnly ? "view-card" : ""}`}>
-      <PersonImage
-        src={record.imageUrl}
-        alt={record.name}
-        square={!viewOnly}
-        className={viewOnly ? "" : "person-card-image"}
-        onClick={onEdit ? () => onEdit(record) : undefined}
-      />
+      {!hideImages && (
+        <PersonImage
+          src={record.imageUrl}
+          alt={record.name}
+          square={!viewOnly}
+          className={viewOnly ? "" : "person-card-image"}
+          onClick={onEdit ? () => onEdit(record) : undefined}
+        />
+      )}
       <div className="person-info">
         <strong className="person-name">{record.name}</strong>
         {record.note && <p className="person-note">{record.note}</p>}

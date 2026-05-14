@@ -38,7 +38,7 @@ export async function deleteRecordById(id: string) {
 
 export async function updateRecordById(
   id: string,
-  data: { name: string; date: string; imageUrl: string; note?: string }
+  data: { name: string; date: string; imageUrl?: string; note?: string }
 ) {
   await updateDoc(doc(db, COLLECTION, id), data);
 }

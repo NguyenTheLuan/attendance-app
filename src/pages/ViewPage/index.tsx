@@ -77,7 +77,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
   async function handleUpdate(data: {
     name: string;
     date: string;
-    imageUrl: string;
+    imageUrl?: string;
     note?: string;
   }) {
     if (!editingRecord) return;

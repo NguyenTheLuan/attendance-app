@@ -8,6 +8,7 @@ import PieChartSection from "~/components/stats/PieChartSection";
 import WeeklyChart, {
   getWeeklyDailyCounts,
 } from "~/components/stats/WeeklyChart";
+import DayGroup from "~/components/DayGroup";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 
@@ -15,12 +16,20 @@ interface StatsPageProps {
   isLoggedIn: boolean;
 }
 
-type ViewMode = "month-compare" | "weekly";
+type ViewMode = "month-compare" | "weekly" | "absences";
+
+const ABSENCE_PASSWORD = "111";
 
 export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const { records, loading, error } = useRecords();
   const [viewMode, setViewMode] = useState<ViewMode>("month-compare");
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  const [showIncidents, setShowIncidents] = useState(false);
+  const [absencePassword, setAbsencePassword] = useState("");
+  const [absenceUnlocked, setAbsenceUnlocked] = useState(false);
+  const [absencePasswordError, setAbsencePasswordError] = useState("");
+  const [absenceSearch, setAbsenceSearch] = useState("");
+  const [absenceMonthFilter, setAbsenceMonthFilter] = useState("");
 
   const monthList = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -38,6 +47,28 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
       }))
       .sort((a, b) => a.month.localeCompare(b.month));
   }, [records]);
+
+  const absencesCount = useMemo(
+    () => records.filter((r) => r.note?.toLowerCase().includes("vắng")).length,
+    [records]
+  );
+
+  const incidentDays = useMemo(() => {
+    const daysWithNotes = new Set(
+      records
+        .filter((r) => r.note?.trim() && !r.note.toLowerCase().includes("vắng"))
+        .map((r) => r.date)
+    );
+    return daysWithNotes.size;
+  }, [records]);
+
+  const incidentsDetail = useMemo(() => {
+    if (!showIncidents) return [];
+    const filtered = records.filter(
+      (r) => r.note?.trim() && !r.note.toLowerCase().includes("vắng")
+    );
+    return groupByDate(filtered);
+  }, [records, showIncidents]);
 
   const uniquePeople = useMemo(
     () => new Set(records.map((r) => r.name)).size,
@@ -65,6 +96,51 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
     return getWeeklyDailyCounts(records, selectedMonth);
   }, [records, selectedMonth]);
 
+  // --- Absence tab data ---
+  const absenceMonths = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of records) {
+      if (r.note?.toLowerCase().includes("vắng")) {
+        set.add(r.date.slice(0, 7));
+      }
+    }
+    return Array.from(set).sort((a, b) => b.localeCompare(a));
+  }, [records]);
+
+  const filteredAbsences = useMemo(() => {
+    let result = records.filter((r) => r.note?.toLowerCase().includes("vắng"));
+
+    if (absenceMonthFilter) {
+      result = result.filter((r) => r.date.startsWith(absenceMonthFilter));
+    }
+
+    if (absenceSearch.trim()) {
+      const q = absenceSearch.toLowerCase().trim();
+      result = result.filter((r) => r.name.toLowerCase().includes(q));
+    }
+
+    return groupByDate(result);
+  }, [records, absenceMonthFilter, absenceSearch]);
+
+  function handleSwitchToAbsences() {
+    setViewMode("absences");
+    setAbsenceUnlocked(false);
+    setAbsencePassword("");
+    setAbsencePasswordError("");
+    setAbsenceSearch("");
+    setAbsenceMonthFilter("");
+  }
+
+  function handleAbsencePasswordSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (absencePassword === ABSENCE_PASSWORD) {
+      setAbsenceUnlocked(true);
+      setAbsencePasswordError("");
+    } else {
+      setAbsencePasswordError("❌ Sai mật khẩu");
+    }
+  }
+
   return (
     <div className="page stats-page">
       <h1>📊 Thống kê lịch trực khu phố 3 - 6</h1>
@@ -78,7 +154,28 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
             totalRecords={records.length}
             uniquePeople={uniquePeople}
             totalMonths={monthList.length}
+            incidentDays={incidentDays}
+            onIncidentClick={() => setShowIncidents((v) => !v)}
           />
+
+          {showIncidents && incidentsDetail.length > 0 && (
+            <div className="card">
+              <div className="incident-header">
+                <h2>⭐ Ngày đặc biệt</h2>
+                <button
+                  className="btn-close-incident"
+                  onClick={() => setShowIncidents(false)}
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="month-detail-list">
+                {incidentsDetail.map(([date, items]) => (
+                  <DayGroup key={date} date={date} records={items} viewOnly />
+                ))}
+              </div>
+            </div>
+          )}
 
           {isLoggedIn && records.length > 0 && (
             <div className="stats-export-row">
@@ -113,6 +210,16 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
             >
               🗓️ Theo tuần
             </button>
+            {isLoggedIn && (
+              <button
+                className={`chart-tab ${
+                  viewMode === "absences" ? "active" : ""
+                }`}
+                onClick={handleSwitchToAbsences}
+              >
+                📝 Số lần vắng ({absencesCount})
+              </button>
+            )}
           </div>
 
           {viewMode === "month-compare" && monthList.length > 0 && (
@@ -144,6 +251,95 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
 
           {viewMode === "month-compare" && pieData.length > 0 && (
             <PieChartSection data={pieData} />
+          )}
+
+          {/* Absence tab */}
+          {viewMode === "absences" && (
+            <div className="card">
+              {!absenceUnlocked ? (
+                <div className="absence-prompt">
+                  <h2>🔒 Nhập mật khẩu để xem</h2>
+                  <form
+                    onSubmit={handleAbsencePasswordSubmit}
+                    className="absence-password-form"
+                  >
+                    <input
+                      type="password"
+                      className="absence-password-input"
+                      placeholder="Nhập mật khẩu..."
+                      value={absencePassword}
+                      onChange={(e) => {
+                        setAbsencePassword(e.target.value);
+                        setAbsencePasswordError("");
+                      }}
+                      autoFocus
+                    />
+                    <button type="submit" className="btn-primary">
+                      Xác nhận
+                    </button>
+                  </form>
+                  {absencePasswordError && (
+                    <p className="msg err">{absencePasswordError}</p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <div className="absence-header">
+                    <h2>📝 Chi tiết vắng mặt</h2>
+                    <span className="absence-total">
+                      Tổng: <strong>{absencesCount}</strong> lượt
+                    </span>
+                  </div>
+
+                  <div className="absence-filters">
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="🔍 Tìm theo tên..."
+                      value={absenceSearch}
+                      onChange={(e) => setAbsenceSearch(e.target.value)}
+                    />
+                    {absenceMonths.length > 0 && (
+                      <select
+                        className="month-select"
+                        value={absenceMonthFilter}
+                        onChange={(e) => setAbsenceMonthFilter(e.target.value)}
+                      >
+                        <option value="">Tất cả tháng</option>
+                        {absenceMonths.map((m) => {
+                          const [y, mo] = m.split("-");
+                          return (
+                            <option key={m} value={m}>
+                              Tháng {parseInt(mo, 10)}/{y}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    )}
+                  </div>
+
+                  {filteredAbsences.length === 0 && (
+                    <div className="card empty">
+                      <p>Không tìm thấy kết quả.</p>
+                    </div>
+                  )}
+
+                  {filteredAbsences.length > 0 && (
+                    <div className="month-detail-list">
+                      {filteredAbsences.map(([date, items]) => (
+                        <DayGroup
+                          key={date}
+                          date={date}
+                          records={items}
+                          viewOnly
+                          hideImages
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           )}
         </>
       )}

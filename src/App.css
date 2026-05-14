@@ -996,9 +996,48 @@ body {
 /* Stat cards (flex variant) */
 .stat-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 20px;
+}
+
+.clickable-card {
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.clickable-card:hover {
+  background: var(--bg-card-hover);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.incident-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.incident-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.btn-close-incident {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.btn-close-incident:hover {
+  background: var(--bg-muted);
+  color: var(--accent);
 }
 
 @media (max-width: 400px) {
@@ -1273,6 +1312,87 @@ body {
     font-size: 12px;
     padding: 4px 10px;
   }
+}
+
+/* ===========================
+   Absence Tab
+   =========================== */
+.absence-prompt {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.absence-prompt h2 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.absence-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.absence-password-input {
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  text-align: center;
+  font-family: inherit;
+}
+
+.absence-password-input:focus {
+  border-color: var(--border-focus);
+}
+
+.absence-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.absence-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.absence-total {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.absence-total strong {
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.absence-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.absence-filters .search-input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.absence-filters .month-select {
+  min-width: 160px;
 }
 
 @media (max-width: 520px) {

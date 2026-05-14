@@ -9,6 +9,7 @@ interface DayGroupProps {
   onDelete?: (id: string) => void;
   onEdit?: (record: AttendanceRecord) => void;
   initialOpen?: boolean;
+  hideImages?: boolean;
 }
 
 export default function DayGroup({
@@ -18,6 +19,7 @@ export default function DayGroup({
   onDelete,
   onEdit,
   initialOpen = true,
+  hideImages = false,
 }: DayGroupProps) {
   const d = new Date(date + "T00:00:00");
   const dayOfWeek = d.toLocaleDateString("vi-VN", { weekday: "long" });
@@ -40,6 +42,7 @@ export default function DayGroup({
             viewOnly={viewOnly}
             onDelete={onDelete}
             onEdit={onEdit}
+            hideImages={hideImages}
           />
         ))}
       </div>

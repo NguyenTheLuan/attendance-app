@@ -1,12 +1,21 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Cell,
+} from "recharts";
 
-interface PieDataItem {
+interface BarDataItem {
   name: string;
   value: number;
 }
 
 interface PieChartSectionProps {
-  data: PieDataItem[];
+  data: BarDataItem[];
 }
 
 const COLORS = [
@@ -20,34 +29,58 @@ const COLORS = [
   "#e67e22",
 ];
 
-const total = (data: PieDataItem[]) =>
-  data.reduce((sum, d) => sum + d.value, 0);
-
 export default function PieChartSection({ data }: PieChartSectionProps) {
-  const sum = total(data);
+  const sorted = [...data].sort((a, b) => b.value - a.value);
+  const top = Math.max(...sorted.map((d) => d.value), 1);
 
   return (
     <div className="card">
       <h2>📊 Phân bố theo người</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-          <Pie
-            data={data}
+      <ResponsiveContainer
+        width="100%"
+        height={Math.max(300, sorted.length * 36)}
+      >
+        <BarChart
+          data={sorted}
+          layout="vertical"
+          margin={{ top: 8, right: 40, left: 80, bottom: 8 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+          <XAxis
+            type="number"
+            domain={[0, top + Math.ceil(top * 0.15)]}
+            tick={{ fontSize: 12, fill: "var(--text-muted)" }}
+          />
+          <YAxis
+            type="category"
+            dataKey="name"
+            width={70}
+            tick={{ fontSize: 13, fill: "var(--text-primary)" }}
+          />
+          <Tooltip
+            formatter={(value: number) => [`${value} lần`, "Tổng số"]}
+            contentStyle={{
+              background: "var(--bg-card)",
+              border: "1px solid var(--border)",
+              borderRadius: 8,
+            }}
+          />
+          <Bar
             dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={160}
-            label={({ name, value }) =>
-              `${name} (${((value / sum) * 100).toFixed(1)}%)`
-            }
+            radius={[0, 8, 8, 0]}
+            maxBarSize={24}
+            label={{
+              position: "right",
+              fill: "var(--text-muted)",
+              fontSize: 12,
+              formatter: (v: number) => `${v} lần`,
+            }}
           >
-            {data.map((_, i) => (
+            {sorted.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}
-          </Pie>
-          <Tooltip formatter={(value) => `${value} lần`} />
-        </PieChart>
+          </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

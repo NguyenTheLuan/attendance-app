@@ -18,7 +18,7 @@ export function exportRecordsToCsv(records: AttendanceRecord[]): void {
 
   for (const date of sortedDates) {
     for (const record of grouped[date]) {
-      rows.push([formatDate(date), record.name, record.imageUrl]);
+      rows.push([formatDate(date), record.name, record.imageUrl ?? ""]);
     }
   }
 
