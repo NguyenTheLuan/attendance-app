@@ -58,7 +58,7 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
             tick={{ fontSize: 13, fill: "var(--text-primary)" }}
           />
           <Tooltip
-            formatter={(value: number) => [`${value} lần`, "Tổng số"]}
+            formatter={(value) => [`${value} lần`, "Tổng số"]}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
@@ -73,7 +73,7 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
               position: "right",
               fill: "var(--text-muted)",
               fontSize: 12,
-              formatter: (v: number) => `${v} lần`,
+              formatter: (v) => `${v} lần`,
             }}
           >
             {sorted.map((_, i) => (

@@ -21,7 +21,7 @@ export default function PersonCard({
     <div className={`person-card ${viewOnly ? "view-card" : ""}`}>
       {!hideImages && (
         <PersonImage
-          src={record.imageUrl}
+          src={record.imageUrl ?? ""}
           alt={record.name}
           square={!viewOnly}
           className={viewOnly ? "" : "person-card-image"}

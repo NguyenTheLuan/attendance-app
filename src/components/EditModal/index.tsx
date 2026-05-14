@@ -43,7 +43,7 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
     if (!name.trim()) return;
     setSaving(true);
     try {
-      let imageUrl = record.imageUrl;
+      let imageUrl = record.imageUrl ?? "";
       if (file) {
         imageUrl = await uploadImage(file);
       }
@@ -63,7 +63,7 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
 
   const closeToast = useCallback(() => setToast(null), []);
 
-  const currentPreview = preview || record.imageUrl;
+  const currentPreview = (preview || record.imageUrl) ?? null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
