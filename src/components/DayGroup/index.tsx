@@ -1,36 +1,107 @@
+import { useState } from "react";
 import type { AttendanceRecord } from "~/types";
-import PersonCard from "~/components/PersonCard";
-import { formatDate } from "~/utils/formatDate";
 
 interface DayGroupProps {
   date: string;
   records: AttendanceRecord[];
+  viewOnly: boolean;
   onDelete?: (id: string) => void;
   onEdit?: (record: AttendanceRecord) => void;
-  viewOnly?: boolean;
 }
 
 export default function DayGroup({
   date,
   records,
+  viewOnly,
   onDelete,
   onEdit,
-  viewOnly = false,
 }: DayGroupProps) {
+  const [expanded, setExpanded] = useState(false);
+
+  const d = new Date(date + "T00:00:00");
+  const dayOfWeek = d.toLocaleDateString("vi-VN", { weekday: "long" });
+  const formattedDate = d.toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
   return (
-    <div className="card day-group">
-      <h3 className="day-title">📌 {formatDate(date)}</h3>
-      <div className="grid">
-        {records.map((r) => (
+    <details className="day-group" open>
+      <summary className="day-summary">
+        <span>
+          {dayOfWeek}, {formattedDate}
+        </span>
+        <span className="day-count">{records.length} người</span>
+      </summary>
+      <div className="person-list">
+        {records.map((record) => (
           <PersonCard
-            key={r.id}
-            record={r}
+            key={record.id}
+            record={record}
+            viewOnly={viewOnly}
             onDelete={onDelete}
             onEdit={onEdit}
-            viewOnly={viewOnly}
           />
         ))}
       </div>
+    </details>
+  );
+}
+
+function PersonCard({
+  record,
+  viewOnly,
+  onDelete,
+  onEdit,
+}: {
+  record: AttendanceRecord;
+  viewOnly: boolean;
+  onDelete?: (id: string) => void;
+  onEdit?: (record: AttendanceRecord) => void;
+}) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className="person-card card">
+      <div className="person-avatar">
+        {imgError ? (
+          <div className="person-avatar-fallback">🧑</div>
+        ) : (
+          <img
+            src={record.imageUrl}
+            alt={record.name}
+            className="person-img"
+            onError={() => setImgError(true)}
+          />
+        )}
+      </div>
+      <div className="person-info">
+        <strong className="person-name">{record.name}</strong>
+        {record.note && <p className="person-note">{record.note}</p>}
+      </div>
+      {!viewOnly && (
+        <div className="person-actions">
+          {onEdit && (
+            <button
+              className="btn-action btn-edit"
+              onClick={() => onEdit(record)}
+              title="Sửa"
+            >
+              ✏️
+            </button>
+          )}
+          {onDelete && (
+            <button
+              className="btn-action btn-delete"
+              onClick={() => onDelete(record.id)}
+              title="Xóa"
+            >
+              🗑️
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

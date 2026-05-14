@@ -10,4 +10,18 @@ export default defineConfig({
       "~": resolve(__dirname, "src"),
     },
   },
+  server: {
+    proxy: {
+      "/firebase-storage": {
+        target: "https://firebasestorage.googleapis.com",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/firebase-storage/, ""),
+        configure: (proxy) => {
+          proxy.on("error", (err) => {
+            console.error("Proxy error:", err);
+          });
+        },
+      },
+    },
+  },
 });
