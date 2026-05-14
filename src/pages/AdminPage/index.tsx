@@ -64,14 +64,15 @@ export default function AdminPage() {
         name: name.trim(),
         imageUrl,
         date: dateStr,
-        note: note.trim() || undefined,
+        note: note.trim() || "",
       });
       setName("");
       setNote("");
       setFile(null);
       setPreview(null);
       setMessage("✅ Đã lưu điểm danh thành công!");
-    } catch {
+    } catch (err) {
+      console.error("Lỗi khi lưu record:", err);
       setMessage("❌ Lỗi khi lưu. Thử lại nhé.");
     } finally {
       setUploading(false);
