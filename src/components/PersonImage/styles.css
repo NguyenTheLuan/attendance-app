@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: center;
   background: var(--bg-avatar);
+  aspect-ratio: 3 / 4;
 }
 
 .person-image--square {
