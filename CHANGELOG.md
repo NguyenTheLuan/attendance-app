@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.0.22] - 2026-05-14
+
+### ✨ Features
+- feat(stats): increase pie chart height for better readability
+- feat: Add sticky header to ViewPage for improved navigation
+- feat(stats): add absence tab, bar chart, and hideImages prop
+- feat(scripts): add all April + May 2026 attendance records
+
+### 🐛 Bug Fixes
+- fix: resolve potential undefined values and improve type safety
+
+### 🔧 Maintenance
+- chore: bump version to v0.0.20
+
+### Other
+- 🔧 chore: bump version to v0.0.21
+
+
+---
+
 ## [0.0.21] - 2026-05-14
 
 ### ✨ Features
