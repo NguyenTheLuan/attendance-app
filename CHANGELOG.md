@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.20] - 2026-05-14
+
+### ✨ Features
+- feat(scripts): add all April + May 2026 attendance records
+
+
+---
+
 ## [0.0.19] - 2026-05-14
 
 ### ✨ Features
