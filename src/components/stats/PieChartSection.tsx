@@ -38,7 +38,7 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
       <h2>📊 Phân bố theo người</h2>
       <ResponsiveContainer
         width="100%"
-        height={Math.max(300, sorted.length * 36)}
+        height={Math.max(350, sorted.length * 48)}
       >
         <BarChart
           data={sorted}
