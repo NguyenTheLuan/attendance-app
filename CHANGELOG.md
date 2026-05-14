@@ -1,5 +1,84 @@
 # Changelog
 
+## [0.0.21] - 2026-05-14
+
+### ✨ Features
+- feat(stats): add absence tab, bar chart, and hideImages prop
+- feat(scripts): add all April + May 2026 attendance records
+- feat(scripts): add seed-data.mjs for May 2026 attendance records
+- feat(scripts): add seed-data script for May 2026 attendance records
+- feat(App): pass isLoggedIn prop to StatsPage
+- feat: refactor PersonCard to use PersonImage, extract card styles into dedicated CSS
+- feat: create reusable PersonImage component with fallback avatar and clickable support
+- feat: improve person card layout with responsive grid and enhanced styling
+- feat: simplify pie chart - show person name + pct directly on chart, remove person list on right
+- feat: pie chart section now uses 2-col layout - chart left, person list right
+- feat: responsive navbar with drawer on mobile
+- feat: replace alert() with Toast component for save error
+- feat: improve ImageUploader with drag & drop UI and update title
+- feat: add All/Month view modes and change title to Xem Khu pho 3-6
+- feat: add beautiful delete confirmation dialog instead of window.confirm
+- feat: add notes feature and enhance StatsPage with 2 view modes
+- feat: add admin edit/delete records on ViewPage via click-to-edit modal
+- feat: refactor attendance stats to use new MonthList and MonthDetail components
+
+### 🐛 Bug Fixes
+- fix(ViewPage): show export CSV only when logged in, use groupByDate utility
+- fix(StatsPage): show export CSV only when logged in, accept isLoggedIn prop
+- fix(LoginPage): change fallback icon from � to �
+- fix(AdminPage): remove capture='environment', allow gallery selection
+- fix(Navbar): hide export CSV button when not logged in
+- fix(attendance): show fallback avatar when imageUrl is missing
+- fix: use text-overflow ellipsis instead of scroll for person-note
+- fix: add max-height for .person-note to prevent content overflow
+- fix: update HTML title to shortened form
+- fix: improve Edit Modal layout
+- fix: add ConfirmDialog for PersonCard and EditModal, fix scroll
+- fix: improve dark mode for chart tooltip and increase PieChart size
+- fix: login navigate to /admin after success & add missing stat-card css
+- fix: correct firebase project id to attendance-app-d215e
+- fix: restore cloudinary config to working cloud name and upload preset with image compression
+
+### ♻️ Refactoring
+- refactor(MonthDetail): use PersonImage component for consistent avatar display
+- refactor(DayGroup): extract groupByDate import, improve day grouping styles
+- refactor: extract groupByDate utility from ViewPage
+- refactor: rewrite App.css with global CSS variables for light/dark mode
+- refactor: MonthDetail now uses PersonCard component for consistent UI
+- refactor: extract DayGroup styles into dedicated CSS file
+- refactor: restructure DayGroup and migrate to Cloudinary for image upload
+- refactor: move code splitting & DRY rules to code-style.md (English), simplify reusability.md
+- refactor: extract Field component, reuse ImageUploader in EditModal
+- refactor: replace remaining relative imports with tilde alias in statspage
+
+### 💄 Styling
+- style(PersonImage): add dedicated styles for fallback and avatar
+- style(App.css): add CSS variables for light/dark mode, rewrite styles
+
+### 📝 Documentation
+- docs: translate Vietnamese changelog entries to English
+- docs: add rules about code splitting and using map/filter when iterating >3 times
+
+### 🔧 Maintenance
+- chore: bump version to v0.0.20
+- chore: bump version to v0.0.14
+- chore: remove stray orphan file 'e'
+- chore: update AGENT.md with English-only rule and improve navbar mobile styling
+- chore: add agent.md with project overview and ai instructions
+- chore: add commitlint + husky to enforce conventional commit format
+
+### Other
+- 🔧 chore: bump version to v0.0.19
+- 🔧 chore: bump version to v0.0.18
+- 🔧 chore: bump version to v0.0.17
+- 🔧 chore: bump version to v0.0.16
+- 🔧 chore: bump version to v0.0.15
+- 🔧 chore: bump version to v0.0.13
+- Persist login state via localStorage so F5 doesn't log out
+
+
+---
+
 ## [0.0.20] - 2026-05-14
 
 ### ✨ Features
