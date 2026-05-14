@@ -34,7 +34,7 @@ export default function DayGroup({
         </span>
         <span className="day-count">{records.length} người</span>
       </summary>
-      <div className="person-list">
+      <div className="person-grid">
         {records.map((record) => (
           <PersonCard
             key={record.id}
@@ -66,7 +66,7 @@ function PersonCard({
     <div className="person-card card">
       <div className="person-avatar">
         {imgError || !record.imageUrl ? (
-          <div className="person-avatar-fallback">🧑</div>
+          <div className="person-avatar-fallback">👤</div>
         ) : (
           <img
             src={record.imageUrl}
