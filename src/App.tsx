@@ -57,7 +57,7 @@ export default function App() {
               path="/stats"
               element={
                 <ErrorBoundary>
-                  <StatsPage />
+                  <StatsPage isLoggedIn={isLoggedIn} />
                 </ErrorBoundary>
               }
             />
