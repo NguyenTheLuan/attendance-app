@@ -8,11 +8,11 @@
 
 ## ✨ Tính năng
 
-| Trang                            | Mô tả                                                         |
-| -------------------------------- | ------------------------------------------------------------- |
-| 👁️ **Xem lịch trực** (`/view`)   | Xem danh sách trực nhật theo ngày, có ảnh và tên              |
-| ✏️ **Nhập điểm danh** (`/admin`) | Thêm người trực mới (cần đăng nhập)                           |
-| 📊 **Thống kê** (`/stats`)       | Biểu đồ xu hướng, so sánh người trực, xem chi tiết theo tháng |
+| Trang                            | Mô tả                                                                                     |
+| -------------------------------- | ----------------------------------------------------------------------------------------- |
+| 👁️ **Xem lịch trực** (`/view`)   | Xem danh sách trực nhật theo ngày, có ảnh và tên                                          |
+| ✏️ **Nhập điểm danh** (`/admin`) | Thêm người trực mới (cần đăng nhập)                                                       |
+| 📊 **Thống kê** (`/stats`)       | Biểu đồ xu hướng, bar chart phân bố người, so sánh theo tháng/tuần, xem chi tiết vắng mặt |
 
 ### 🔐 Đăng nhập
 

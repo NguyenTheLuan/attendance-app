@@ -1,20 +1,32 @@
 # Changelog
 
+## [0.0.20] - 2026-05-14
+
+### ✨ Features
+
+- feat(stats): add password-protected absence tab with search and month filter
+- feat(stats): replace pie chart with horizontal bar chart for person distribution
+- feat(stats): add hideImages prop to DayGroup and PersonCard for image-less views
+
+---
+
 ## [0.0.19] - 2026-05-14
 
 ### ✨ Features
-- feat(scripts): add seed-data.mjs for May 2026 attendance records
 
+- feat(scripts): add seed-data.mjs for May 2026 attendance records
 
 ---
 
 ## [0.0.18] - 2026-05-14
 
 ### ✨ Features
+
 - feat(scripts): add seed-data script for May 2026 attendance records
 - feat(App): pass isLoggedIn prop to StatsPage
 
 ### 🐛 Bug Fixes
+
 - fix(ViewPage): show export CSV only when logged in, use groupByDate utility
 - fix(StatsPage): show export CSV only when logged in, accept isLoggedIn prop
 - fix(LoginPage): change fallback icon from � to �
@@ -22,56 +34,61 @@
 - fix(Navbar): hide export CSV button when not logged in
 
 ### ♻️ Refactoring
+
 - refactor(MonthDetail): use PersonImage component for consistent avatar display
 - refactor(DayGroup): extract groupByDate import, improve day grouping styles
 - refactor: extract groupByDate utility from ViewPage
 
 ### 💄 Styling
+
 - style(PersonImage): add dedicated styles for fallback and avatar
 - style(App.css): add CSS variables for light/dark mode, rewrite styles
-
 
 ---
 
 ## [0.0.17] - 2026-05-14
 
 ### ✨ Features
+
 - feat: refactor PersonCard to use PersonImage, extract card styles into dedicated CSS
 - feat: create reusable PersonImage component with fallback avatar and clickable support
 - feat: improve person card layout with responsive grid and enhanced styling
 
 ### 🐛 Bug Fixes
+
 - fix(attendance): show fallback avatar when imageUrl is missing
 
 ### ♻️ Refactoring
+
 - refactor: rewrite App.css with global CSS variables for light/dark mode
 - refactor: MonthDetail now uses PersonCard component for consistent UI
 - refactor: extract DayGroup styles into dedicated CSS file
 - refactor: restructure DayGroup and migrate to Cloudinary for image upload
 
 ### 📝 Documentation
+
 - docs: translate Vietnamese changelog entries to English
 
 ### Other
+
 - Merge branch 'main' of https://github.com/NguyenTheLuan/attendance-app
 - 🔧 chore: bump version to v0.0.16
-
 
 ---
 
 ## [0.0.16] - 2026-05-14
 
 ### ♻️ Refactoring
+
 - refactor: restructure DayGroup and migrate to Cloudinary for image upload
 
 ### 📝 Documentation
-- docs: translate Vietnamese changelog entries to English
 
+- docs: translate Vietnamese changelog entries to English
 
 ---
 
 ## [0.0.15] - 2026-05-13
-
 
 ---
 
