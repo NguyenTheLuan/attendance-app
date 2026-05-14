@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { AttendanceRecord } from "~/types";
+import PersonCard from "~/components/PersonCard";
+import "./styles.css";
 
 interface DayGroupProps {
   date: string;
@@ -29,10 +31,7 @@ export default function DayGroup({
   return (
     <details className="day-group" open>
       <summary className="day-summary">
-        <span>
-          {dayOfWeek}, {formattedDate}
-        </span>
-        <span className="day-count">{records.length} người</span>
+        {dayOfWeek}, {formattedDate} — {records.length} người
       </summary>
       <div className="person-grid">
         {records.map((record) => (
@@ -40,53 +39,11 @@ export default function DayGroup({
             key={record.id}
             record={record}
             viewOnly={viewOnly}
+            onDelete={onDelete}
             onEdit={onEdit}
           />
         ))}
       </div>
     </details>
-  );
-}
-
-function PersonCard({
-  record,
-  viewOnly,
-  onEdit,
-}: {
-  record: AttendanceRecord;
-  viewOnly: boolean;
-  onEdit?: (record: AttendanceRecord) => void;
-}) {
-  const [imgError, setImgError] = useState(false);
-
-  function handleClick() {
-    if (!viewOnly && onEdit) {
-      onEdit(record);
-    }
-  }
-
-  return (
-    <div className="person-card card">
-      <div
-        className="person-avatar"
-        onClick={handleClick}
-        style={{ cursor: viewOnly ? "default" : "pointer" }}
-      >
-        {imgError || !record.imageUrl ? (
-          <div className="person-avatar-fallback">👤</div>
-        ) : (
-          <img
-            src={record.imageUrl}
-            alt={record.name}
-            className="person-img"
-            onError={() => setImgError(true)}
-          />
-        )}
-      </div>
-      <div className="person-info">
-        <strong className="person-name">{record.name}</strong>
-        {record.note && <p className="person-note">{record.note}</p>}
-      </div>
-    </div>
   );
 }

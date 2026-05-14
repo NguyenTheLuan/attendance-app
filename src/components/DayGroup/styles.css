@@ -1,0 +1,50 @@
+/* ===========================
+   Day Group
+   =========================== */
+.day-group {
+  margin-bottom: 16px;
+}
+
+.day-summary {
+  list-style: none;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.day-summary:hover {
+  background: var(--bg-card-hover);
+}
+
+.day-summary::before {
+  content: "📅";
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.day-summary::-webkit-details-marker {
+  display: none;
+}
+
+.day-group[open] .day-summary {
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-title {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
