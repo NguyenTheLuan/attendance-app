@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.0.17] - 2026-05-14
+
+### ✨ Features
+- feat: refactor PersonCard to use PersonImage, extract card styles into dedicated CSS
+- feat: create reusable PersonImage component with fallback avatar and clickable support
+- feat: improve person card layout with responsive grid and enhanced styling
+
+### 🐛 Bug Fixes
+- fix(attendance): show fallback avatar when imageUrl is missing
+
+### ♻️ Refactoring
+- refactor: rewrite App.css with global CSS variables for light/dark mode
+- refactor: MonthDetail now uses PersonCard component for consistent UI
+- refactor: extract DayGroup styles into dedicated CSS file
+- refactor: restructure DayGroup and migrate to Cloudinary for image upload
+
+### 📝 Documentation
+- docs: translate Vietnamese changelog entries to English
+
+### Other
+- Merge branch 'main' of https://github.com/NguyenTheLuan/attendance-app
+- 🔧 chore: bump version to v0.0.16
+
+
+---
+
 ## [0.0.16] - 2026-05-14
 
 ### ♻️ Refactoring
