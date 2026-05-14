@@ -19,6 +19,7 @@ export default function AdminPage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   function getDateString(
     type: "today" | "tomorrow" | "custom",
@@ -71,9 +72,11 @@ export default function AdminPage() {
       setFile(null);
       setPreview(null);
       setMessage("✅ Đã lưu điểm danh thành công!");
+      setIsSuccess(true);
     } catch (err) {
       console.error("Lỗi khi lưu record:", err);
       setMessage("❌ Lỗi khi lưu. Thử lại nhé.");
+      setIsSuccess(false);
     } finally {
       setUploading(false);
     }
@@ -123,9 +126,7 @@ export default function AdminPage() {
           {uploading ? "⏳ Đang upload..." : "💾 Lưu điểm danh"}
         </button>
         {message && (
-          <p className={`msg ${message.startsWith("✅") ? "ok" : "err"}`}>
-            {message}
-          </p>
+          <p className={`msg ${isSuccess ? "ok" : "err"}`}>{message}</p>
         )}
       </form>
     </div>
