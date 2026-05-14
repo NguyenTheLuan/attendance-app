@@ -65,7 +65,7 @@ function PersonCard({
   return (
     <div className="person-card card">
       <div className="person-avatar">
-        {imgError ? (
+        {imgError || !record.imageUrl ? (
           <div className="person-avatar-fallback">🧑</div>
         ) : (
           <img
