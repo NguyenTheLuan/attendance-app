@@ -1,0 +1,44 @@
+/* ===========================
+   Person Image (reusable)
+   =========================== */
+.person-image {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-avatar);
+}
+
+.person-image--square {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
+
+.person-image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
+.person-image-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: var(--bg-fallback);
+  color: var(--text-light);
+}
+
+.person-image--clickable {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.person-image--clickable:hover {
+  opacity: 0.9;
+}

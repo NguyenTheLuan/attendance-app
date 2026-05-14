@@ -49,7 +49,6 @@ export default function ImageUploader({
         ref={fileRef}
         type="file"
         accept="image/*"
-        capture="environment"
         onChange={handleChange}
         disabled={disabled}
         style={{ display: "none" }}

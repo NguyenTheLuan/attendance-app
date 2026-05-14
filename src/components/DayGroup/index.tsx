@@ -40,7 +40,6 @@ export default function DayGroup({
             key={record.id}
             record={record}
             viewOnly={viewOnly}
-            onDelete={onDelete}
             onEdit={onEdit}
           />
         ))}
@@ -52,19 +51,27 @@ export default function DayGroup({
 function PersonCard({
   record,
   viewOnly,
-  onDelete,
   onEdit,
 }: {
   record: AttendanceRecord;
   viewOnly: boolean;
-  onDelete?: (id: string) => void;
   onEdit?: (record: AttendanceRecord) => void;
 }) {
   const [imgError, setImgError] = useState(false);
 
+  function handleClick() {
+    if (!viewOnly && onEdit) {
+      onEdit(record);
+    }
+  }
+
   return (
     <div className="person-card card">
-      <div className="person-avatar">
+      <div
+        className="person-avatar"
+        onClick={handleClick}
+        style={{ cursor: viewOnly ? "default" : "pointer" }}
+      >
         {imgError || !record.imageUrl ? (
           <div className="person-avatar-fallback">👤</div>
         ) : (
@@ -80,28 +87,6 @@ function PersonCard({
         <strong className="person-name">{record.name}</strong>
         {record.note && <p className="person-note">{record.note}</p>}
       </div>
-      {!viewOnly && (
-        <div className="person-actions">
-          {onEdit && (
-            <button
-              className="btn-action btn-edit"
-              onClick={() => onEdit(record)}
-              title="Sửa"
-            >
-              ✏️
-            </button>
-          )}
-          {onDelete && (
-            <button
-              className="btn-action btn-delete"
-              onClick={() => onDelete(record.id)}
-              title="Xóa"
-            >
-              🗑️
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
