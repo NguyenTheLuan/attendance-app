@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.0.16] - 2026-05-14
+
+### ✨ Features
+- feat: add CORS configuration for Firebase Storage
+
+### 📝 Documentation
+- docs: translate Vietnamese changelog entries to English
+
+
+---
+
 ## [0.0.15] - 2026-05-13
 
 
