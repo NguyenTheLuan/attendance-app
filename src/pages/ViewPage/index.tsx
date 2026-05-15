@@ -3,6 +3,7 @@ import { useRecords } from "~/hooks/useRecords";
 import DayGroup from "~/components/DayGroup";
 import EditModal from "~/components/EditModal";
 import ConfirmDialog from "~/components/ConfirmDialog";
+import Toast from "~/components/Toast";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 import { deleteRecordById, updateRecordById } from "~/services/db";
@@ -22,6 +23,9 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     null
   );
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error">("error");
   const { records, loading, error, load } = useRecords();
 
   // Get available months from records
@@ -67,11 +71,23 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     setDeleteTargetId(id);
   }
 
+  function showToastMsg(message: string, type: "success" | "error") {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+  }
+
   async function handleDelete() {
     if (!deleteTargetId) return;
-    await deleteRecordById(deleteTargetId);
-    await load();
-    setDeleteTargetId(null);
+    try {
+      await deleteRecordById(deleteTargetId);
+      await load();
+      setDeleteTargetId(null);
+      showToastMsg("Đã xóa thành công!", "success");
+    } catch {
+      showToastMsg("Lỗi khi xóa. Thử lại nhé.", "error");
+      setDeleteTargetId(null);
+    }
   }
 
   async function handleUpdate(data: {
@@ -81,9 +97,14 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     note?: string;
   }) {
     if (!editingRecord) return;
-    await updateRecordById(editingRecord.id, data);
-    await load();
-    setEditingRecord(null);
+    try {
+      await updateRecordById(editingRecord.id, data);
+      await load();
+      setEditingRecord(null);
+      showToastMsg("Đã lưu thành công!", "success");
+    } catch {
+      showToastMsg("Lỗi khi lưu. Thử lại nhé.", "error");
+    }
   }
 
   return (
@@ -196,6 +217,13 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
         cancelLabel="Hủy"
         onConfirm={handleDelete}
         onCancel={() => setDeleteTargetId(null)}
+      />
+
+      <Toast
+        show={showToast}
+        message={toastMessage}
+        type={toastType}
+        onClose={() => setShowToast(false)}
       />
     </div>
   );
