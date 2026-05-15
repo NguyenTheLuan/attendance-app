@@ -483,6 +483,55 @@ body {
   border-color: var(--accent);
 }
 
+/* Login divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Zalo login button */
+.btn-zalo {
+  width: 100%;
+  padding: 14px;
+  background: #0068ff;
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-zalo:hover:not(:disabled) {
+  background: #0052cc;
+}
+
+.btn-zalo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-btn {
+  margin-top: 4px;
+}
+
 /* Messages */
 .msg {
   margin-top: 12px;

@@ -28,7 +28,8 @@
 - **Recharts** — biểu đồ thống kê
 - **Cloudinary** — lưu trữ ảnh
 - **Firebase** — database backend
-- **GitHub Pages** — deploy
+- **GitHub Pages** — deploy web
+- **Zalo Mini App (ZMA)** — nền tảng Zalo
 
 ---
 
@@ -50,18 +51,88 @@ npm run dev
 
 ---
 
-## 📦 Deploy lên GitHub Pages
+## 📦 Deploy
+
+### GitHub Pages
 
 ```bash
+# Build web (output: dist/)
+npm run build
+
+# Deploy lên GitHub Pages
 npm run deploy
 ```
 
-Script deploy sẽ build và push lên branch `gh-pages`.
+> ⚠️ Yêu cầu: GitHub repo đã cấu hình Pages ở branch `gh-pages`.
+
+### Zalo Mini App (ZMA)
+
+Deploy app lên Zalo Mini App — ứng dụng nhúng trong Zalo.
+
+#### Yêu cầu
+
+- Extension VS Code: **Zalo Mini App** (ID: `zalo-mini-app.zalo-mini-app`)
+- Tài khoản Zalo Mini App tại https://mini.zalo.me
+
+#### Deploy bằng VS Code Extension
+
+1. Mở project trong VS Code
+2. Mở tab **Zalo Mini App** ở thanh Extension bên trái
+3. Đăng nhập tài khoản Zalo Mini App
+4. Nhấn nút **Deploy**
+5. Chọn môi trường:
+   - **Development** — deploy test nhanh, quét QR xem ngay
+   - **Testing** — deploy bản dùng để gửi xét duyệt
+6. Nhập mô tả phiên bản (ví dụ: `Phiên bản đầu tiên v1.0`)
+7. Chờ deploy hoàn tất
+8. Quét QR code để test trên điện thoại
+
+#### Deploy thủ công (build + upload)
+
+```bash
+# Build + zip (output: www/ → attendance-app-zma.zip)
+npm run zip:zma
+```
+
+Upload file `attendance-app-zma.zip` lên https://mini.zalo.me → **Quản lý phiên bản** → **Tải lên**.
+
+#### Kiểm tra & debug ZMA
+
+Nếu app bị **trang trắng (blank page)**:
+
+1. Mở Mini App trên điện thoại
+2. **Lắc mạnh điện thoại** → chọn **Debug / Console**
+3. Xem log lỗi JS hiện ra
+4. Các nguyên nhân thường gặp:
+   - Thiếu chunk JS (đã fix: gộp 1 file duy nhất)
+   - Không tìm thấy root element (đã fix: dùng `#app`)
+   - Lỗi Firebase / SDK
+
+---
+
+## 📜 Quy trình commit
+
+```bash
+# 1. Kiểm tra trạng thái
+git status
+
+# 2. Thêm file
+git add .
+
+# 3. Commit
+git commit -m "chore: mô tả thay đổi"
+
+# 4. Push lên GitHub
+git push origin main
+```
+
+Sau đó chạy deploy tuỳ nền tảng:
+
+- **GitHub Pages:** `npm run build && npm run deploy`
+- **Zalo Mini App:** Deploy bằng VS Code Extension
 
 ---
 
 ## 📜 Lịch sử thay đổi
 
-Xem file [CHANGELOG.md](./CHANGELOG.md) để biết chi tiết các phiên bản.
-
-> 💡 **Mẹo**: Để GitHub hiển thị CHANGELOG đẹp trên giao diện, bạn vào repo trên GitHub → **Settings** → **General** → kéo xuống mục **Features** → bật **Releases**. Sau đó tạo **Release** với tag version, GitHub sẽ tự động show changelog ở tab **Releases**.
+Xem [CHANGELOG.md](./CHANGELOG.md) để biết chi tiết các phiên bản.
