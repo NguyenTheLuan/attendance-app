@@ -1,9 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { uploadImage } from "~/services/cloudinary";
 import type { AttendanceRecord } from "~/types";
 import Field from "~/components/Field";
 import ImageUploader from "~/components/ImageUploader";
-import Toast from "~/components/Toast";
 
 interface EditModalProps {
   record: AttendanceRecord;
@@ -23,10 +22,7 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
+  const [error, setError] = useState("");
 
   function handleFileChange(f: File | null) {
     setFile(f);
@@ -40,7 +36,11 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
   }
 
   async function handleSave() {
-    if (!name.trim()) return;
+    if (!name.trim()) {
+      setError("Vui lòng nhập tên");
+      return;
+    }
+    setError("");
     setSaving(true);
     try {
       let imageUrl = record.imageUrl ?? "";
@@ -51,17 +51,15 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
         name: name.trim(),
         date,
         imageUrl,
-        note: note.trim() || undefined,
+        note: note.trim() || "",
       });
       onClose();
     } catch {
-      setToast({ message: "Lỗi khi lưu. Thử lại nhé.", type: "error" });
+      setError("Lỗi khi lưu. Thử lại nhé.");
     } finally {
       setSaving(false);
     }
   }
-
-  const closeToast = useCallback(() => setToast(null), []);
 
   const currentPreview = (preview || record.imageUrl) ?? null;
 
@@ -107,6 +105,8 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
               disabled={saving}
               rows={3}
             />
+
+            {error && <p className="msg err">{error}</p>}
           </div>
         </div>
 
@@ -123,10 +123,6 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
           </button>
         </div>
       </div>
-
-      {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={closeToast} />
-      )}
     </div>
   );
 }
