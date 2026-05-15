@@ -1,146 +1,184 @@
-# 🚀 Deploy Attendance App lên Zalo Mini App
+# 🚀 Hướng dẫn Deploy Attendance App lên Zalo Mini App
 
-## Kế hoạch chi tiết
+## Yêu cầu
 
----
-
-## Phase 1: Phân tích hiện trạng
-
-### ✅ Công nghệ hiện tại
-
-| Công nghệ             | Trạng thái  | Ghi chú                            |
-| --------------------- | ----------- | ---------------------------------- |
-| React 19 + TypeScript | ✅ OK       | ZMA hỗ trợ React                   |
-| Vite build            | ✅ OK       | Cần cấu hình lại base path         |
-| HashRouter            | ✅ OK       | Phù hợp với ZMA (iframe)           |
-| Firebase Firestore    | ✅ OK       | Cần whitelist domain               |
-| Cloudinary upload     | ✅ OK       | Cần whitelist domain + config CORS |
-| GitHub Pages deploy   | ❌ Cần thay | ZMA deploy lên Zalo Cloud          |
-| localStorage login    | ❌ Cần sửa  | Phải dùng Zalo OAuth thay thế      |
+- Tài khoản Zalo Developer: https://mini.zalo.me/
+- Ứng dụng đã build: `npm run zip:zma` → file `dist-zma/attendance-app-zma.zip`
 
 ---
 
-## Phase 2: Cấu hình dự án
+## Bước 1: Truy cập Zalo Mini App Dashboard
 
-### Bước 1: Cài đặt dependencies
+Mở trình duyệt, vào **https://mini.zalo.me/** và đăng nhập bằng tài khoản Zalo của bạn.
 
-```bash
-npm install zmp-sdk zmp-ui
-npm install -D @vitejs/plugin-zmp
+---
+
+## Bước 2: Tạo Mini App mới
+
+1. Click nút **"Tạo Mini App"** (góc phải trên cùng)
+2. Điền thông tin:
+   - **Tên Mini App**: `Điểm Danh Khu Phố`
+   - **Mô tả**: `Ứng dụng hỗ trợ điểm danh và quản lý lịch trực cho khu phố. Người dân có thể xem lịch, điểm danh trực tuyến, admin dễ dàng theo dõi thống kê và xuất báo cáo hàng tháng.`
+   - **Upload icon**: Chọn ảnh vuông 512x512px
+3. Nhấn **"Tạo"**
+
+---
+
+## Bước 3: Upload bản build
+
+1. Trong trang quản lý app, chọn tab **"Cấu hình"** hoặc **"Release"**
+2. Click **"Upload phiên bản"**
+3. Chọn file `attendance-app-zma.zip` (đã tạo ở bước build)
+4. Hệ thống sẽ kiểm tra và hiển thị thông tin:
+   - File `index.html` ✅ (tự động nhận diện)
+   - Dung lượng: ~0.32 MB
+5. Click **"Xác nhận"** / **"Upload"**
+
+---
+
+## Bước 4: Cấu hình Domain Whitelist
+
+Trong tab **"Cấu hình"** → **"Danh sách cho phép"** (Allowlist/Whitelist), thêm các domain sau:
+
+```txt
+firestore.googleapis.com
+firebasestorage.googleapis.com
+identitytoolkit.googleapis.com
+securetoken.googleapis.com
+api.cloudinary.com
+res.cloudinary.com
 ```
 
-### Bước 2: Tạo `app-config.json`
-
-File cấu gốc cho Zalo Mini App (cần thay `APP_ID` thật).
-
-### Bước 3: Tạo `mini.app.json`
-
-Cấu hình routing và theme cho ZMA.
-
-### Bước 4: Sửa `vite.config.ts`
-
-- Đổi `base` từ `"/attendance-app/"` thành `"/"` hoặc `"./"`
-- Thêm plugin ZMP
-
-### Bước 5: Sửa `index.html`
-
-- Thêm Zalo SDK script
-- Thêm meta tags cho ZMA
+> **Lưu ý**: ZMA yêu cầu whitelist tất cả domain mà app gọi API. Nếu thiếu, app sẽ bị lỗi khi fetch data từ Firebase hoặc upload ảnh Cloudinary.
 
 ---
 
-## Phase 3: Chỉnh sửa code
+## Bước 5: Cấu hình app-config.json
 
-### Bước 6: Tích hợp Zalo Login
+File `app-config.json` đã có sẵn trong project. Nếu cần chỉnh sửa:
 
-- Bỏ login local (`localStorage` hiện tại)
-- Dùng `zmp-sdk` login flow:
-  - `getAccessToken()` → lấy token
-  - `getUserInfo()` → lấy thông tin user
-
-### Bước 7: Thay `localStorage` bằng ZMA Storage
-
-Dùng ZMA's `setStorage()` / `getStorage()` thay vì `localStorage`.
-
-### Bước 8: Wrap App với ZaloProvider
-
-```tsx
-import { ZaloProvider } from "zmp-ui";
-
-<ZaloProvider>
-  <App />
-</ZaloProvider>;
+```json
+{
+  "app": {
+    "title": "Điểm Danh Khu Phố",
+    "headerColor": "#1677ff",
+    "textColor": "#ffffff"
+  }
+}
 ```
 
-### Bước 9: Xử lý routing
+Các tham số:
 
-- ZMA thường có trang index là trang chính (`/view`)
-- Cần map route ZMA với React Router
+- `title`: Tiêu đề hiển thị trên header ZMA
+- `headerColor`: Màu nền header (mã hex)
+- `textColor`: Màu chữ trên header
 
 ---
 
-## Phase 4: Build & Deploy
+## Bước 6: Test thử
 
-### Bước 10: Build thử
+Sau khi upload thành công, ZMA sẽ cấp cho bạn:
+
+1. **Link test**: Dạng `https://mini.zalo.me/test/xxxxx`
+2. Mở link này trên **Zalo App** (không phải trình duyệt web)
+3. Kiểm tra các chức năng:
+   - [ ] App load được trên Zalo
+   - [ ] Đăng nhập bằng Zalo hoạt động
+   - [ ] Xem lịch trực hiển thị đúng
+   - [ ] Admin thêm/sửa/xóa record
+   - [ ] Upload ảnh qua Cloudinary
+   - [ ] Thống kê biểu đồ
+
+---
+
+## Bước 7: Public (khi sẵn sàng)
+
+1. Vào tab **"Phát hành"** (Release)
+2. Click **"Gửi duyệt"** nếu muốn public cho mọi người dùng
+3. Hoặc để ở chế độ **"Chỉ dev"** nếu chỉ dùng nội bộ
+
+---
+
+## Các lệnh cần nhớ
 
 ```bash
+# Dev server (test trên web)
+npm run dev
+
+# ─── GitHub Pages ─────────────────────
+# Build web (output: dist/)
 npm run build
+
+# Deploy lên GitHub Pages
+npm run deploy
+
+# ─── Zalo Mini App ────────────────────
+# Build + zip ZMA (output: www/ → dist-zma/attendance-app-zma.zip)
+npm run zip:zma
 ```
 
-### Bước 11: Cài Zalo CLI
+---
+
+## 🔄 Quy trình deploy đầy đủ (Manual — không CI/CD)
+
+### A. Deploy lên GitHub Pages
 
 ```bash
-npm install -g zmp-cli
+# 1. Build web
+npm run build
+
+# 2. Kiểm tra thư mục dist/ có đủ file không
+ls dist/
+
+# 3. Deploy lên GitHub Pages
+npm run deploy
+
+# 4. Commit & push code nếu có thay đổi
+git add .
+git commit -m "chore: update source code"
+git push origin main   # hoặc tên branch của bạn
 ```
 
-### Bước 12: Login & Deploy
+> ⚠️ Nếu dùng `gh-pages` lần đầu, cần vào GitHub repo → Settings → Pages → chọn branch `gh-pages`.
+
+### B. Deploy lên Zalo Mini App
 
 ```bash
-zmp login
-zmp deploy
+# 1. Build + zip
+npm run zip:zma
+
+# 2. Kiểm tra file zip
+ls dist-zma/attendance-app-zma.zip
+
+# 3. Lên https://mini.zalo.me/ upload file zip đó
+
+# 4. Commit & push code nếu có thay đổi
+git add .
+git commit -m "chore: update source code"
+git push origin main
 ```
 
-### Bước 13: Cấu hình Domain Whitelist
+### C. Deploy cả hai cùng lúc
 
-Trên Zalo Developer Dashboard → Mini App → Cấu hình:
+```bash
+# Build web + build ZMA cùng lúc
+npm run build && npm run zip:zma
 
-- `firestore.googleapis.com`
-- `api.cloudinary.com`
-- `res.cloudinary.com`
-- `firebasestorage.googleapis.com`
+# Deploy web lên GitHub Pages
+npm run deploy
 
----
-
-## Phase 5: Kiểm thử
-
-### Checklist test
-
-- [ ] App load được trên Zalo
-- [ ] Login Zalo hoạt động
-- [ ] View lịch trực hiển thị đúng
-- [ ] Thêm mới record (admin)
-- [ ] Upload ảnh qua Cloudinary
-- [ ] Thống kê hiển thị biểu đồ
-- [ ] Navigation giữa các trang
+# Sau đó lên mini.zalo.me upload file dist-zma/attendance-app-zma.zip
+```
 
 ---
 
-## ⚠️ Rủi ro & Lưu ý
+## ⚠️ Troubleshooting thường gặp
 
-1. **CORS & Domain Whitelist**: Firebase và Cloudinary cần được whitelist trên ZMA dashboard
-2. **Zalo OAuth**: Không thể giữ login đơn giản như hiện tại
-3. **Upload ảnh**: Cloudinary unsigned upload có thể bị chặn, cần signed upload preset
-4. **Bundle size**: Cần tối ưu nếu quá 10MB
-5. **Chi phí Zalo Cloud**: Free tier có giới hạn
-
----
-
-## 📅 Ước tính thời gian
-
-| Phase                    | Thời gian        |
-| ------------------------ | ---------------- |
-| Phase 2 - Cấu hình       | ~30 phút         |
-| Phase 3 - Chỉnh code     | ~1 giờ           |
-| Phase 4 - Build & Deploy | ~30 phút         |
-| Phase 5 - Kiểm thử       | ~30 phút         |
-| **Tổng**                 | **~2.5 - 3 giờ** |
+| Vấn đề                      | Nguyên nhân                    | Cách fix                                         |
+| --------------------------- | ------------------------------ | ------------------------------------------------ |
+| App load nhưng trắng        | BASE_PATH sai                  | Kiểm tra `.env.zma` có `BASE_PATH=./`            |
+| Firebase lỗi                | Domain chưa whitelist          | Thêm domain vào whitelist                        |
+| Upload ảnh lỗi              | Cloudinary CORS                | Config CORS cho upload preset                    |
+| Login không được            | ZMA SDK thiếu                  | Kiểm tra script trong `index.html`               |
+| `www/` không có app-config  | Thiếu plugin `zmp-vite-plugin` | Kiểm tra trong `vite.config.ts` có import plugin |
+| Build ra `dist/` thay `www` | Sai mode build                 | Dùng `npm run zip:zma` (tự động chọn mode `zma`) |

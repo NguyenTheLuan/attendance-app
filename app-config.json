@@ -1,0 +1,17 @@
+{
+  "app": {
+    "title": "Điểm Danh Trực",
+    "headerColor": "#1e3a5f",
+    "textColor": "white",
+    "statusBarColor": "#1e3a5f",
+    "actionBarHidden": false,
+    "hideAndroidBottomNavigationBar": false,
+    "hideIOSSafeAreaBottom": false
+  },
+  "pages": [
+    {
+      "match": "/*",
+      "path": "index.html"
+    }
+  ]
+}
