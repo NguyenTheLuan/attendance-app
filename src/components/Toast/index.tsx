@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface ToastProps {
+  show: boolean;
   message: string;
   type?: "success" | "error";
   onClose: () => void;
@@ -8,6 +9,7 @@ interface ToastProps {
 }
 
 export default function Toast({
+  show,
   message,
   type = "error",
   onClose,
@@ -16,6 +18,10 @@ export default function Toast({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (!show) {
+      setVisible(false);
+      return;
+    }
     // Trigger enter animation
     requestAnimationFrame(() => setVisible(true));
 
@@ -25,7 +31,9 @@ export default function Toast({
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [duration, onClose]);
+  }, [duration, onClose, show]);
+
+  if (!show) return null;
 
   return (
     <div
