@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.0.29] - 2026-05-16
+
+### ✨ Features
+- feat: improve WeeklyChart X-axis labeling and switch to monthly view
+- feat(navbar): add theme selector to mobile drawer and icons to nav links
+- feat: fix chart colors and rewrite weekly chart to show daily bars
+- feat: add multi-mode theme system (Light Classic, Light Warm, Dark Premium, Dark OLED, Glass)
+
+### 🐛 Bug Fixes
+- fix: bump version to 0.0.28
+
+### ♻️ Refactoring
+- refactor: update Navbar and ConfirmDialog to use theme CSS variables
+
+### 📝 Documentation
+- docs: add environment configuration section to README and update CHANGELOG for v0.0.28
+
+### 🔧 Maintenance
+- chore: rename system-style to design-system and add AGENTS.md
+
+
+---
+
 ## [0.0.28] - 2026-05-16
 
 ### 🔧 Maintenance
