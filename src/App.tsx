@@ -8,6 +8,7 @@ import ErrorBoundary from "~/components/ErrorBoundary";
 import Navbar from "~/components/Navbar";
 import { zmaGetItem, zmaRemoveItem } from "~/services/zma";
 import "~/App.css";
+import "~/components/Button/styles.css";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Field from "~/components/Field";
+import "~/pages/LoginPage/styles.css";
+
 import { isZMA, zmaLogin, zmaSetItem } from "~/services/zma";
 
 const PASSWORD = "123456";

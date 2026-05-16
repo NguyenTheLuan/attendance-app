@@ -1,3 +1,5 @@
+import "~/components/ConfirmDialog/styles.css";
+
 interface ConfirmDialogProps {
   open: boolean;
   title: string;

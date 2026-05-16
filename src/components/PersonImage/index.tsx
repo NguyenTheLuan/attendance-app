@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./PersonImage/styles.css";
+import "./styles.css";
 
 interface PersonImageProps {
   src: string;

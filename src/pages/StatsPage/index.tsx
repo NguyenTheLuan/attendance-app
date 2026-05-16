@@ -14,6 +14,7 @@ import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 import { getMonthlyDailyData } from "~/utils/weeklyCounts";
 import type { AttendanceRecord } from "~/types";
+import "~/pages/StatsPage/styles.css";
 
 const MonthOverviewChart = lazy(
   () => import("~/components/stats/MonthOverviewChart")

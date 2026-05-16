@@ -10,6 +10,7 @@ import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 import { deleteRecordById, updateRecordById } from "~/services/db";
 import type { AttendanceRecord } from "~/types";
+import "~/pages/ViewPage/styles.css";
 
 interface ViewPageProps {
   isLoggedIn: boolean;

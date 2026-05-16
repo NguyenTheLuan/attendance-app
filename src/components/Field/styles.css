@@ -1,0 +1,76 @@
+/* ===========================
+   Field
+   =========================== */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.field-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.field-row span {
+  white-space: nowrap;
+  min-width: fit-content;
+  text-align: left;
+}
+
+.field-row input {
+  flex: 1;
+}
+
+.field span {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.field input[type="text"],
+.field input[type="password"],
+.field input[type="date"] {
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  transition: all var(--transition-fast);
+  outline: none;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.field input[type="text"]:focus,
+.field input[type="password"]:focus,
+.field input[type="date"]:focus {
+  border-color: var(--border-focus);
+  box-shadow: var(--primary-glow);
+}
+
+.field input[type="file"] {
+  font-size: 14px;
+}
+
+.field-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: all var(--transition-fast);
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.field-textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: var(--primary-glow);
+}
