@@ -147,6 +147,7 @@ jobs:
             --target main
 
   build-and-deploy:
+    if: github.ref == 'refs/heads/main'
     needs: update-changelog
     runs-on: ubuntu-latest
     environment:
