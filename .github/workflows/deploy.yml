@@ -71,13 +71,25 @@ jobs:
           TOTAL=$(wc -l < /tmp/raw_commits.txt)
           echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
 
-      - name: Bump version from latest tag
+      - name: Bump version based on diff between package.json and latest tag
         id: bump
         run: |
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          CURRENT=${LATEST_TAG#v}
-          IFS='.' read -r MAJ MIN PAT <<< "$CURRENT"
-          echo "version=$MAJ.$MIN.$((PAT + 1))" >> "$GITHUB_OUTPUT"
+          TAG_VER=${LATEST_TAG#v}
+
+          PKG_VER=$(node -e "console.log(require('./package.json').version)")
+
+          IFS='.' read -r TAG_MAJ TAG_MIN TAG_PAT <<< "$TAG_VER"
+          IFS='.' read -r PKG_MAJ PKG_MIN PKG_PAT <<< "$PKG_VER"
+
+          # Bump = (tag_patch - pkg_patch) + 1
+          # Example: tag=0.0.13, pkg=0.0.10 → bump = (13-10)+1 = 4 → result = 0.0.14
+          DIFF=$((TAG_PAT - PKG_PAT))
+          BUMP=$((DIFF + 1))
+          NEW_PAT=$((PKG_PAT + BUMP))
+
+          echo "version=$PKG_MAJ.$PKG_MIN.$NEW_PAT" >> "$GITHUB_OUTPUT"
+          echo "Tag=$TAG_VER, Pkg=$PKG_VER, Diff=$DIFF, Bump=$BUMP → $PKG_MAJ.$PKG_MIN.$NEW_PAT"
 
       - name: Write CHANGELOG.md
         env:
