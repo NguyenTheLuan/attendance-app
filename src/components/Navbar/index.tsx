@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { useTheme } from "~/hooks/useTheme";
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -8,7 +9,12 @@ interface NavbarProps {
 
 export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const [themeOpen, setThemeOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const themeRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme, themes } = useTheme();
+
+  const currentTheme = themes.find((t) => t.value === theme) ?? themes[0];
 
   // Close drawer on outside click
   useEffect(() => {
@@ -16,16 +22,20 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
+      if (themeRef.current && !themeRef.current.contains(e.target as Node)) {
+        setThemeOpen(false);
+      }
     }
-    if (open) {
+    if (open || themeOpen) {
       document.addEventListener("mousedown", handleClick);
     }
     return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
+  }, [open, themeOpen]);
 
   // Close drawer on route change
   function handleNavClick() {
     setOpen(false);
+    setThemeOpen(false);
   }
 
   function handleOverlayClick() {
@@ -57,6 +67,37 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
             <span className="nav-icon">🚪</span> Thoát
           </button>
         )}
+
+        {/* Theme Selector */}
+        <div className="theme-selector" ref={themeRef}>
+          <button
+            className="theme-selector-btn"
+            onClick={() => setThemeOpen((o) => !o)}
+            aria-label="Chọn giao diện"
+          >
+            <span className="theme-icon">{currentTheme.icon}</span>
+            <span className="theme-label">{currentTheme.label}</span>
+          </button>
+          {themeOpen && (
+            <div className="theme-selector-dropdown">
+              {themes.map((t) => (
+                <button
+                  key={t.value}
+                  className={`theme-option${
+                    t.value === theme ? " active" : ""
+                  }`}
+                  onClick={() => {
+                    setTheme(t.value);
+                    setThemeOpen(false);
+                  }}
+                >
+                  <span className="theme-option-icon">{t.icon}</span>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Hamburger button (mobile only) */}

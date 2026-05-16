@@ -20,18 +20,59 @@ export default function ConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="confirm-overlay" onClick={onCancel}>
-      <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="confirm-icon">
-          <span>⚠️</span>
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div
+          style={{ textAlign: "center", fontSize: "36px", marginBottom: "8px" }}
+        >
+          ⚠️
         </div>
-        <h3>{title}</h3>
-        <p>{message}</p>
-        <div className="confirm-actions">
-          <button className="btn-cancel" onClick={onCancel}>
+        <h3 style={{ textAlign: "center" }}>{title}</h3>
+        <p
+          style={{
+            textAlign: "center",
+            color: "var(--text-secondary)",
+            marginBottom: "20px",
+          }}
+        >
+          {message}
+        </p>
+        <div className="modal-actions" style={{ justifyContent: "center" }}>
+          <button
+            className="btn-cancel"
+            onClick={onCancel}
+            style={{
+              padding: "14px 20px",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              fontSize: "15px",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              background: "var(--bg-muted)",
+              color: "var(--text-secondary)",
+              flex: 1,
+            }}
+          >
             {cancelLabel}
           </button>
-          <button className="btn-danger" onClick={onConfirm} autoFocus>
+          <button
+            className="btn-danger"
+            onClick={onConfirm}
+            autoFocus
+            style={{
+              padding: "14px 20px",
+              border: "none",
+              borderRadius: "var(--radius-md)",
+              fontSize: "15px",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              background: "var(--danger)",
+              color: "#ffffff",
+              flex: 1,
+            }}
+          >
             {confirmLabel}
           </button>
         </div>
