@@ -22,3 +22,5 @@ Follow `.clinerules\react-architecture.md`
 
 - Think create component first, easy to reuse - avoid hard code component
 - If you are unclear, not force to code - ask user to get information until you are clear. You just do what you know
+
+- After creating report file, it will be on `report`. You will base on it for improving, implementation..
