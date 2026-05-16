@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.28] - 2026-05-16
+
+### 🔧 Maintenance
+- ci: pass Firebase environment variables to build step in deploy workflow
+
+
+---
+
 ## [0.0.27] - 2026-05-16
 
 ### ✨ Features
