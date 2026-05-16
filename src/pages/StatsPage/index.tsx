@@ -235,7 +235,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                 </div>
               }
             >
-              <MonthOverviewChart months={monthList} />
+              <MonthOverviewChart months={monthList} records={records} />
             </Suspense>
           )}
 
@@ -251,7 +251,10 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                     </div>
                   }
                 >
-                  <WeeklyChart weeks={weeks} />
+                  <WeeklyChart
+                    dailyData={weeks}
+                    monthLabel={selectedMonth ?? undefined}
+                  />
                 </Suspense>
               )}
 
