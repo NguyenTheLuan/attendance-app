@@ -1,0 +1,111 @@
+/* ===========================
+   Theme Selector
+   =========================== */
+.theme-selector {
+  position: relative;
+  margin-left: 8px;
+}
+
+.theme-selector-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  min-height: 36px;
+}
+
+.theme-selector-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.theme-selector-btn .theme-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.theme-selector-btn .theme-label {
+  display: none;
+}
+
+.theme-selector-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  z-index: 300;
+  min-width: 200px;
+  animation: dropdownIn 0.15s ease-out;
+}
+
+[data-theme="glass"] .theme-selector-dropdown {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-bg);
+  border: var(--glass-border);
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  text-align: left;
+}
+
+.theme-option:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.theme-option.active {
+  background: var(--primary);
+  color: var(--text-on-primary);
+}
+
+.theme-option .theme-option-icon {
+  font-size: 18px;
+  line-height: 1;
+  width: 24px;
+  text-align: center;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (min-width: 900px) {
+  .theme-selector-btn .theme-label {
+    display: inline;
+  }
+}

@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
+import { useIsMobile } from "~/hooks/useIsMobile";
 import {
   BarChart,
   Bar,
@@ -37,24 +38,6 @@ const DAY_LABELS = [
   "Thứ 6",
   "Thứ 7",
 ];
-
-function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 560;
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    function onResize() {
-      setIsMobile(window.innerWidth < 560);
-    }
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  return isMobile;
-}
 
 export default function PeopleDetail({ records }: PeopleDetailProps) {
   const isMobile = useIsMobile();
@@ -120,7 +103,7 @@ export default function PeopleDetail({ records }: PeopleDetailProps) {
             />
             <Tooltip
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: any) => [`${value} lần`, "Tổng số"]}
+              formatter={(value: number) => [`${value} lần`, "Tổng số"]}
               contentStyle={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",
@@ -137,10 +120,15 @@ export default function PeopleDetail({ records }: PeopleDetailProps) {
                 fill: "var(--text-muted)",
                 fontSize: barLabelFontSize,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter: (v: any) => `${v} lần`,
+                formatter: (v: number) => `${v} lần`,
               }}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              shape={(props: any) => {
+              shape={(props: {
+                index: number;
+                x: number;
+                y: number;
+                width: number;
+                height: number;
+              }) => {
                 return (
                   <Rectangle
                     {...props}
@@ -179,7 +167,7 @@ export default function PeopleDetail({ records }: PeopleDetailProps) {
             />
             <Tooltip
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: any) => [`${value} lượt`, "Số lượt"]}
+              formatter={(value: number) => [`${value} lượt`, "Số lượt"]}
               contentStyle={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",

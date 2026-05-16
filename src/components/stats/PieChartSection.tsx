@@ -1,4 +1,5 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
+import { useIsMobile } from "~/hooks/useIsMobile";
 import {
   BarChart,
   Bar,
@@ -29,24 +30,6 @@ const COLORS = [
   "var(--chart-7)",
   "var(--chart-8)",
 ];
-
-function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 560;
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    function onResize() {
-      setIsMobile(window.innerWidth < 560);
-    }
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  return isMobile;
-}
 
 export default function PieChartSection({ data }: PieChartSectionProps) {
   const sorted = [...data].sort((a, b) => b.value - a.value);
@@ -91,8 +74,7 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
             tick={{ fontSize: yAxisFontSize, fill: "var(--text-primary)" }}
           />
           <Tooltip
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            formatter={(value: any) => [`${value} lần`, "Tổng số"]}
+            formatter={(value: number) => [`${value} lần`, "Tổng số"]}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
@@ -108,11 +90,15 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
               position: "right",
               fill: "var(--text-muted)",
               fontSize: barLabelFontSize,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter: (v: any) => `${v} lần`,
+              formatter: (v: number) => `${v} lần`,
             }}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            shape={(props: any) => {
+            shape={(props: {
+              index: number;
+              x: number;
+              y: number;
+              width: number;
+              height: number;
+            }) => {
               return (
                 <Rectangle
                   {...props}

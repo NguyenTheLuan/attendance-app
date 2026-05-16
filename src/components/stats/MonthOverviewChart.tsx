@@ -120,10 +120,8 @@ export default function MonthOverviewChart({
               width={30}
             />
             <Tooltip
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: any) => [`${value} lượt`, "Tổng"]}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              labelFormatter={(label: any) => label}
+              formatter={(value: number) => [`${value} lượt`, "Tổng"]}
+              labelFormatter={(label: string) => label}
               contentStyle={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",

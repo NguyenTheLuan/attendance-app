@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useTheme } from "~/hooks/useTheme";
+import "~/components/Navbar/styles.css";
 
 interface NavbarProps {
   isLoggedIn: boolean;

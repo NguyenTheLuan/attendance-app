@@ -81,10 +81,8 @@ export default function WeeklyChart({
             domain={[0, "auto"]}
           />
           <Tooltip
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            formatter={(value: any) => [`${value} lượt`, "Ngày"]}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            labelFormatter={(label: any) => `Ngày ${label}`}
+            formatter={(value: number) => [`${value} lượt`, "Ngày"]}
+            labelFormatter={(label: string) => `Ngày ${label}`}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
