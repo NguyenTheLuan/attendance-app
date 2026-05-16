@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.0.32] - 2026-05-16
+
+### 🐛 Bug Fixes
+- fix: improve mobile responsiveness of EditModal layout and spacing
+
+### Other
+- Merge branch 'main' of https://github.com/NguyenTheLuan/attendance-app
+
+
+---
+
 ## [0.0.31] - 2026-05-16
 
 ### 🐛 Bug Fixes
