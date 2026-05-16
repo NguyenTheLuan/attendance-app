@@ -9,6 +9,7 @@ import WeeklyChart, {
   getWeeklyDailyCounts,
 } from "~/components/stats/WeeklyChart";
 import DayGroup from "~/components/DayGroup";
+import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 
@@ -49,14 +50,14 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   }, [records]);
 
   const absencesCount = useMemo(
-    () => records.filter((r) => r.note?.toLowerCase().includes("vắng")).length,
+    () => records.filter((r) => isAbsentNote(r.note)).length,
     [records]
   );
 
   const incidentDays = useMemo(() => {
     const daysWithNotes = new Set(
       records
-        .filter((r) => r.note?.trim() && !r.note.toLowerCase().includes("vắng"))
+        .filter((r) => r.note?.trim() && !isAbsentNote(r.note))
         .map((r) => r.date)
     );
     return daysWithNotes.size;
@@ -65,7 +66,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const incidentsDetail = useMemo(() => {
     if (!showIncidents) return [];
     const filtered = records.filter(
-      (r) => r.note?.trim() && !r.note.toLowerCase().includes("vắng")
+      (r) => r.note?.trim() && !isAbsentNote(r.note)
     );
     return groupByDate(filtered);
   }, [records, showIncidents]);
@@ -100,7 +101,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const absenceMonths = useMemo(() => {
     const set = new Set<string>();
     for (const r of records) {
-      if (r.note?.toLowerCase().includes("vắng")) {
+      if (isAbsentNote(r.note)) {
         set.add(r.date.slice(0, 7));
       }
     }
@@ -108,7 +109,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   }, [records]);
 
   const filteredAbsences = useMemo(() => {
-    let result = records.filter((r) => r.note?.toLowerCase().includes("vắng"));
+    let result = records.filter((r) => isAbsentNote(r.note));
 
     if (absenceMonthFilter) {
       result = result.filter((r) => r.date.startsWith(absenceMonthFilter));

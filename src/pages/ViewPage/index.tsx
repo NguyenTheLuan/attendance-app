@@ -4,6 +4,7 @@ import DayGroup from "~/components/DayGroup";
 import EditModal from "~/components/EditModal";
 import ConfirmDialog from "~/components/ConfirmDialog";
 import Toast from "~/components/Toast";
+import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 import { deleteRecordById, updateRecordById } from "~/services/db";
@@ -51,6 +52,11 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
   const filteredRecords = useMemo(() => {
     let result = records;
 
+    // Hide absent records from non-logged-in users
+    if (!isLoggedIn) {
+      result = result.filter((r) => !isAbsentNote(r.note));
+    }
+
     // Filter by month
     if (viewMode === "month" && currentMonth) {
       result = result.filter((r) => r.date.startsWith(currentMonth));
@@ -62,7 +68,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     }
 
     return result;
-  }, [records, viewMode, currentMonth, searchLower]);
+  }, [records, isLoggedIn, viewMode, currentMonth, searchLower]);
 
   const groupedEntries = groupByDate(filteredRecords);
   const grouped = Object.fromEntries(groupedEntries);
