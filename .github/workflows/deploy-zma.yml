@@ -41,9 +41,12 @@ jobs:
           VITE_CLOUDINARY_CLOUD_NAME: ${{ secrets.VITE_CLOUDINARY_CLOUD_NAME }}
           VITE_CLOUDINARY_UPLOAD_PRESET: ${{ secrets.VITE_CLOUDINARY_UPLOAD_PRESET }}
 
-      - name: Create zip archive
+      - name: Fix app-config.json in build output and create zip archive
         run: |
-          cd dist
+          # zmp-vite-plugin generates www/app-config.json with empty pages array,
+          # which fails ZMA validation. Copy the root config with proper pages.
+          cp app-config.json www/app-config.json
+          cd www
           zip -r ../attendance-app-zma.zip ./*
 
       - name: Upload artifact

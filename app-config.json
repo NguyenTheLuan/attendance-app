@@ -10,7 +10,12 @@
     "hideAndroidBottomNavigationBar": false,
     "hideIOSSafeAreaBottom": false
   },
-  "pages": [],
+  "pages": [
+    {
+      "match": "/*",
+      "path": "index.html"
+    }
+  ],
   "permissions": ["scope.userInfo"],
   "listCSS": [],
   "listSyncJS": [],

@@ -1,17 +1,21 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, lazy, Suspense } from "react";
 import { useRecords } from "~/hooks/useRecords";
 import StatCards from "~/components/stats/StatCards";
 import MonthList from "~/components/stats/MonthList";
 import MonthDetail from "~/components/stats/MonthDetail";
-import MonthOverviewChart from "~/components/stats/MonthOverviewChart";
-import PieChartSection from "~/components/stats/PieChartSection";
-import WeeklyChart, {
-  getWeeklyDailyCounts,
-} from "~/components/stats/WeeklyChart";
 import DayGroup from "~/components/DayGroup";
 import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
+import { getWeeklyDailyCounts } from "~/utils/weeklyCounts";
+
+const MonthOverviewChart = lazy(
+  () => import("~/components/stats/MonthOverviewChart")
+);
+const PieChartSection = lazy(
+  () => import("~/components/stats/PieChartSection")
+);
+const WeeklyChart = lazy(() => import("~/components/stats/WeeklyChart"));
 
 interface StatsPageProps {
   isLoggedIn: boolean;
@@ -224,7 +228,15 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
           </div>
 
           {viewMode === "month-compare" && monthList.length > 0 && (
-            <MonthOverviewChart months={monthList} />
+            <Suspense
+              fallback={
+                <div className="card empty">
+                  <p>⏳ Đang tải biểu đồ...</p>
+                </div>
+              }
+            >
+              <MonthOverviewChart months={monthList} />
+            </Suspense>
           )}
 
           {viewMode === "weekly" && (
@@ -232,7 +244,15 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
               <MonthList months={monthList} onSelectMonth={setSelectedMonth} />
 
               {selectedMonth && weeks.length > 0 && (
-                <WeeklyChart weeks={weeks} />
+                <Suspense
+                  fallback={
+                    <div className="card empty">
+                      <p>⏳ Đang tải biểu đồ...</p>
+                    </div>
+                  }
+                >
+                  <WeeklyChart weeks={weeks} />
+                </Suspense>
               )}
 
               {selectedMonth && monthDetail.length === 0 && (
@@ -251,7 +271,15 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
           )}
 
           {viewMode === "month-compare" && pieData.length > 0 && (
-            <PieChartSection data={pieData} />
+            <Suspense
+              fallback={
+                <div className="card empty">
+                  <p>⏳ Đang tải biểu đồ...</p>
+                </div>
+              }
+            >
+              <PieChartSection data={pieData} />
+            </Suspense>
           )}
 
           {/* Absence tab */}

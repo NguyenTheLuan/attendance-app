@@ -26,7 +26,23 @@ export default defineConfig(({ mode }) => {
               inlineDynamicImports: true,
             },
           }
-        : undefined,
+        : {
+            output: {
+              manualChunks(id) {
+                // Split recharts (large library) into its own chunk
+                if (id.includes("node_modules/recharts")) {
+                  return "recharts-vendor";
+                }
+                // Split firebase into its own chunk
+                if (
+                  id.includes("node_modules/firebase") ||
+                  id.includes("node_modules/@firebase")
+                ) {
+                  return "firebase-vendor";
+                }
+              },
+            },
+          },
     },
     resolve: {
       alias: {
