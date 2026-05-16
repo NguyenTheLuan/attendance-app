@@ -10,6 +10,7 @@ import {
 } from "recharts";
 
 interface DailyData {
+  label: string;
   day: number;
   count: number;
 }
@@ -36,13 +37,22 @@ function formatMonthLabel(month?: string) {
   return `Tháng ${parseInt(m, 10)}/${y}`;
 }
 
+/**
+ * Return label text only for even day numbers (2, 4, 6…), otherwise "".
+ * This makes the X-axis show a sparse, readable set of labels.
+ */
+function tickFormatter(value: string) {
+  const num = parseInt(value, 10);
+  if (isNaN(num)) return value;
+  return num % 2 === 0 ? value : "";
+}
+
 export default function WeeklyChart({
   dailyData,
   monthLabel,
 }: WeeklyChartProps) {
   if (dailyData.length === 0) return null;
 
-  const maxDay = dailyData.length;
   const maxCount = Math.max(...dailyData.map((d) => d.count), 1);
 
   return (
@@ -51,17 +61,17 @@ export default function WeeklyChart({
       <ResponsiveContainer width="100%" height={220}>
         <BarChart
           data={dailyData}
-          margin={{ top: 8, right: 8, bottom: 16, left: -8 }}
+          margin={{ top: 8, right: 8, bottom: 8, left: -8 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="day"
-            fontSize={10}
-            height={40}
+            dataKey="label"
+            fontSize={12}
+            height={30}
             tick={{ fill: "var(--text-muted)" }}
             axisLine={false}
             tickLine={false}
-            interval={Math.floor(maxDay / 10) || 1}
+            tickFormatter={tickFormatter}
           />
           <YAxis
             allowDecimals={false}
@@ -74,7 +84,7 @@ export default function WeeklyChart({
           />
           <Tooltip
             formatter={(value: number) => [`${value} lượt`, "Ngày"]}
-            labelFormatter={(label: number) => `Ngày ${label}`}
+            labelFormatter={(label: string) => `Ngày ${label}`}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",

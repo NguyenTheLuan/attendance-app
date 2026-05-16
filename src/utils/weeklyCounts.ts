@@ -66,19 +66,23 @@ export function getEightChunks(records: AttendanceRecord[]) {
   return chunks;
 }
 
-export function getWeeklyDailyCounts(
+/**
+ * Return daily data for a given month.
+ * Each entry is { label: day number (e.g. "1", "2"…), day: number, count: number }.
+ */
+export function getMonthlyDailyData(
   records: AttendanceRecord[],
   month: string
-): { day: number; count: number }[] {
+): { label: string; day: number; count: number }[] {
   const monthRecords = records.filter((r) => r.date.startsWith(month));
   const [y, m] = month.split("-").map(Number);
   const lastDay = new Date(y, m, 0).getDate();
 
-  const dailyCounts: { day: number; count: number }[] = [];
+  const result: { label: string; day: number; count: number }[] = [];
   for (let d = 1; d <= lastDay; d++) {
     const dateStr = `${month}-${String(d).padStart(2, "0")}`;
     const count = monthRecords.filter((r) => r.date === dateStr).length;
-    dailyCounts.push({ day: d, count });
+    result.push({ label: String(d), day: d, count });
   }
-  return dailyCounts;
+  return result;
 }

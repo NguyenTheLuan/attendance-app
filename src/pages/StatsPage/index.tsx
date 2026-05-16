@@ -7,7 +7,7 @@ import DayGroup from "~/components/DayGroup";
 import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
-import { getWeeklyDailyCounts } from "~/utils/weeklyCounts";
+import { getMonthlyDailyData } from "~/utils/weeklyCounts";
 
 const MonthOverviewChart = lazy(
   () => import("~/components/stats/MonthOverviewChart")
@@ -96,9 +96,9 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
       .sort((a, b) => b.value - a.value);
   }, [records]);
 
-  const weeks = useMemo(() => {
+  const dailyData = useMemo(() => {
     if (!selectedMonth) return [];
-    return getWeeklyDailyCounts(records, selectedMonth);
+    return getMonthlyDailyData(records, selectedMonth);
   }, [records, selectedMonth]);
 
   // --- Absence tab data ---
@@ -213,7 +213,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                 setSelectedMonth(null);
               }}
             >
-              🗓️ Theo tuần
+              🗓️ Theo tháng
             </button>
             {isLoggedIn && (
               <button
@@ -243,7 +243,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
             <>
               <MonthList months={monthList} onSelectMonth={setSelectedMonth} />
 
-              {selectedMonth && weeks.length > 0 && (
+              {selectedMonth && dailyData.length > 0 && (
                 <Suspense
                   fallback={
                     <div className="card empty">
@@ -252,7 +252,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                   }
                 >
                   <WeeklyChart
-                    dailyData={weeks}
+                    dailyData={dailyData}
                     monthLabel={selectedMonth ?? undefined}
                   />
                 </Suspense>
