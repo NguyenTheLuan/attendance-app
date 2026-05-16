@@ -1,6 +1,7 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { isZMA } from "~/services/zma";
+import { ThemeProvider } from "~/hooks/useTheme";
 import App from "~/App";
 import "~/index.css";
 
@@ -20,15 +21,17 @@ function AppWithProvider() {
     }
   }, []);
 
+  const app = (
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  );
+
   if (Provider) {
-    return (
-      <Provider>
-        <App />
-      </Provider>
-    );
+    return <Provider>{app}</Provider>;
   }
 
-  return <App />;
+  return app;
 }
 
 function Root() {
