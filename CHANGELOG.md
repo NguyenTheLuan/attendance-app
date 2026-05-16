@@ -1,139 +1,164 @@
 # Changelog
 
+## [0.0.28] - 2026-05-16
+
+### 🔧 Maintenance
+
+- ci: pass Firebase environment variables to build step in deploy workflow
+
+---
+
 ## [0.0.27] - 2026-05-16
 
 ### ✨ Features
+
 - feat: improve UI accessibility with larger touch targets and consistent styling
 - feat(zma): add Zalo Mini App deploy support
 
 ### 🐛 Bug Fixes
+
 - fix: use explicit HEAD:main refspec for git push after version bump
 - fix(deploy): Fix app-config.json ZMA validation, lazy load chart components, and extract weekly count utility
 - fix(zma): resolve blank page on ZMA deploy
 
 ### 📝 Documentation
+
 - docs: simplify ZMA deployment instructions and restructure config docs
 - docs: update Zalo Mini App deployment guide with detailed configuration and build steps
 - docs: add deployment plan for Zalo Mini App integration
 
 ### 🔧 Maintenance
+
 - ci: restrict build-and-deploy job to main branch
 - ci: migrate Firebase config and Cloudinary secrets to environment variables
 - chore: increase commitlint header-max-length limit from 100 to 400
 
 ### Other
-- Merge pull request #1 from NguyenTheLuan/zma
 
+- Merge pull request #1 from NguyenTheLuan/zma
 
 ---
 
 ## [0.0.26] - 2026-05-16
 
-
 ---
 
 ## [0.0.25] - 2026-05-16
-
 
 ---
 
 ## [0.0.24] - 2026-05-15
 
 ### ✨ Features
+
 - feat(stats): increase pie chart height for better readability
 - feat: Add sticky header to ViewPage for improved navigation
 - feat(stats): add absence tab, bar chart, and hideImages prop
 - feat(scripts): add all April + May 2026 attendance records
 
 ### 🐛 Bug Fixes
+
 - fix: move toast out of modal to prevent unmount before showing
 - fix: prevent undefined note from being sent to Firestore
 - fix: resolve potential undefined values and improve type safety
 
 ### ♻️ Refactoring
+
 - refactor: add show prop to Toast for external show/hide control
 
 ### 🔧 Maintenance
+
 - chore: bump version to v0.0.20
 
 ### Other
+
 - 🔧 chore: bump version to v0.0.23
 - 🔧 chore: bump version to v0.0.22
 - 🔧 chore: bump version to v0.0.21
-
 
 ---
 
 ## [0.0.23] - 2026-05-15
 
 ### ✨ Features
+
 - feat(stats): increase pie chart height for better readability
 - feat: Add sticky header to ViewPage for improved navigation
 - feat(stats): add absence tab, bar chart, and hideImages prop
 - feat(scripts): add all April + May 2026 attendance records
 
 ### 🐛 Bug Fixes
+
 - fix: move toast out of modal to prevent unmount before showing
 - fix: prevent undefined note from being sent to Firestore
 - fix: resolve potential undefined values and improve type safety
 
 ### ♻️ Refactoring
+
 - refactor: add show prop to Toast for external show/hide control
 
 ### 🔧 Maintenance
+
 - chore: bump version to v0.0.20
 
 ### Other
+
 - 🔧 chore: bump version to v0.0.22
 - 🔧 chore: bump version to v0.0.21
-
 
 ---
 
 ## [0.0.22] - 2026-05-15
 
 ### ✨ Features
+
 - feat(stats): increase pie chart height for better readability
 - feat: Add sticky header to ViewPage for improved navigation
 - feat(stats): add absence tab, bar chart, and hideImages prop
 - feat(scripts): add all April + May 2026 attendance records
 
 ### 🐛 Bug Fixes
+
 - fix: move toast out of modal to prevent unmount before showing
 - fix: prevent undefined note from being sent to Firestore
 - fix: resolve potential undefined values and improve type safety
 
 ### ♻️ Refactoring
+
 - refactor: add show prop to Toast for external show/hide control
 
 ### 🔧 Maintenance
+
 - chore: bump version to v0.0.20
 
 ### Other
-- 🔧 chore: bump version to v0.0.21
 
+- 🔧 chore: bump version to v0.0.21
 
 ---
 
 ## [0.0.21] - 2026-05-15
 
 ### ✨ Features
+
 - feat(stats): increase pie chart height for better readability
 - feat: Add sticky header to ViewPage for improved navigation
 - feat(stats): add absence tab, bar chart, and hideImages prop
 - feat(scripts): add all April + May 2026 attendance records
 
 ### 🐛 Bug Fixes
+
 - fix: move toast out of modal to prevent unmount before showing
 - fix: prevent undefined note from being sent to Firestore
 - fix: resolve potential undefined values and improve type safety
 
 ### ♻️ Refactoring
+
 - refactor: add show prop to Toast for external show/hide control
 
 ### 🔧 Maintenance
-- chore: bump version to v0.0.20
 
+- chore: bump version to v0.0.20
 
 ---
 

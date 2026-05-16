@@ -33,27 +33,58 @@
 
 ---
 
+## 🔧 Cấu hình môi trường
+
+Tạo file `.env` ở thư mục gốc:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+### GitHub Secrets
+
+Khi deploy qua GitHub Actions, các biến trên cần được đặt trong **GitHub Secrets** của repository:
+
+| Secret                              | Tương ứng                           |
+| ----------------------------------- | ----------------------------------- |
+| `VITE_FIREBASE_API_KEY`             | `VITE_FIREBASE_API_KEY`             |
+| `VITE_FIREBASE_AUTH_DOMAIN`         | `VITE_FIREBASE_AUTH_DOMAIN`         |
+| `VITE_FIREBASE_PROJECT_ID`          | `VITE_FIREBASE_PROJECT_ID`          |
+| `VITE_FIREBASE_STORAGE_BUCKET`      | `VITE_FIREBASE_STORAGE_BUCKET`      |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | `VITE_FIREBASE_MESSAGING_SENDER_ID` |
+| `VITE_FIREBASE_APP_ID`              | `VITE_FIREBASE_APP_ID`              |
+
+---
+
 ## 🚀 Chạy local
 
 ```bash
 git clone https://github.com/NguyenTheLuan/attendance-app.git
 cd attendance-app
 npm install
+cp .env.example .env   # điền Firebase config
 npm run dev
 ```
-
-> ⚠️ Cần cấu hình biến môi trường cho Firebase và Cloudinary để chạy đầy đủ tính năng.
 
 ---
 
 ## 📦 Deploy
 
-### GitHub Pages
+### GitHub Pages (CI/CD)
 
-```bash
-npm run build
-npm run deploy
-```
+**Tự động** khi push vào nhánh `main` — workflow sẽ:
+
+1. Bump version (tạo tag mới)
+2. Cập nhật `CHANGELOG.md` với các commit mới
+3. Tạo GitHub Release
+4. Build và deploy lên GitHub Pages
+
+> Cần set **6 GitHub Secrets** (ở trên) để build có Firebase config.
 
 ### Zalo Mini App (ZMA)
 
@@ -84,10 +115,7 @@ git commit -m "chore: mô tả thay đổi"
 git push origin main
 ```
 
-Sau đó deploy tuỳ nền tảng:
-
-- **GitHub Pages:** `npm run build && npm run deploy`
-- **ZMA:** VS Code Extension hoặc `npm run zip:zma`
+> Workflow GitHub Actions sẽ tự động build + deploy khi push lên `main`.
 
 ---
 
