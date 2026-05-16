@@ -81,8 +81,8 @@ export default function WeeklyChart({
             domain={[0, "auto"]}
           />
           <Tooltip
-            formatter={(value: number) => [`${value} lượt`, "Ngày"]}
-            labelFormatter={(label: string) => `Ngày ${label}`}
+            formatter={(value) => [`${value ?? 0} lượt`, "Ngày"]}
+            labelFormatter={(label) => `Ngày ${label ?? ""}`}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",

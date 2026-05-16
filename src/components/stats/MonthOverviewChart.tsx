@@ -120,8 +120,8 @@ export default function MonthOverviewChart({
               width={30}
             />
             <Tooltip
-              formatter={(value: number) => [`${value} lượt`, "Tổng"]}
-              labelFormatter={(label: string) => label}
+              formatter={(value) => [`${value ?? 0} lượt`, "Tổng"]}
+              labelFormatter={(label) => String(label ?? "")}
               contentStyle={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",

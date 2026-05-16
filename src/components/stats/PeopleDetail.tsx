@@ -102,8 +102,7 @@ export default function PeopleDetail({ records }: PeopleDetailProps) {
               tick={{ fontSize: barLabelFontSize, fill: "var(--text-primary)" }}
             />
             <Tooltip
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: number) => [`${value} lần`, "Tổng số"]}
+              formatter={(value) => [`${value ?? 0} lần`, "Tổng số"]}
               contentStyle={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",
@@ -119,8 +118,7 @@ export default function PeopleDetail({ records }: PeopleDetailProps) {
                 position: "right",
                 fill: "var(--text-muted)",
                 fontSize: barLabelFontSize,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter: (v: number) => `${v} lần`,
+                formatter: (v) => `${v ?? 0} lần`,
               }}
               shape={(props: {
                 index: number;
@@ -166,8 +164,7 @@ export default function PeopleDetail({ records }: PeopleDetailProps) {
               width={30}
             />
             <Tooltip
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              formatter={(value: number) => [`${value} lượt`, "Số lượt"]}
+              formatter={(value) => [`${value ?? 0} lượt`, "Số lượt"]}
               contentStyle={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",
