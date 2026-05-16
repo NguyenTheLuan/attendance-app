@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.0.31] - 2026-05-16
+
+### 🐛 Bug Fixes
+- fix(stats): add null safety to tooltip formatters
+
+### Other
+- Merge branch 'main' of https://github.com/NguyenTheLuan/attendance-app
+
+
+---
+
 ## [0.0.30] - 2026-05-16
 
 ### ✨ Features
