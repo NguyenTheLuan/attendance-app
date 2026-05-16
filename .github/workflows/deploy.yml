@@ -1,0 +1,178 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths-ignore:
+      - "CHANGELOG.md"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Get commits since last tag
+        id: log
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            GIT_RANGE="$(git rev-list --max-parents=0 HEAD)..HEAD"
+          else
+            GIT_RANGE="$PREV_TAG..HEAD"
+          fi
+
+          git log --format="%s" "$GIT_RANGE" > /tmp/raw_commits.txt
+
+          categorize() {
+            local pattern="$1"
+            local header="$2"
+            grep -iE "$pattern" /tmp/raw_commits.txt | sed 's/^/- /' > /tmp/cat_items.txt || true
+            if [ -s /tmp/cat_items.txt ]; then
+              echo "$header" >> /tmp/changelog_body.txt
+              cat /tmp/cat_items.txt >> /tmp/changelog_body.txt
+              echo "" >> /tmp/changelog_body.txt
+            fi
+          }
+
+          : > /tmp/changelog_body.txt
+          categorize "^feat" "### ✨ Features"
+          categorize "^fix" "### 🐛 Bug Fixes"
+          categorize "^refactor" "### ♻️ Refactoring"
+          categorize "^style" "### 💄 Styling"
+          categorize "^docs" "### 📝 Documentation"
+          categorize "^(chore|build|ci|perf)" "### 🔧 Maintenance"
+
+          # Uncategorized
+          grep -viE "^(feat|fix|refactor|style|docs|chore|build|ci|perf)" /tmp/raw_commits.txt > /tmp/other.txt || true
+          if [ -s /tmp/other.txt ]; then
+            echo "### Other" >> /tmp/changelog_body.txt
+            sed 's/^/- /' /tmp/other.txt >> /tmp/changelog_body.txt
+            echo "" >> /tmp/changelog_body.txt
+          fi
+
+          TOTAL=$(wc -l < /tmp/raw_commits.txt)
+          echo "total=$TOTAL" >> "$GITHUB_OUTPUT"
+
+      - name: Bump version from latest tag
+        id: bump
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          CURRENT=${LATEST_TAG#v}
+          IFS='.' read -r MAJ MIN PAT <<< "$CURRENT"
+          echo "version=$MAJ.$MIN.$((PAT + 1))" >> "$GITHUB_OUTPUT"
+
+      - name: Write CHANGELOG.md
+        env:
+          VER: ${{ steps.bump.outputs.version }}
+        run: |
+          node << 'NODESCRIPT'
+            const fs = require('fs');
+            const ver = process.env.VER;
+            const date = new Date().toISOString().slice(0, 10);
+            const changes = fs.readFileSync('/tmp/changelog_body.txt', 'utf8');
+
+            // Build new entry
+            const entry = [
+              '',
+              '## [' + ver + '] - ' + date,
+              '',
+              changes,
+              '---',
+              '',
+            ].join('\n');
+
+            // Read existing or start fresh
+            let existing = '# Changelog';
+            try {
+              existing = fs.readFileSync('CHANGELOG.md', 'utf8');
+            } catch (e) {
+              // File doesn't exist yet
+            }
+
+            const lines = existing.split('\n');
+            const title = lines[0];
+            const rest = lines.slice(1).join('\n').trimStart();
+
+            fs.writeFileSync('CHANGELOG.md', [title, entry, rest].join('\n'));
+          NODESCRIPT
+
+      - name: Update package.json version
+        env:
+          VER: ${{ steps.bump.outputs.version }}
+        run: |
+          node -e "
+            const pkg = require('./package.json');
+            pkg.version = process.env.VER;
+            require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Commit & push changelog + tag
+        env:
+          VER: ${{ steps.bump.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md package.json package-lock.json
+          git commit -m "🔧 chore: bump version to v${VER}" || echo "Nothing to commit"
+          git push origin HEAD:main
+          git tag "v${VER}"
+          git push origin "v${VER}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VER: ${{ steps.bump.outputs.version }}
+        run: |
+          gh release create "v${VER}" \
+            --title "v${VER}" \
+            --notes "$(cat /tmp/changelog_body.txt)" \
+            --target main
+
+  build-and-deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: update-changelog
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: "dist"
+      - id: deployment
+        uses: actions/deploy-pages@v5

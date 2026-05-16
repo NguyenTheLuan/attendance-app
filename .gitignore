@@ -1,0 +1,8 @@
+node_modules/
+dist/
+www/
+*.zip
+.env
+scripts/zma-package/
+skills
+report
