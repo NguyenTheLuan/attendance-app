@@ -8,6 +8,7 @@ interface DayGroupProps {
   viewOnly: boolean;
   onDelete?: (id: string) => void;
   onEdit?: (record: AttendanceRecord) => void;
+  onViewDetail?: (record: AttendanceRecord) => void;
   initialOpen?: boolean;
   hideImages?: boolean;
 }
@@ -18,6 +19,7 @@ export default function DayGroup({
   viewOnly,
   onDelete,
   onEdit,
+  onViewDetail,
   initialOpen = true,
   hideImages = false,
 }: DayGroupProps) {
@@ -42,6 +44,7 @@ export default function DayGroup({
             viewOnly={viewOnly}
             onDelete={onDelete}
             onEdit={onEdit}
+            onViewDetail={onViewDetail}
             hideImages={hideImages}
           />
         ))}

@@ -1,0 +1,63 @@
+/* Detail info rows (read-only EditModal mimic) */
+.detail-info-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.detail-info-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding-top: 10px;
+}
+
+.detail-info-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-sm);
+}
+
+.detail-info-value--note {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.edit-image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  font-size: 48px;
+  color: var(--text-light);
+  aspect-ratio: 3 / 4;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+
+/* Stack vertically on tiny screens */
+@media (max-width: 360px) {
+  .detail-info-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile: stack & full width */
+@media (max-width: 600px) {
+  .edit-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .edit-image-col {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+}

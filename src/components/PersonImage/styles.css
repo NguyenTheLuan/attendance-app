@@ -43,3 +43,16 @@
 .person-image--clickable:hover {
   opacity: 0.9;
 }
+
+/* Clickable image (legacy support) */
+.clickable-img {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-md);
+}
+
+.clickable-img:hover {
+  opacity: 0.95;
+  box-shadow: var(--primary-glow);
+}

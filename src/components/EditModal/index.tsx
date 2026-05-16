@@ -2,6 +2,7 @@ import { useState } from "react";
 import { uploadImage } from "~/services/cloudinary";
 import type { AttendanceRecord } from "~/types";
 import Field from "~/components/Field";
+import "~/components/EditModal/styles.css";
 import ImageUploader from "~/components/ImageUploader";
 
 interface EditModalProps {

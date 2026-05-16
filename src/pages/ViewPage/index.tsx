@@ -4,11 +4,13 @@ import DayGroup from "~/components/DayGroup";
 import EditModal from "~/components/EditModal";
 import ConfirmDialog from "~/components/ConfirmDialog";
 import Toast from "~/components/Toast";
+import PersonDetailModal from "~/components/PersonDetailModal";
 import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 import { deleteRecordById, updateRecordById } from "~/services/db";
 import type { AttendanceRecord } from "~/types";
+import "~/pages/ViewPage/styles.css";
 
 interface ViewPageProps {
   isLoggedIn: boolean;
@@ -24,6 +26,8 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     null
   );
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [viewDetailRecord, setViewDetailRecord] =
+    useState<AttendanceRecord | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState<"success" | "error">("error");
@@ -203,9 +207,17 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
             viewOnly={!isLoggedIn}
             onDelete={isLoggedIn ? handleDeleteClick : undefined}
             onEdit={isLoggedIn ? setEditingRecord : undefined}
+            onViewDetail={!isLoggedIn ? setViewDetailRecord : undefined}
           />
         ))}
       </div>
+
+      {viewDetailRecord && (
+        <PersonDetailModal
+          record={viewDetailRecord}
+          onClose={() => setViewDetailRecord(null)}
+        />
+      )}
 
       {editingRecord && (
         <EditModal

@@ -3,7 +3,10 @@ interface StatCardsProps {
   uniquePeople: number;
   totalMonths: number;
   incidentDays: number;
-  onIncidentClick?: () => void;
+  activeCard: "total" | "people" | "incident" | null;
+  onTotalDutyClick: () => void;
+  onUniquePeopleClick: () => void;
+  onIncidentClick: () => void;
 }
 
 export default function StatCards({
@@ -11,24 +14,40 @@ export default function StatCards({
   uniquePeople,
   totalMonths,
   incidentDays,
+  activeCard,
+  onTotalDutyClick,
+  onUniquePeopleClick,
   onIncidentClick,
 }: StatCardsProps) {
   return (
     <div className="stat-cards">
-      <div className="stat-card">
+      <div
+        className={
+          "stat-card clickable-card" + (activeCard === "total" ? " active" : "")
+        }
+        onClick={onTotalDutyClick}
+      >
         <span className="stat-num">{totalRecords}</span>
-        <span className="stat-label">Tổng lượt trực</span>
+        <span className="stat-label">
+          Tổng lượt trực
+          <span className="stat-sub">trong {totalMonths} tháng</span>
+        </span>
       </div>
-      <div className="stat-card">
+      <div
+        className={
+          "stat-card clickable-card" +
+          (activeCard === "people" ? " active" : "")
+        }
+        onClick={onUniquePeopleClick}
+      >
         <span className="stat-num">{uniquePeople}</span>
         <span className="stat-label">Người đã trực</span>
       </div>
-      <div className="stat-card">
-        <span className="stat-num">{totalMonths}</span>
-        <span className="stat-label">Tháng</span>
-      </div>
       <div
-        className={`stat-card${onIncidentClick ? " clickable-card" : ""}`}
+        className={
+          "stat-card clickable-card" +
+          (activeCard === "incident" ? " active" : "")
+        }
         onClick={onIncidentClick}
       >
         <span className="stat-num">{incidentDays}</span>

@@ -2,8 +2,9 @@ import { useState, useCallback } from "react";
 import { isAbsentNote } from "~/utils/absence";
 import { uploadImage } from "~/services/cloudinary";
 import Field from "~/components/Field";
-import DateSelector from "~/components/DateSelector";
+import DateSelector, { getDateString } from "~/components/DateSelector";
 import ImageUploader from "~/components/ImageUploader";
+
 import { addRecord } from "~/services/db";
 import type { AttendanceRecord } from "~/types";
 
@@ -23,17 +24,6 @@ export default function AdminPage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const isAbsent = isAbsentNote(note);
-
-  function getDateString(
-    type: "today" | "tomorrow" | "custom",
-    custom: string
-  ) {
-    if (type === "custom") return custom;
-    const d = new Date();
-    if (type === "tomorrow") d.setDate(d.getDate() + 1);
-    return d.toISOString().split("T")[0];
-  }
-
   const dateStr = getDateString(dateType, customDate);
 
   function handleFileChange(f: File | null) {

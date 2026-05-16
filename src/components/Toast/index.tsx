@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "~/components/Toast/styles.css";
 
 interface ToastProps {
   show: boolean;

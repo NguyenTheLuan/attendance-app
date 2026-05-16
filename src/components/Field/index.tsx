@@ -1,4 +1,5 @@
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import "~/components/Field/styles.css";
 
 interface FieldBaseProps {
   label: string;

@@ -1,0 +1,27 @@
+/* ===========================
+   Card Group
+   =========================== */
+.card-group {
+  margin-bottom: 20px;
+}
+
+.card-group-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.card-group-title::before {
+  content: "📅";
+  margin-right: 6px;
+  font-size: 16px;
+}

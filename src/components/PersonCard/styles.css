@@ -76,10 +76,23 @@
   background: #e03040;
 }
 
-/* Larger touch targets on mobile */
+/* Larger touch targets & bigger images on mobile */
 @media (max-width: 480px) {
   .person-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+}
+
+/* On small mobile, single column with bigger images */
+@media (max-width: 360px) {
+  .person-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .person-card-image .person-image-img,
+  .person-image .person-image-img {
+    min-height: 200px;
+    object-fit: cover;
   }
 }

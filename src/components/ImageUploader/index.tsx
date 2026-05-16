@@ -1,4 +1,5 @@
 import { useRef, useState, type DragEvent } from "react";
+import "~/components/ImageUploader/styles.css";
 
 interface ImageUploaderProps {
   preview: string | null;

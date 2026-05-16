@@ -6,6 +6,7 @@ interface PersonCardProps {
   record: AttendanceRecord;
   onDelete?: (id: string) => void;
   onEdit?: (record: AttendanceRecord) => void;
+  onViewDetail?: (record: AttendanceRecord) => void;
   viewOnly?: boolean;
   hideImages?: boolean;
 }
@@ -14,9 +15,18 @@ export default function PersonCard({
   record,
   onDelete,
   onEdit,
+  onViewDetail,
   viewOnly = false,
   hideImages = false,
 }: PersonCardProps) {
+  const handleImageClick = () => {
+    if (onEdit) {
+      onEdit(record);
+    } else if (onViewDetail) {
+      onViewDetail(record);
+    }
+  };
+
   return (
     <div className={`person-card ${viewOnly ? "view-card" : ""}`}>
       {!hideImages && (
@@ -25,7 +35,7 @@ export default function PersonCard({
           alt={record.name}
           square={!viewOnly}
           className={viewOnly ? "" : "person-card-image"}
-          onClick={onEdit ? () => onEdit(record) : undefined}
+          onClick={onEdit || onViewDetail ? handleImageClick : undefined}
         />
       )}
       <div className="person-info">

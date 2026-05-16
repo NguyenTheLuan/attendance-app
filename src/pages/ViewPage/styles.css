@@ -1,0 +1,69 @@
+/* ===========================
+   View Page
+   =========================== */
+.view-sticky-header {
+  position: sticky;
+  top: 56px;
+  z-index: 50;
+  background: var(--bg-page);
+  padding: 12px 0 4px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+  .view-sticky-header {
+    top: 48px;
+    padding: 8px 0 4px;
+  }
+}
+
+.view-scroll-content {
+  padding-top: 4px;
+}
+
+.view-mode-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.view-mode-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  color: var(--text-muted);
+  font-family: inherit;
+  min-height: 44px;
+}
+
+.view-mode-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.view-mode-tab.active {
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.month-select-row {
+  margin-bottom: 12px;
+}
+
+.view-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
