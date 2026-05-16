@@ -6,6 +6,8 @@ import MonthList from "~/components/stats/MonthList";
 import MonthDetail from "~/components/stats/MonthDetail";
 import PeopleDetail from "~/components/stats/PeopleDetail";
 import PersonDetailModal from "~/components/PersonDetailModal";
+import Card from "~/components/Card";
+import CardGroup from "~/components/CardGroup";
 import DayGroup from "~/components/DayGroup";
 import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
@@ -211,12 +213,12 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
           {viewMode === "incidents" && (
             <>
               {incidentsDetail.length === 0 ? (
-                <div className="card">
+                <Card>
                   <p className="empty">Không có ngày đặc biệt nào.</p>
-                </div>
+                </Card>
               ) : (
                 <>
-                  <div className="card">
+                  <Card>
                     <div className="incident-header">
                       <h2>⭐ Ngày đặc biệt</h2>
                       <button
@@ -226,17 +228,28 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                         ✕
                       </button>
                     </div>
-                  </div>
+                  </Card>
                   <div className="view-scroll-content">
-                    {incidentsDetail.map(([date, items]) => (
-                      <DayGroup
-                        key={date}
-                        date={date}
-                        records={items}
-                        viewOnly
-                        onViewDetail={setViewDetailRecord}
-                      />
-                    ))}
+                    {incidentsDetail.map(([date, items]) => {
+                      const d = new Date(date + "T00:00:00");
+                      const dayOfWeek = d.toLocaleDateString("vi-VN", {
+                        weekday: "long",
+                      });
+                      const formattedDate = d.toLocaleDateString("vi-VN", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      });
+                      const title = `${dayOfWeek}, ${formattedDate} — ${items.length} người`;
+                      return (
+                        <CardGroup
+                          key={date}
+                          title={title}
+                          records={items}
+                          onViewDetail={setViewDetailRecord}
+                        />
+                      );
+                    })}
                   </div>
                 </>
               )}
