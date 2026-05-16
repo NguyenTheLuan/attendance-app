@@ -46,12 +46,12 @@ export default function PersonDetailModal({
           {/* Right column: read-only info */}
           <div className="edit-form-col">
             <div className="detail-info-row">
-              <span className="detail-info-label">Tên người trực</span>
+              <span className="detail-info-label">Tên</span>
               <span className="detail-info-value">{record.name}</span>
             </div>
 
             <div className="detail-info-row">
-              <span className="detail-info-label">Ngày trực</span>
+              <span className="detail-info-label">Ngày</span>
               <span className="detail-info-value">
                 {dayOfWeek}, {formattedDate}
               </span>

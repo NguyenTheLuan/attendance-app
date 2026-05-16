@@ -60,3 +60,18 @@
     transform: scale(1);
   }
 }
+
+/* Mobile: stack image above form */
+@media (max-width: 600px) {
+  .edit-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .edit-image-col {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+}
