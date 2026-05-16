@@ -1,4 +1,7 @@
 node_modules/
 dist/
 www/
-attendance-app-zma.zip
+*.zip
+.env
+scripts/zma-package/
+skills
