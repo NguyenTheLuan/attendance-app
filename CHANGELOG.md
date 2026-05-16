@@ -32,6 +32,45 @@
 - chore: rename system-style to design-system and add AGENTS.md
 
 ### Other
+- 🔧 chore: bump version to v0.0.29
+- Merge pull request #3 from NguyenTheLuan/improve/analytic
+- 🔧 chore: bump version to v0.0.29
+
+
+---
+
+## [0.0.29] - 2026-05-16
+
+### ✨ Features
+- feat: add .gitkeep to report directory
+- feat: improve mobile layout and detail modal styling
+- feat: add mobile responsive navbar with drawer and theme selector
+- feat(stats): add Card and CardGroup components for stats page
+- feat(stats): add incidents view, people detail, and responsive improvements
+- feat: add design patterns and React architecture documentation for code quality guidelines
+- feat: improve WeeklyChart X-axis labeling and switch to monthly view
+- feat(navbar): add theme selector to mobile drawer and icons to nav links
+- feat: fix chart colors and rewrite weekly chart to show daily bars
+- feat: add multi-mode theme system (Light Classic, Light Warm, Dark Premium, Dark OLED, Glass)
+
+### 🐛 Bug Fixes
+- fix: add report directory to .gitignore
+- fix: bump version to 0.0.28
+
+### ♻️ Refactoring
+- refactor(components): extract CSS from App.css monolith, add Button component, fix PersonImage structure
+- refactor: Remove unused navbar and theme selector CSS from App.css
+- refactor: extract card no-padding style to CSS module and restyle PersonDetailModal to match EditModal layout
+- refactor: update Navbar and ConfirmDialog to use theme CSS variables
+
+### 📝 Documentation
+- docs: update AGENTS.md with code style and component reuse guidelines
+- docs: add environment configuration section to README and update CHANGELOG for v0.0.28
+
+### 🔧 Maintenance
+- chore: rename system-style to design-system and add AGENTS.md
+
+### Other
 - Merge pull request #3 from NguyenTheLuan/improve/analytic
 - 🔧 chore: bump version to v0.0.29
 
