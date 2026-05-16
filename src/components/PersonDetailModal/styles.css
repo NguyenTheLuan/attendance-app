@@ -1,0 +1,41 @@
+/* Detail info rows (read-only EditModal mimic) */
+.detail-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-info-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.detail-info-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  padding: 10px 14px;
+  background: var(--bg-muted);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.detail-info-value--note {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.edit-image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  font-size: 48px;
+  color: var(--text-light);
+  aspect-ratio: 3 / 4;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+}

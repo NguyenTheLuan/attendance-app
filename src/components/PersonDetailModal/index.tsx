@@ -1,10 +1,15 @@
 import type { AttendanceRecord } from "~/types";
+import "./styles.css";
 
 interface PersonDetailModalProps {
   record: AttendanceRecord;
   onClose: () => void;
 }
 
+/**
+ * Read-only detail modal that mimics EditModal layout (image left + info right).
+ * No edit/delete buttons — just view details and close.
+ */
 export default function PersonDetailModal({
   record,
   onClose,
@@ -19,39 +24,43 @@ export default function PersonDetailModal({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="modal modal-person-detail"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button className="modal-close-btn" onClick={onClose} aria-label="Đóng">
-          ✕
-        </button>
+      <div className="modal modal-edit" onClick={(e) => e.stopPropagation()}>
+        <h3>👤 Thông tin chi tiết</h3>
 
-        <div className="person-detail-layout">
-          {record.imageUrl && (
-            <div className="person-detail-image-col">
+        <div className="edit-layout">
+          {/* Left column: image */}
+          <div className="edit-image-col">
+            {record.imageUrl ? (
               <img
                 src={record.imageUrl}
                 alt={record.name}
-                className="person-detail-image"
+                className="edit-image"
               />
+            ) : (
+              <div className="edit-image edit-image--empty">
+                <span>📷</span>
+              </div>
+            )}
+          </div>
+
+          {/* Right column: read-only info */}
+          <div className="edit-form-col">
+            <div className="detail-info-row">
+              <span className="detail-info-label">Tên người trực</span>
+              <span className="detail-info-value">{record.name}</span>
             </div>
-          )}
 
-          <div className="person-detail-info-col">
-            <h3 className="person-detail-name">{record.name}</h3>
-
-            <div className="person-detail-info-row">
-              <span className="person-detail-label">Ngày trực</span>
-              <span className="person-detail-value">
+            <div className="detail-info-row">
+              <span className="detail-info-label">Ngày trực</span>
+              <span className="detail-info-value">
                 {dayOfWeek}, {formattedDate}
               </span>
             </div>
 
             {record.note && (
-              <div className="person-detail-info-row">
-                <span className="person-detail-label">Ghi chú</span>
-                <span className="person-detail-value note-text">
+              <div className="detail-info-row">
+                <span className="detail-info-label">Ghi chú</span>
+                <span className="detail-info-value detail-info-value--note">
                   {record.note}
                 </span>
               </div>

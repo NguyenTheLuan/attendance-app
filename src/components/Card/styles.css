@@ -1,0 +1,4 @@
+/* Card container — no padding variant */
+.card--no-padding {
+  padding: 0;
+}

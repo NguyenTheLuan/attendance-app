@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import "./styles.css";
 
 interface CardProps {
   children: ReactNode;
