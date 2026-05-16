@@ -28,7 +28,10 @@ export default function StatCards({
         onClick={onTotalDutyClick}
       >
         <span className="stat-num">{totalRecords}</span>
-        <span className="stat-label">Tổng lượt trực</span>
+        <span className="stat-label">
+          Tổng lượt trực
+          <span className="stat-sub">trong {totalMonths} tháng</span>
+        </span>
       </div>
       <div
         className={
@@ -39,10 +42,6 @@ export default function StatCards({
       >
         <span className="stat-num">{uniquePeople}</span>
         <span className="stat-label">Người đã trực</span>
-      </div>
-      <div className="stat-card">
-        <span className="stat-num">{totalMonths}</span>
-        <span className="stat-label">Tháng</span>
       </div>
       <div
         className={

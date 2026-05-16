@@ -56,13 +56,14 @@
   border-bottom-color: #ffffff;
 }
 
-.logout-btn {
-  margin-left: auto;
-}
-
 .logout-btn:hover {
   color: #fca5a5;
   border-bottom-color: #fca5a5;
+}
+
+/* Theme selector - push to far right */
+.theme-selector {
+  margin-left: auto;
 }
 
 /* Hamburger */
