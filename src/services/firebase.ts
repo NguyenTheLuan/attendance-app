@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDzQdLWaL9igZ3YYSzCkt0ANWkvUEYWKnM",
-  authDomain: "attendance-app-d215e.firebaseapp.com",
-  projectId: "attendance-app-d215e",
-  storageBucket: "attendance-app-d215e.firebasestorage.app",
-  messagingSenderId: "31107838129",
-  appId: "1:31107838129:web:905a38215ab9bc9fe53290",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);

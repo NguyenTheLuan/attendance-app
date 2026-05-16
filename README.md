@@ -28,21 +28,17 @@
 - **Recharts** — biểu đồ thống kê
 - **Cloudinary** — lưu trữ ảnh
 - **Firebase** — database backend
-- **GitHub Pages** — deploy
+- **GitHub Pages** — deploy web
+- **Zalo Mini App (ZMA)** — nền tảng Zalo
 
 ---
 
 ## 🚀 Chạy local
 
 ```bash
-# Clone repo
 git clone https://github.com/NguyenTheLuan/attendance-app.git
 cd attendance-app
-
-# Cài dependencies
 npm install
-
-# Chạy dev server
 npm run dev
 ```
 
@@ -50,18 +46,51 @@ npm run dev
 
 ---
 
-## 📦 Deploy lên GitHub Pages
+## 📦 Deploy
+
+### GitHub Pages
 
 ```bash
+npm run build
 npm run deploy
 ```
 
-Script deploy sẽ build và push lên branch `gh-pages`.
+### Zalo Mini App (ZMA)
+
+Có 2 cách deploy:
+
+#### Cách 1: VS Code Extension
+
+1. Mở project trong VS Code
+2. Mở tab **Zalo Mini App** ở thanh Extension bên trái
+3. Đăng nhập → nhấn **Deploy** → chọn môi trường → nhập mô tả → deploy
+4. Quét QR để test trên điện thoại
+
+#### Cách 2: Build + Upload (Web Dashboard)
+
+```bash
+npm run zip:zma
+```
+
+Upload file `scripts/zma-package/attendance-app-zma.zip` lên [mini.zalo.me](https://mini.zalo.me).
+
+---
+
+## 📜 Quy trình commit
+
+```bash
+git add .
+git commit -m "chore: mô tả thay đổi"
+git push origin main
+```
+
+Sau đó deploy tuỳ nền tảng:
+
+- **GitHub Pages:** `npm run build && npm run deploy`
+- **ZMA:** VS Code Extension hoặc `npm run zip:zma`
 
 ---
 
 ## 📜 Lịch sử thay đổi
 
-Xem file [CHANGELOG.md](./CHANGELOG.md) để biết chi tiết các phiên bản.
-
-> 💡 **Mẹo**: Để GitHub hiển thị CHANGELOG đẹp trên giao diện, bạn vào repo trên GitHub → **Settings** → **General** → kéo xuống mục **Features** → bật **Releases**. Sau đó tạo **Release** với tag version, GitHub sẽ tự động show changelog ở tab **Releases**.
+Xem [CHANGELOG.md](./CHANGELOG.md).

@@ -1,4 +1,7 @@
 node_modules/
 dist/
-.git_disabled/
-nul
+www/
+*.zip
+.env
+scripts/zma-package/
+skills

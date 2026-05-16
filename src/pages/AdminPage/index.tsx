@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { isAbsentNote } from "~/utils/absence";
 import { uploadImage } from "~/services/cloudinary";
 import Field from "~/components/Field";
 import DateSelector from "~/components/DateSelector";
@@ -21,7 +22,7 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const isAbsent = note.toLowerCase().includes("vắng");
+  const isAbsent = isAbsentNote(note);
 
   function getDateString(
     type: "today" | "tomorrow" | "custom",

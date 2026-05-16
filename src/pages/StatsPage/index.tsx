@@ -1,16 +1,21 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, lazy, Suspense } from "react";
 import { useRecords } from "~/hooks/useRecords";
 import StatCards from "~/components/stats/StatCards";
 import MonthList from "~/components/stats/MonthList";
 import MonthDetail from "~/components/stats/MonthDetail";
-import MonthOverviewChart from "~/components/stats/MonthOverviewChart";
-import PieChartSection from "~/components/stats/PieChartSection";
-import WeeklyChart, {
-  getWeeklyDailyCounts,
-} from "~/components/stats/WeeklyChart";
 import DayGroup from "~/components/DayGroup";
+import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
+import { getWeeklyDailyCounts } from "~/utils/weeklyCounts";
+
+const MonthOverviewChart = lazy(
+  () => import("~/components/stats/MonthOverviewChart")
+);
+const PieChartSection = lazy(
+  () => import("~/components/stats/PieChartSection")
+);
+const WeeklyChart = lazy(() => import("~/components/stats/WeeklyChart"));
 
 interface StatsPageProps {
   isLoggedIn: boolean;
@@ -49,14 +54,14 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   }, [records]);
 
   const absencesCount = useMemo(
-    () => records.filter((r) => r.note?.toLowerCase().includes("vắng")).length,
+    () => records.filter((r) => isAbsentNote(r.note)).length,
     [records]
   );
 
   const incidentDays = useMemo(() => {
     const daysWithNotes = new Set(
       records
-        .filter((r) => r.note?.trim() && !r.note.toLowerCase().includes("vắng"))
+        .filter((r) => r.note?.trim() && !isAbsentNote(r.note))
         .map((r) => r.date)
     );
     return daysWithNotes.size;
@@ -65,7 +70,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const incidentsDetail = useMemo(() => {
     if (!showIncidents) return [];
     const filtered = records.filter(
-      (r) => r.note?.trim() && !r.note.toLowerCase().includes("vắng")
+      (r) => r.note?.trim() && !isAbsentNote(r.note)
     );
     return groupByDate(filtered);
   }, [records, showIncidents]);
@@ -100,7 +105,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const absenceMonths = useMemo(() => {
     const set = new Set<string>();
     for (const r of records) {
-      if (r.note?.toLowerCase().includes("vắng")) {
+      if (isAbsentNote(r.note)) {
         set.add(r.date.slice(0, 7));
       }
     }
@@ -108,7 +113,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   }, [records]);
 
   const filteredAbsences = useMemo(() => {
-    let result = records.filter((r) => r.note?.toLowerCase().includes("vắng"));
+    let result = records.filter((r) => isAbsentNote(r.note));
 
     if (absenceMonthFilter) {
       result = result.filter((r) => r.date.startsWith(absenceMonthFilter));
@@ -223,7 +228,15 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
           </div>
 
           {viewMode === "month-compare" && monthList.length > 0 && (
-            <MonthOverviewChart months={monthList} />
+            <Suspense
+              fallback={
+                <div className="card empty">
+                  <p>⏳ Đang tải biểu đồ...</p>
+                </div>
+              }
+            >
+              <MonthOverviewChart months={monthList} />
+            </Suspense>
           )}
 
           {viewMode === "weekly" && (
@@ -231,7 +244,15 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
               <MonthList months={monthList} onSelectMonth={setSelectedMonth} />
 
               {selectedMonth && weeks.length > 0 && (
-                <WeeklyChart weeks={weeks} />
+                <Suspense
+                  fallback={
+                    <div className="card empty">
+                      <p>⏳ Đang tải biểu đồ...</p>
+                    </div>
+                  }
+                >
+                  <WeeklyChart weeks={weeks} />
+                </Suspense>
               )}
 
               {selectedMonth && monthDetail.length === 0 && (
@@ -250,7 +271,15 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
           )}
 
           {viewMode === "month-compare" && pieData.length > 0 && (
-            <PieChartSection data={pieData} />
+            <Suspense
+              fallback={
+                <div className="card empty">
+                  <p>⏳ Đang tải biểu đồ...</p>
+                </div>
+              }
+            >
+              <PieChartSection data={pieData} />
+            </Suspense>
           )}
 
           {/* Absence tab */}

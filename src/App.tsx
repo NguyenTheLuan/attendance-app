@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import AdminPage from "~/pages/AdminPage";
 import ViewPage from "~/pages/ViewPage";
@@ -6,17 +6,40 @@ import StatsPage from "~/pages/StatsPage";
 import LoginPage from "~/pages/LoginPage";
 import ErrorBoundary from "~/components/ErrorBoundary";
 import Navbar from "~/components/Navbar";
+import { zmaGetItem, zmaRemoveItem } from "~/services/zma";
 import "~/App.css";
 import "~/components/ConfirmDialog/styles.css";
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    () => localStorage.getItem("attendance_logged_in") === "true"
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  function handleLogout() {
-    localStorage.removeItem("attendance_logged_in");
+  useEffect(() => {
+    async function checkLogin() {
+      try {
+        const val = await zmaGetItem("attendance_logged_in");
+        setIsLoggedIn(val === "true");
+      } catch {
+        setIsLoggedIn(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkLogin();
+  }, []);
+
+  async function handleLogout() {
+    await zmaRemoveItem("attendance_logged_in");
     setIsLoggedIn(false);
+  }
+
+  // Show minimal loading while checking login state
+  if (loading) {
+    return (
+      <div className="page" style={{ textAlign: "center", paddingTop: "2rem" }}>
+        Đang tải...
+      </div>
+    );
   }
 
   return (
