@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.0.29] - 2026-05-16
+
+### 🐛 Bug Fixes
+- fix: bump version to 0.0.28
+
+### 📝 Documentation
+- docs: add environment configuration section to README and update CHANGELOG for v0.0.28
+
+
+---
+
 ## [0.0.28] - 2026-05-16
 
 ### 🔧 Maintenance
