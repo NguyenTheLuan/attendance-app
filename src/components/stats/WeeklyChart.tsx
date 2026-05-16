@@ -53,8 +53,6 @@ export default function WeeklyChart({
 }: WeeklyChartProps) {
   if (dailyData.length === 0) return null;
 
-  const maxCount = Math.max(...dailyData.map((d) => d.count), 1);
-
   return (
     <div className="card">
       <h2>📊 {formatMonthLabel(monthLabel)}</h2>
@@ -83,8 +81,10 @@ export default function WeeklyChart({
             domain={[0, "auto"]}
           />
           <Tooltip
-            formatter={(value: number) => [`${value} lượt`, "Ngày"]}
-            labelFormatter={(label: string) => `Ngày ${label}`}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any) => [`${value} lượt`, "Ngày"]}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            labelFormatter={(label: any) => `Ngày ${label}`}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
@@ -93,7 +93,7 @@ export default function WeeklyChart({
             }}
           />
           <Bar dataKey="count" radius={[3, 3, 0, 0]}>
-            {dailyData.map((entry, index) => (
+            {dailyData.map((_entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={CHART_COLORS[index % CHART_COLORS.length]}

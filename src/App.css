@@ -493,6 +493,10 @@
   box-shadow: var(--glass-shadow);
 }
 
+.card h2 {
+  margin-bottom: 16px;
+}
+
 /* ===========================
    Grid
    =========================== */
@@ -1223,6 +1227,12 @@
   box-shadow: var(--shadow);
 }
 
+.stat-card.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  box-shadow: var(--primary-glow);
+}
+
 .stat-number,
 .stat-num {
   font-size: 28px;
@@ -1304,6 +1314,12 @@
 .month-item.clickable:hover {
   background: var(--primary-soft);
   border-color: var(--primary);
+}
+
+.month-item.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  box-shadow: var(--primary-glow);
 }
 
 .month-name {
@@ -1415,7 +1431,8 @@
   color: var(--danger);
 }
 
-@media (max-width: 400px) {
+/* On mobile (iPhone-sized), show 2 cards per row */
+@media (max-width: 600px) {
   .stat-cards {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1559,4 +1576,13 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* ===========================
+   Month Detail List
+   =========================== */
+.month-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }

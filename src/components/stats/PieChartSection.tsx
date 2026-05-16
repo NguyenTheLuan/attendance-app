@@ -91,7 +91,8 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
             tick={{ fontSize: yAxisFontSize, fill: "var(--text-primary)" }}
           />
           <Tooltip
-            formatter={(value) => [`${value} lần`, "Tổng số"]}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any) => [`${value} lần`, "Tổng số"]}
             contentStyle={{
               background: "var(--bg-card)",
               border: "1px solid var(--border)",
@@ -107,7 +108,8 @@ export default function PieChartSection({ data }: PieChartSectionProps) {
               position: "right",
               fill: "var(--text-muted)",
               fontSize: barLabelFontSize,
-              formatter: (v: number) => `${v} lần`,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              formatter: (v: any) => `${v} lần`,
             }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             shape={(props: any) => {

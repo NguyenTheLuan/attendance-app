@@ -1,19 +1,20 @@
 import { useMemo, useState, lazy, Suspense } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useRecords } from "~/hooks/useRecords";
 import StatCards from "~/components/stats/StatCards";
 import MonthList from "~/components/stats/MonthList";
 import MonthDetail from "~/components/stats/MonthDetail";
+import PeopleDetail from "~/components/stats/PeopleDetail";
+import PersonDetailModal from "~/components/PersonDetailModal";
 import DayGroup from "~/components/DayGroup";
 import { isAbsentNote } from "~/utils/absence";
 import { exportRecordsToCsv } from "~/utils/exportCsv";
 import { groupByDate } from "~/utils/groupByDate";
 import { getMonthlyDailyData } from "~/utils/weeklyCounts";
+import type { AttendanceRecord } from "~/types";
 
 const MonthOverviewChart = lazy(
   () => import("~/components/stats/MonthOverviewChart")
-);
-const PieChartSection = lazy(
-  () => import("~/components/stats/PieChartSection")
 );
 const WeeklyChart = lazy(() => import("~/components/stats/WeeklyChart"));
 
@@ -21,15 +22,27 @@ interface StatsPageProps {
   isLoggedIn: boolean;
 }
 
-type ViewMode = "month-compare" | "weekly" | "absences";
+type ViewMode =
+  | "month-compare"
+  | "weekly"
+  | "people"
+  | "absences"
+  | "incidents";
 
 const ABSENCE_PASSWORD = "111";
 
 export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   const { records, loading, error } = useRecords();
-  const [viewMode, setViewMode] = useState<ViewMode>("month-compare");
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-  const [showIncidents, setShowIncidents] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [viewMode, setViewMode] = useState<ViewMode>(
+    (searchParams.get("mode") as ViewMode) || "month-compare"
+  );
+  const [viewDetailRecord, setViewDetailRecord] =
+    useState<AttendanceRecord | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | undefined>(
+    undefined
+  );
+
   const [absencePassword, setAbsencePassword] = useState("");
   const [absenceUnlocked, setAbsenceUnlocked] = useState(false);
   const [absencePasswordError, setAbsencePasswordError] = useState("");
@@ -68,12 +81,12 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
   }, [records]);
 
   const incidentsDetail = useMemo(() => {
-    if (!showIncidents) return [];
+    if (viewMode !== "incidents") return [];
     const filtered = records.filter(
       (r) => r.note?.trim() && !isAbsentNote(r.note)
     );
     return groupByDate(filtered);
-  }, [records, showIncidents]);
+  }, [records, viewMode]);
 
   const uniquePeople = useMemo(
     () => new Set(records.map((r) => r.name)).size,
@@ -85,16 +98,6 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
     const filtered = records.filter((r) => r.date.startsWith(selectedMonth));
     return groupByDate(filtered);
   }, [records, selectedMonth]);
-
-  const pieData = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const r of records) {
-      map.set(r.name, (map.get(r.name) ?? 0) + 1);
-    }
-    return Array.from(map.entries())
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value);
-  }, [records]);
 
   const dailyData = useMemo(() => {
     if (!selectedMonth) return [];
@@ -127,8 +130,46 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
     return groupByDate(result);
   }, [records, absenceMonthFilter, absenceSearch]);
 
+  const activeCard = useMemo(() => {
+    if (viewMode === "people") return "people" as const;
+    if (viewMode === "incidents") return "incident" as const;
+    if (viewMode === "month-compare" || viewMode === "weekly")
+      return "total" as const;
+    return null;
+  }, [viewMode]);
+
+  // --- Sync viewMode to URL ---
+
+  function updateViewMode(mode: ViewMode) {
+    setViewMode(mode);
+    const params = new URLSearchParams(searchParams);
+    if (mode === "month-compare") {
+      params.delete("mode");
+    } else {
+      params.set("mode", mode);
+    }
+    setSearchParams(params, { replace: true });
+  }
+
+  // --- Handlers for stat card clicks ---
+
+  function handleTotalDutyClick() {
+    updateViewMode("month-compare");
+    setSelectedMonth(undefined);
+  }
+
+  function handleUniquePeopleClick() {
+    updateViewMode("people");
+    setSelectedMonth(undefined);
+  }
+
+  function handleIncidentClick() {
+    updateViewMode(viewMode === "incidents" ? "month-compare" : "incidents");
+    setSelectedMonth(undefined);
+  }
+
   function handleSwitchToAbsences() {
-    setViewMode("absences");
+    updateViewMode("absences");
     setAbsenceUnlocked(false);
     setAbsencePassword("");
     setAbsencePasswordError("");
@@ -156,31 +197,54 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
       {!loading && !error && (
         <>
           <StatCards
+            activeCard={activeCard}
             totalRecords={records.length}
             uniquePeople={uniquePeople}
             totalMonths={monthList.length}
             incidentDays={incidentDays}
-            onIncidentClick={() => setShowIncidents((v) => !v)}
+            onTotalDutyClick={handleTotalDutyClick}
+            onUniquePeopleClick={handleUniquePeopleClick}
+            onIncidentClick={handleIncidentClick}
           />
 
-          {showIncidents && incidentsDetail.length > 0 && (
-            <div className="card">
-              <div className="incident-header">
-                <h2>⭐ Ngày đặc biệt</h2>
-                <button
-                  className="btn-close-incident"
-                  onClick={() => setShowIncidents(false)}
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="month-detail-list">
-                {incidentsDetail.map(([date, items]) => (
-                  <DayGroup key={date} date={date} records={items} viewOnly />
-                ))}
-              </div>
-            </div>
+          {/* Incident / Special days section */}
+          {viewMode === "incidents" && (
+            <>
+              {incidentsDetail.length === 0 ? (
+                <div className="card">
+                  <p className="empty">Không có ngày đặc biệt nào.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="card">
+                    <div className="incident-header">
+                      <h2>⭐ Ngày đặc biệt</h2>
+                      <button
+                        className="btn-close-incident"
+                        onClick={() => setViewMode("month-compare")}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                  <div className="view-scroll-content">
+                    {incidentsDetail.map(([date, items]) => (
+                      <DayGroup
+                        key={date}
+                        date={date}
+                        records={items}
+                        viewOnly
+                        onViewDetail={setViewDetailRecord}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
           )}
+
+          {/* People detail view */}
+          {viewMode === "people" && <PeopleDetail records={records} />}
 
           {isLoggedIn && records.length > 0 && (
             <div className="stats-export-row">
@@ -193,39 +257,41 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
             </div>
           )}
 
-          {/* View mode toggle */}
-          <div className="chart-tabs">
-            <button
-              className={`chart-tab ${
-                viewMode === "month-compare" ? "active" : ""
-              }`}
-              onClick={() => {
-                setViewMode("month-compare");
-                setSelectedMonth(null);
-              }}
-            >
-              📈 So sánh theo tháng
-            </button>
-            <button
-              className={`chart-tab ${viewMode === "weekly" ? "active" : ""}`}
-              onClick={() => {
-                setViewMode("weekly");
-                setSelectedMonth(null);
-              }}
-            >
-              🗓️ Theo tháng
-            </button>
-            {isLoggedIn && (
+          {/* View mode toggle — hidden in people / incidents mode */}
+          {viewMode !== "people" && viewMode !== "incidents" && (
+            <div className="chart-tabs">
               <button
                 className={`chart-tab ${
-                  viewMode === "absences" ? "active" : ""
+                  viewMode === "month-compare" ? "active" : ""
                 }`}
-                onClick={handleSwitchToAbsences}
+                onClick={() => {
+                  setViewMode("month-compare");
+                  setSelectedMonth(undefined);
+                }}
               >
-                📝 Số lần vắng ({absencesCount})
+                📈 So sánh theo tháng
               </button>
-            )}
-          </div>
+              <button
+                className={`chart-tab ${viewMode === "weekly" ? "active" : ""}`}
+                onClick={() => {
+                  setViewMode("weekly");
+                  setSelectedMonth(undefined);
+                }}
+              >
+                🗓️ Theo từng tháng
+              </button>
+              {isLoggedIn && (
+                <button
+                  className={`chart-tab ${
+                    viewMode === "absences" ? "active" : ""
+                  }`}
+                  onClick={handleSwitchToAbsences}
+                >
+                  📝 Số lần vắng ({absencesCount})
+                </button>
+              )}
+            </div>
+          )}
 
           {viewMode === "month-compare" && monthList.length > 0 && (
             <Suspense
@@ -241,7 +307,11 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
 
           {viewMode === "weekly" && (
             <>
-              <MonthList months={monthList} onSelectMonth={setSelectedMonth} />
+              <MonthList
+                months={monthList}
+                onSelectMonth={setSelectedMonth}
+                selectedMonth={selectedMonth}
+              />
 
               {selectedMonth && dailyData.length > 0 && (
                 <Suspense
@@ -253,7 +323,7 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                 >
                   <WeeklyChart
                     dailyData={dailyData}
-                    monthLabel={selectedMonth ?? undefined}
+                    monthLabel={selectedMonth}
                   />
                 </Suspense>
               )}
@@ -270,19 +340,8 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
             <MonthDetail
               selectedMonth={selectedMonth}
               monthDetail={monthDetail}
+              onViewDetail={setViewDetailRecord}
             />
-          )}
-
-          {viewMode === "month-compare" && pieData.length > 0 && (
-            <Suspense
-              fallback={
-                <div className="card empty">
-                  <p>⏳ Đang tải biểu đồ...</p>
-                </div>
-              }
-            >
-              <PieChartSection data={pieData} />
-            </Suspense>
           )}
 
           {/* Absence tab */}
@@ -374,6 +433,14 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
             </div>
           )}
         </>
+      )}
+
+      {/* Person detail modal (shown when a record image is clicked) */}
+      {viewDetailRecord && (
+        <PersonDetailModal
+          record={viewDetailRecord}
+          onClose={() => setViewDetailRecord(null)}
+        />
       )}
     </div>
   );

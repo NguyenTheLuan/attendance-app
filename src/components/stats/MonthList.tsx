@@ -4,9 +4,14 @@ import type { MonthStats } from "~/types";
 interface MonthListProps {
   months: MonthStats[];
   onSelectMonth: (month: string) => void;
+  selectedMonth?: string;
 }
 
-export default function MonthList({ months, onSelectMonth }: MonthListProps) {
+export default function MonthList({
+  months,
+  onSelectMonth,
+  selectedMonth,
+}: MonthListProps) {
   return (
     <div className="card">
       <h2>🗓️ Các tháng</h2>
@@ -14,7 +19,10 @@ export default function MonthList({ months, onSelectMonth }: MonthListProps) {
         {months.map((m) => (
           <div
             key={m.month}
-            className="month-item clickable"
+            className={
+              "month-item clickable" +
+              (m.month === selectedMonth ? " active" : "")
+            }
             onClick={() => onSelectMonth(m.month)}
           >
             <span className="month-name">{formatMonth(m.month)}</span>
