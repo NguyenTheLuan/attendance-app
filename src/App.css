@@ -217,6 +217,100 @@
   margin: 8px 0;
 }
 
+/* Drawer theme section (mobile only) */
+.drawer-theme-divider {
+  margin-top: auto;
+}
+
+.drawer-theme-section {
+  padding: 12px 16px 20px;
+}
+
+.drawer-theme-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-theme-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.drawer-theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+  text-align: left;
+}
+
+.drawer-theme-option:hover {
+  background: rgba(124, 58, 237, 0.2);
+  color: #ffffff;
+}
+
+.drawer-theme-option.active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.drawer-theme-option .theme-option-icon {
+  font-size: 18px;
+  line-height: 1;
+  width: 24px;
+  text-align: center;
+}
+
+/* ===========================
+   Responsive Navbar: hamburger + drawer on small screens
+   =========================== */
+@media (max-width: 767px) {
+  .navbar-desktop {
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: flex;
+  }
+
+  .navbar-drawer .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .drawer-theme-divider,
+  .drawer-theme-section {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 768px) {
+  .drawer-theme-divider,
+  .drawer-theme-section {
+    display: none;
+  }
+}
+
 /* ===========================
    Theme Selector
    =========================== */

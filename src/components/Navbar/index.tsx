@@ -130,13 +130,13 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
           className={linkClass}
           onClick={handleNavClick}
         >
-          Nhập điểm danh
+          <span className="nav-icon">✏️</span> Nhập điểm danh
         </NavLink>
         <NavLink to="/view" className={linkClass} onClick={handleNavClick}>
-          Xem lịch trực
+          <span className="nav-icon">👁️</span> Xem lịch trực
         </NavLink>
         <NavLink to="/stats" className={linkClass} onClick={handleNavClick}>
-          Thống kê
+          <span className="nav-icon">📊</span> Thống kê
         </NavLink>
         {isLoggedIn && (
           <>
@@ -148,10 +148,36 @@ export default function Navbar({ isLoggedIn, onLogout }: NavbarProps) {
                 setOpen(false);
               }}
             >
-              Thoát
+              <span className="nav-icon">🚪</span> Thoát
             </button>
           </>
         )}
+
+        {/* Theme Selector in Drawer (mobile only) */}
+        <hr className="navbar-divider drawer-theme-divider" />
+        <div className="drawer-theme-section">
+          <div className="drawer-theme-label">
+            <span className="theme-icon">{currentTheme.icon}</span> Chọn giao
+            diện
+          </div>
+          <div className="drawer-theme-options">
+            {themes.map((t) => (
+              <button
+                key={t.value}
+                className={`drawer-theme-option${
+                  t.value === theme ? " active" : ""
+                }`}
+                onClick={() => {
+                  setTheme(t.value);
+                  setThemeOpen(false);
+                }}
+              >
+                <span className="theme-option-icon">{t.icon}</span>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </nav>
   );
