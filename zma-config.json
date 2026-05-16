@@ -1,0 +1,20 @@
+{
+  "mpId": "399913455877657263",
+  "name": "Điểm Danh Khu Phố",
+  "description": "Lịch trực của khu phố",
+  "version": "1.0.0",
+  "icon": "",
+  "entryPage": "pages/index/index",
+  "pages": ["pages/index/index", "pages/profile/index", "pages/history/index"],
+  "window": {
+    "titleBarColor": "#ffffff",
+    "navigationBarTitleText": "Điểm Danh Khu Phố",
+    "navigationBarTextStyle": "black"
+  },
+  "permissions": [
+    "scope.userInfo",
+    "scope.userLocation",
+    "scope.camera",
+    "scope.uploadFile"
+  ]
+}

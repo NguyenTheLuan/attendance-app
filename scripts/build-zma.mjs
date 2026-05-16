@@ -6,7 +6,7 @@
  * Steps:
  *   1. Vite build with mode "zma" → output to www/
  *   2. Remove files not needed for ZMA (e.g. 404.html for GitHub Pages)
- *   3. Fix app-config.json pages from root config
+ *   3. Replace app-config.json with correct ZMA v2 format
  *   4. Zip www/ → attendance-app-zma.zip
  */
 
@@ -40,18 +40,16 @@ async function main() {
   const dist404 = join(DIST, "404.html");
   if (existsSync(dist404)) unlinkSync(dist404);
 
-  // 3. Fix app-config.json: inject pages from root config
-  //    (zmp-vite-plugin generates pages: [] incorrectly)
-  console.log(
-    "   Fixing app-config.json (injecting pages from root config)..."
-  );
-  const rootConfig = JSON.parse(
-    readFileSync(join(ROOT, "app-config.json"), "utf-8")
-  );
+  // 3. Replace app-config.json with correct ZMA v2 format
+  //    zmp-vite-plugin generates an old-format config; we must override it.
+  //    Read from zma-config.json (source of truth) and inject version from package.json.
+  console.log("   Writing ZMA v2 app-config.json...");
+  const pkg = JSON.parse(await readFile(join(ROOT, "package.json"), "utf-8"));
+  const zmaConfigPath = join(ROOT, "zma-config.json");
+  const zmaConfig = JSON.parse(readFileSync(zmaConfigPath, "utf-8"));
+  zmaConfig.version = pkg.version;
   const distConfigPath = join(DIST, "app-config.json");
-  const distConfig = JSON.parse(readFileSync(distConfigPath, "utf-8"));
-  Object.assign(distConfig, { pages: rootConfig.pages || [] });
-  writeFileSync(distConfigPath, JSON.stringify(distConfig));
+  writeFileSync(distConfigPath, JSON.stringify(zmaConfig, null, 2));
 
   // 4. Remove old zip
   if (existsSync(OUT_ZIP)) unlinkSync(OUT_ZIP);
@@ -72,14 +70,14 @@ async function main() {
   });
 
   // 6. Show result
-  const pkg = JSON.parse(await readFile(join(ROOT, "package.json"), "utf-8"));
+  const pkg2 = JSON.parse(await readFile(join(ROOT, "package.json"), "utf-8"));
   const stats = await stat(OUT_ZIP);
   const sizeMB = (stats.size / 1024 / 1024).toFixed(2);
 
   console.log("\n✅ Done!");
   console.log(`   📍 File:  ${OUT_ZIP}`);
   console.log(`   📦 Size:  ${sizeMB} MB`);
-  console.log(`   📌 Ver:   ${pkg.version}`);
+  console.log(`   📌 Ver:   ${pkg2.version}`);
   console.log("\n👉 Upload this zip to https://mini.zalo.me/");
 }
 
