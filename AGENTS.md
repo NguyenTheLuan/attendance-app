@@ -1,6 +1,10 @@
-Follow `.clinerules\code-style.md`
+### For commit:
+
 Follow `.clinerules\commit-rule.md`
-Follow `.clinerules\react-vibe.md`
-Follow `.clinerules\reusability.md`
+
+### For coding:
+
+Follow `.clinerules\code-style.md`
+Follow `.clinerules\design-patterns-architecture.md`
 Follow `.clinerules\design-system.md`
-Follow all `.clinerules\skills`
+Follow `.clinerules\react-architecture.md`
