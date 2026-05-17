@@ -61,17 +61,25 @@ export default function AdminPage() {
       if (!isAbsent && file) {
         imageUrl = await uploadImage(file);
       }
-      await handleAdd({
-        name: name.trim(),
-        imageUrl,
-        date: dateStr,
-        note: note.trim() || "",
-      });
+      // Split names by comma, trim each, filter empty
+      const names = name
+        .split(",")
+        .map((n) => n.trim())
+        .filter(Boolean);
+      for (const n of names) {
+        await handleAdd({
+          name: n,
+          imageUrl,
+          date: dateStr,
+          note: note.trim() || "",
+        });
+      }
       setName("");
       setNote("");
       setFile(null);
       setPreview(null);
-      setMessage("✅ Đã lưu điểm danh thành công!");
+      const count = names.length;
+      setMessage(`✅ Đã lưu điểm danh ${count} người thành công!`);
       setIsSuccess(true);
     } catch (err) {
       console.error("Lỗi khi lưu record:", err);
@@ -94,7 +102,7 @@ export default function AdminPage() {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nhập tên..."
+          placeholder="Nhập tên... (có thể nhập nhiều tên, cách nhau bằng dấu phẩy)"
           disabled={uploading}
         />
 
