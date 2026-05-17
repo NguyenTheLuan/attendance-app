@@ -80,7 +80,7 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
 
           <div className="edit-form-col">
             <Field
-              label="Tên người trực"
+              label="Tên"
               row
               type="text"
               value={name}
@@ -89,7 +89,7 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
             />
 
             <Field
-              label="Ngày trực"
+              label="Ngày"
               row
               type="date"
               value={date}
