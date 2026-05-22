@@ -29,7 +29,6 @@
 - **Cloudinary** — lưu trữ ảnh
 - **Firebase** — database backend
 - **GitHub Pages** — deploy web
-- **Zalo Mini App (ZMA)** — nền tảng Zalo
 
 ---
 
@@ -85,25 +84,6 @@ npm run dev
 4. Build và deploy lên GitHub Pages
 
 > Cần set **6 GitHub Secrets** (ở trên) để build có Firebase config.
-
-### Zalo Mini App (ZMA)
-
-Có 2 cách deploy:
-
-#### Cách 1: VS Code Extension
-
-1. Mở project trong VS Code
-2. Mở tab **Zalo Mini App** ở thanh Extension bên trái
-3. Đăng nhập → nhấn **Deploy** → chọn môi trường → nhập mô tả → deploy
-4. Quét QR để test trên điện thoại
-
-#### Cách 2: Build + Upload (Web Dashboard)
-
-```bash
-npm run zip:zma
-```
-
-Upload file `scripts/zma-package/attendance-app-zma.zip` lên [mini.zalo.me](https://mini.zalo.me).
 
 ---
 

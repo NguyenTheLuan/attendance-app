@@ -20,6 +20,28 @@
   background-clip: text;
 }
 
+@media (max-width: 480px) {
+  .page {
+    padding: 16px 12px 40px;
+  }
+
+  .page h1 {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 12px 10px 32px;
+  }
+
+  .page h1 {
+    font-size: 19px;
+    margin-bottom: 14px;
+  }
+}
+
 .subtitle {
   text-align: center;
   color: var(--text-secondary);
