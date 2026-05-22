@@ -6,7 +6,6 @@ import StatsPage from "~/pages/StatsPage";
 import LoginPage from "~/pages/LoginPage";
 import ErrorBoundary from "~/components/ErrorBoundary";
 import Navbar from "~/components/Navbar";
-import { zmaGetItem, zmaRemoveItem } from "~/services/zma";
 import "~/App.css";
 import "~/components/Button/styles.css";
 
@@ -15,9 +14,9 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function checkLogin() {
+    function checkLogin() {
       try {
-        const val = await zmaGetItem("attendance_logged_in");
+        const val = localStorage.getItem("attendance_logged_in");
         setIsLoggedIn(val === "true");
       } catch {
         setIsLoggedIn(false);
@@ -28,8 +27,8 @@ export default function App() {
     checkLogin();
   }, []);
 
-  async function handleLogout() {
-    await zmaRemoveItem("attendance_logged_in");
+  function handleLogout() {
+    localStorage.removeItem("attendance_logged_in");
     setIsLoggedIn(false);
   }
 
