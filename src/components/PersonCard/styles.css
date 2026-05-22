@@ -76,11 +76,28 @@
   background: #e03040;
 }
 
-/* Larger touch targets & bigger images on mobile */
+/* ===========================
+   Responsive
+   =========================== */
 @media (max-width: 480px) {
   .person-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+
+  .person-info {
+    padding: 10px 8px 10px;
+  }
+
+  .person-name {
+    font-size: 13px;
+  }
+
+  .person-note {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 }
 

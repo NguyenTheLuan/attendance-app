@@ -10,52 +10,6 @@
   margin-top: 4px;
 }
 
-.login-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 16px 0;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-.login-divider::before,
-.login-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-.btn-zalo {
-  width: 100%;
-  padding: 14px 20px;
-  background: #0068ff;
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: inherit;
-  box-shadow: 0 2px 8px rgba(0, 104, 255, 0.25);
-}
-
-.btn-zalo:hover:not(:disabled) {
-  background: #0052cc;
-  transform: translateY(-1px);
-}
-
-.btn-zalo:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .msg {
   margin-top: 12px;
   padding: 12px 16px;
