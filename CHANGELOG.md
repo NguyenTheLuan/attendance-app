@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.33] - 2026-05-22
+
+### ✨ Features
+- feat: support adding multiple attendees in AdminPage by comma-separated names
+
+### 🐛 Bug Fixes
+- fix: remove ZMA section and improve responsive styles across components
+- fix: update root container ID from "root" to "app" in main.tsx
+- fix: shorten input field labels in edit modal
+
+### 🔧 Maintenance
+- chore: bump version to 0.0.31 and remove ZMA dependencies
+
+### Other
+- Merge pull request #5 from NguyenTheLuan/improve-ui
+
+
+---
+
 ## [0.0.32] - 2026-05-16
 
 ### 🐛 Bug Fixes
