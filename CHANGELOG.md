@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.34] - 2026-05-25
+
+### ✨ Features
+- feat(ConfirmDialog): add loading state with spinner for delete actions
+
+### 🐛 Bug Fixes
+- fix(admin): stop clearing file upload when note is edited
+
+### Other
+- Merge pull request #6 from NguyenTheLuan/improve/event-animation
+
+
+---
+
 ## [0.0.33] - 2026-05-22
 
 ### ✨ Features
