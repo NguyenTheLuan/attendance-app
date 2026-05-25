@@ -26,6 +26,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     null
   );
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [viewDetailRecord, setViewDetailRecord] =
     useState<AttendanceRecord | null>(null);
   const [showToast, setShowToast] = useState(false);
@@ -89,6 +90,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
 
   async function handleDelete() {
     if (!deleteTargetId) return;
+    setIsDeleting(true);
     try {
       await deleteRecordById(deleteTargetId);
       await load();
@@ -97,6 +99,8 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
     } catch {
       showToastMsg("Lỗi khi xóa. Thử lại nhé.", "error");
       setDeleteTargetId(null);
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -235,6 +239,7 @@ export default function ViewPage({ isLoggedIn }: ViewPageProps) {
         cancelLabel="Hủy"
         onConfirm={handleDelete}
         onCancel={() => setDeleteTargetId(null)}
+        loading={isDeleting}
       />
 
       <Toast
