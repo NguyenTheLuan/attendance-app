@@ -128,8 +128,6 @@ export default function AdminPage() {
           value={note}
           onChange={(e) => {
             setNote(e.target.value);
-            setFile(null);
-            setPreview(null);
           }}
           placeholder={
             isAbsent ? "Ví dụ: vắng (không cần ảnh)" : "Ví dụ: hỗ trợ..."

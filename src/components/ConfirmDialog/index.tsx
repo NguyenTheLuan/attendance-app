@@ -8,6 +8,7 @@ interface ConfirmDialogProps {
   cancelLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
+  loading?: boolean;
 }
 
 export default function ConfirmDialog({
@@ -18,11 +19,14 @@ export default function ConfirmDialog({
   cancelLabel = "Hủy",
   onConfirm,
   onCancel,
+  loading = false,
 }: ConfirmDialogProps) {
   if (!open) return null;
 
+  const handleOverlayClick = loading ? undefined : onCancel;
+
   return (
-    <div className="modal-overlay" onClick={onCancel}>
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div
           style={{ textAlign: "center", fontSize: "36px", marginBottom: "8px" }}
@@ -43,17 +47,19 @@ export default function ConfirmDialog({
           <button
             className="btn-cancel"
             onClick={onCancel}
+            disabled={loading}
             style={{
               padding: "14px 20px",
               border: "none",
               borderRadius: "var(--radius-md)",
               fontSize: "15px",
               fontWeight: 600,
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               fontFamily: "inherit",
               background: "var(--bg-muted)",
               color: "var(--text-secondary)",
               flex: 1,
+              opacity: loading ? 0.6 : 1,
             }}
           >
             {cancelLabel}
@@ -62,20 +68,29 @@ export default function ConfirmDialog({
             className="btn-danger"
             onClick={onConfirm}
             autoFocus
+            disabled={loading}
             style={{
               padding: "14px 20px",
               border: "none",
               borderRadius: "var(--radius-md)",
               fontSize: "15px",
               fontWeight: 600,
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               fontFamily: "inherit",
               background: "var(--danger)",
               color: "#ffffff",
               flex: 1,
+              opacity: loading ? 0.8 : 1,
             }}
           >
-            {confirmLabel}
+            {loading ? (
+              <>
+                <span className="btn-spinner" />
+                {" Đang xử lý..."}
+              </>
+            ) : (
+              confirmLabel
+            )}
           </button>
         </div>
       </div>
