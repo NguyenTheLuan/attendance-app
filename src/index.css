@@ -1,38 +1,39 @@
 /* ===================================================================
    ULTIMATE VIP DESIGN SYSTEM 2026 - Multi-Mode Theme Variables
-   Brand: Modern Purple-Violet (#7C3AED)
+   Brand: Clean Military / Professional (Navy & Gold)
    =================================================================== */
 
-/* --- Base Purple Brand (shared across modes) --- */
+/* --- Base Brand (shared across modes) --- */
 :root {
-  --purple-base: #7c3aed;
-  --purple-light-hover: #6d28d9;
-  --purple-dark-hover: #a855f7;
-  --purple-soft: rgba(124, 58, 237, 0.1);
-  --purple-soft-hover: rgba(124, 58, 237, 0.15);
-  --purple-glow: 0 0 20px rgba(124, 58, 237, 0.3);
+  --navy-base: #1e3a5f;
+  --navy-light: #2c5282;
+  --navy-dark: #1a2e4a;
+  --gold-base: #d4a017;
+  --gold-hover: #b8860b;
+  
+  --danger: #dc3545;
+  --danger-hover: #c82333;
+  --success: #28a745;
+  --success-hover: #218838;
 
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
-  --success: #10b981;
+  --chart-1: #1e3a5f;
+  --chart-2: #2c5282;
+  --chart-3: #d4a017;
+  --chart-4: #4a5568;
+  --chart-5: #28a745;
+  --chart-6: #e2e8f0;
+  --chart-7: #dc3545;
+  --chart-8: #718096;
 
-  --chart-1: #7c3aed;
-  --chart-2: #a855f7;
-  --chart-3: #ec4899;
-  --chart-4: #f59e0b;
-  --chart-5: #10b981;
-  --chart-6: #3b82f6;
-  --chart-7: #ef4444;
-  --chart-8: #8b5cf6;
-
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
 
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 24px;
+  /* Sharp, structured corners for professional look */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
@@ -49,60 +50,60 @@
    =================================================================== */
 [data-theme="light-classic"],
 :root:not([data-theme]) {
-  --bg-page: #f8f9fa;
+  --bg-page: #f0f2f5;
   --bg-surface: #ffffff;
-  --bg-surface-2: #f1f3f5;
+  --bg-surface-2: #f8f9fa;
   --bg-card: #ffffff;
   --bg-input: #ffffff;
-  --bg-muted: #f1f3f5;
-  --bg-overlay: rgba(0, 0, 0, 0.4);
-  --bg-navbar: #7c3aed;
-  --bg-navbar-dark: #5b21b6;
+  --bg-muted: #e2e8f0;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-navbar: #1e3a5f;
+  --bg-navbar-dark: #1a2e4a;
 
-  --border: #e5e7eb;
-  --border-light: #f3f4f6;
-  --border-focus: #7c3aed;
+  --border: #e2e8f0;
+  --border-light: #edf2f7;
+  --border-focus: #1e3a5f;
 
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --text-muted: #6b7280;
-  --text-light: #9ca3af;
-  --text-faint: #d1d5db;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --text-light: #a0aec0;
+  --text-faint: #cbd5e0;
   --text-white: #ffffff;
   --text-on-primary: #ffffff;
 
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-  --primary-soft: rgba(124, 58, 237, 0.08);
-  --primary-glow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+  --primary: #1e3a5f;
+  --primary-hover: #2c5282;
+  --primary-soft: rgba(30, 58, 95, 0.08);
+  --primary-glow: 0 0 0 3px rgba(30, 58, 95, 0.2);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
 
-  --toast-error-bg: #ef4444;
-  --toast-success-bg: #10b981;
+  --toast-error-bg: #dc3545;
+  --toast-success-bg: #28a745;
 }
 
 /* ===================================================================
-   MODE 2: Light Warm (Dịu mắt nhất - Khuyến nghị cho Light)
+   MODE 2: Light Warm
    =================================================================== */
 [data-theme="light-warm"] {
-  --bg-page: #faf7f2;
-  --bg-surface: #fffcf7;
-  --bg-surface-2: #f5f0e8;
-  --bg-card: #fffcf7;
-  --bg-input: #fffcf7;
-  --bg-muted: #f5f0e8;
-  --bg-overlay: rgba(44, 37, 32, 0.4);
-  --bg-navbar: #7c3aed;
-  --bg-navbar-dark: #5b21b6;
+  --bg-page: #faf8f5;
+  --bg-surface: #ffffff;
+  --bg-surface-2: #f4f1eb;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-muted: #eaddd3;
+  --bg-overlay: rgba(44, 37, 32, 0.5);
+  --bg-navbar: #1e3a5f;
+  --bg-navbar-dark: #1a2e4a;
 
-  --border: #ede6db;
-  --border-light: #f5f0e8;
-  --border-focus: #7c3aed;
+  --border: #e6dfd7;
+  --border-light: #f4f1eb;
+  --border-focus: #1e3a5f;
 
   --text-primary: #2c2520;
   --text-secondary: #5c5349;
@@ -112,10 +113,10 @@
   --text-white: #ffffff;
   --text-on-primary: #ffffff;
 
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-  --primary-soft: rgba(124, 58, 237, 0.08);
-  --primary-glow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+  --primary: #1e3a5f;
+  --primary-hover: #2c5282;
+  --primary-soft: rgba(30, 58, 95, 0.08);
+  --primary-glow: 0 0 0 3px rgba(30, 58, 95, 0.2);
 
   --shadow-sm: 0 1px 3px rgba(44, 37, 32, 0.06);
   --shadow: 0 2px 12px rgba(44, 37, 32, 0.06);
@@ -123,83 +124,83 @@
   --shadow-lg: 0 8px 32px rgba(44, 37, 32, 0.12);
   --shadow-xl: 0 12px 48px rgba(44, 37, 32, 0.15);
 
-  --toast-error-bg: #ef4444;
-  --toast-success-bg: #10b981;
+  --toast-error-bg: #dc3545;
+  --toast-success-bg: #28a745;
 }
 
 /* ===================================================================
    MODE 3: Dark Premium (Default Dark)
    =================================================================== */
 [data-theme="dark-premium"] {
-  --bg-page: #0a0a0a;
-  --bg-surface: #171717;
-  --bg-surface-2: #1f1f1f;
-  --bg-surface-3: #262626;
-  --bg-card: #171717;
-  --bg-input: #1f1f1f;
-  --bg-muted: #1f1f1f;
+  --bg-page: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-surface-2: #334155;
+  --bg-surface-3: #475569;
+  --bg-card: #1e293b;
+  --bg-input: #0f172a;
+  --bg-muted: #334155;
   --bg-overlay: rgba(0, 0, 0, 0.7);
-  --bg-navbar: #111111;
-  --bg-navbar-dark: #0a0a0a;
+  --bg-navbar: #0f172a;
+  --bg-navbar-dark: #020617;
 
-  --border: #2f2f2f;
-  --border-light: #262626;
-  --border-focus: #a855f7;
+  --border: #334155;
+  --border-light: #475569;
+  --border-focus: #d4a017;
 
-  --text-primary: #f5f5f5;
-  --text-secondary: #d1d5db;
-  --text-muted: #9ca3af;
-  --text-light: #6b7280;
-  --text-faint: #4b5563;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  --text-faint: #475569;
   --text-white: #ffffff;
-  --text-on-primary: #ffffff;
+  --text-on-primary: #1e293b;
 
-  --primary: #a855f7;
-  --primary-hover: #c084fc;
-  --primary-soft: rgba(168, 85, 247, 0.12);
-  --primary-glow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+  --primary: #d4a017;
+  --primary-hover: #f0d060;
+  --primary-soft: rgba(212, 160, 23, 0.15);
+  --primary-glow: 0 0 0 3px rgba(212, 160, 23, 0.3);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.5);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.6);
 
-  --toast-error-bg: #dc2626;
-  --toast-success-bg: #059669;
+  --toast-error-bg: #ef4444;
+  --toast-success-bg: #10b981;
 }
 
 /* ===================================================================
-   MODE 4: Dark OLED (True Black - Siêu sang)
+   MODE 4: Dark OLED
    =================================================================== */
 [data-theme="dark-oled"] {
   --bg-page: #000000;
-  --bg-surface: #0f0f0f;
-  --bg-surface-2: #1a1a1a;
-  --bg-surface-3: #222222;
-  --bg-card: #0f0f0f;
-  --bg-input: #1a1a1a;
-  --bg-muted: #1a1a1a;
-  --bg-overlay: rgba(0, 0, 0, 0.8);
+  --bg-surface: #0a0f1a;
+  --bg-surface-2: #131c2d;
+  --bg-surface-3: #1c2a40;
+  --bg-card: #0a0f1a;
+  --bg-input: #000000;
+  --bg-muted: #131c2d;
+  --bg-overlay: rgba(0, 0, 0, 0.85);
   --bg-navbar: #000000;
   --bg-navbar-dark: #000000;
 
-  --border: #2a2a2a;
-  --border-light: #1a1a1a;
-  --border-focus: #c084fc;
+  --border: #1e293b;
+  --border-light: #0f172a;
+  --border-focus: #d4a017;
 
-  --text-primary: #fafafa;
-  --text-secondary: #d4d4d4;
-  --text-muted: #a3a3a3;
-  --text-light: #737373;
-  --text-faint: #525252;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  --text-faint: #334155;
   --text-white: #ffffff;
   --text-on-primary: #000000;
 
-  --primary: #c084fc;
-  --primary-hover: #d8b4fe;
-  --primary-soft: rgba(192, 132, 252, 0.12);
-  --primary-glow: 0 0 0 3px rgba(192, 132, 252, 0.3);
+  --primary: #d4a017;
+  --primary-hover: #f0d060;
+  --primary-soft: rgba(212, 160, 23, 0.15);
+  --primary-glow: 0 0 0 3px rgba(212, 160, 23, 0.3);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
   --shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
@@ -207,41 +208,41 @@
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
   --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.7);
 
-  --toast-error-bg: #dc2626;
-  --toast-success-bg: #059669;
+  --toast-error-bg: #ef4444;
+  --toast-success-bg: #10b981;
 }
 
 /* ===================================================================
-   MODE 5: iOS 26 / VisionOS Style (Glassmorphism + Depth)
+   MODE 5: Glassmorphism
    =================================================================== */
 [data-theme="glass"] {
-  --bg-page: #f2f2f7;
-  --bg-surface: rgba(255, 255, 255, 0.85);
-  --bg-surface-2: rgba(255, 255, 255, 0.65);
-  --bg-surface-3: rgba(255, 255, 255, 0.5);
-  --bg-card: rgba(255, 255, 255, 0.78);
-  --bg-input: rgba(255, 255, 255, 0.7);
-  --bg-muted: rgba(255, 255, 255, 0.5);
+  --bg-page: #e2e8f0;
+  --bg-surface: rgba(255, 255, 255, 0.75);
+  --bg-surface-2: rgba(255, 255, 255, 0.5);
+  --bg-surface-3: rgba(255, 255, 255, 0.3);
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-input: rgba(255, 255, 255, 0.6);
+  --bg-muted: rgba(255, 255, 255, 0.4);
   --bg-overlay: rgba(0, 0, 0, 0.3);
-  --bg-navbar: rgba(255, 255, 255, 0.72);
-  --bg-navbar-dark: rgba(0, 0, 0, 0.1);
+  --bg-navbar: rgba(30, 58, 95, 0.85);
+  --bg-navbar-dark: rgba(26, 46, 74, 0.9);
 
-  --border: rgba(60, 60, 67, 0.12);
-  --border-light: rgba(60, 60, 67, 0.08);
-  --border-focus: #7c3aed;
+  --border: rgba(30, 58, 95, 0.15);
+  --border-light: rgba(30, 58, 95, 0.08);
+  --border-focus: #1e3a5f;
 
-  --text-primary: #1c1c1e;
-  --text-secondary: #3a3a3c;
-  --text-muted: #8e8e93;
-  --text-light: #aeaeb2;
-  --text-faint: #c7c7cc;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --text-faint: #cbd5e1;
   --text-white: #ffffff;
   --text-on-primary: #ffffff;
 
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-  --primary-soft: rgba(124, 58, 237, 0.12);
-  --primary-glow: 0 0 0 4px rgba(124, 58, 237, 0.25);
+  --primary: #1e3a5f;
+  --primary-hover: #2c5282;
+  --primary-soft: rgba(30, 58, 95, 0.12);
+  --primary-glow: 0 0 0 4px rgba(30, 58, 95, 0.25);
 
   --glass-bg: rgba(255, 255, 255, 0.72);
   --glass-border: 1px solid rgba(255, 255, 255, 0.3);
@@ -249,57 +250,58 @@
   --glass-blur: blur(32px);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 12px 60px rgba(0, 0, 0, 0.12);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.12);
 
-  --toast-error-bg: rgba(239, 68, 68, 0.85);
-  --toast-success-bg: rgba(16, 185, 129, 0.85);
+  --toast-error-bg: rgba(220, 53, 69, 0.85);
+  --toast-success-bg: rgba(40, 167, 69, 0.85);
 }
 
-/* Dark variant for Glass mode */
 @media (prefers-color-scheme: dark) {
   [data-theme="glass"] {
-    --bg-page: #000000;
-    --bg-surface: rgba(30, 30, 30, 0.75);
-    --bg-surface-2: rgba(40, 40, 40, 0.6);
-    --bg-surface-3: rgba(50, 50, 50, 0.45);
-    --bg-card: rgba(30, 30, 30, 0.7);
-    --bg-input: rgba(40, 40, 40, 0.65);
-    --bg-muted: rgba(50, 50, 50, 0.4);
-    --bg-overlay: rgba(0, 0, 0, 0.5);
-    --bg-navbar: rgba(20, 20, 20, 0.8);
-    --bg-navbar-dark: rgba(0, 0, 0, 0.5);
+    --bg-page: #020617;
+    --bg-surface: rgba(30, 41, 59, 0.75);
+    --bg-surface-2: rgba(51, 65, 85, 0.6);
+    --bg-surface-3: rgba(71, 85, 105, 0.45);
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --bg-input: rgba(15, 23, 42, 0.65);
+    --bg-muted: rgba(51, 65, 85, 0.4);
+    --bg-overlay: rgba(0, 0, 0, 0.6);
+    --bg-navbar: rgba(15, 23, 42, 0.85);
+    --bg-navbar-dark: rgba(2, 6, 23, 0.9);
 
-    --border: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.1);
     --border-light: rgba(255, 255, 255, 0.05);
-    --border-focus: #a855f7;
+    --border-focus: #d4a017;
 
-    --text-primary: #f5f5f5;
-    --text-secondary: #d1d5db;
-    --text-muted: #9ca3af;
-    --text-light: #6b7280;
-    --text-faint: #4b5563;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-light: #64748b;
+    --text-faint: #475569;
+    --text-white: #ffffff;
+    --text-on-primary: #1e293b;
 
-    --primary: #a855f7;
-    --primary-hover: #c084fc;
-    --primary-soft: rgba(168, 85, 247, 0.15);
-    --primary-glow: 0 0 0 4px rgba(168, 85, 247, 0.3);
+    --primary: #d4a017;
+    --primary-hover: #f0d060;
+    --primary-soft: rgba(212, 160, 23, 0.15);
+    --primary-glow: 0 0 0 4px rgba(212, 160, 23, 0.3);
 
-    --glass-bg: rgba(20, 20, 20, 0.75);
+    --glass-bg: rgba(30, 41, 59, 0.75);
     --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     --glass-blur: blur(32px);
 
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.35);
-    --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 12px 60px rgba(0, 0, 0, 0.45);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.6);
 
-    --toast-error-bg: rgba(220, 38, 38, 0.85);
-    --toast-success-bg: rgba(5, 150, 105, 0.85);
+    --toast-error-bg: rgba(239, 68, 68, 0.85);
+    --toast-success-bg: rgba(16, 185, 129, 0.85);
   }
 }
 
@@ -343,28 +345,15 @@ body {
   transition: border-color var(--transition-slow);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.3;
 }
 
-h1 {
-  font-size: 28px;
-  letter-spacing: -0.5px;
-}
-h2 {
-  font-size: 22px;
-  letter-spacing: -0.3px;
-}
-h3 {
-  font-size: 18px;
-}
+h1 { font-size: 24px; letter-spacing: -0.5px; }
+h2 { font-size: 20px; letter-spacing: -0.3px; }
+h3 { font-size: 16px; }
 
 p {
   margin: 0;
@@ -396,16 +385,13 @@ img {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
