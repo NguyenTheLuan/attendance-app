@@ -437,7 +437,6 @@ export default function StatsPage({ isLoggedIn }: StatsPageProps) {
                           date={date}
                           records={items}
                           viewOnly
-                          hideImages
                         />
                       ))}
                     </div>
