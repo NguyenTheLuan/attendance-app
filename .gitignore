@@ -6,3 +6,5 @@ www/
 scripts/zma-package/
 skills
 report
+# Antigravity IDE MCP Config
+.agents/mcp.json
