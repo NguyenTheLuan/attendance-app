@@ -72,5 +72,19 @@ export const vi = {
     today: "Hôm nay",
     yesterday: "Hôm qua",
     peopleCount: "{count} người trực",
+  },
+  theme: {
+    "light-classic": "Sáng Cơ bản",
+    "light-warm": "Sáng Ấm áp",
+    "dark-premium": "Tối Sang trọng",
+    "dark-oled": "Tối Tiết kiệm pin (OLED)",
+    "glass": "Kính Trong suốt",
+  },
+  dev: {
+    title: "Phát triển",
+    generateData: "Test dữ liệu",
+    testDesc: "Bật để dùng dữ liệu mẫu (từ T9/2025)",
+    generating: "⏳ Đang tạo dữ liệu...",
+    generateSuccess: "✅ Đã tạo {count} bản ghi dữ liệu mẫu!",
   }
 };

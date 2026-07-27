@@ -77,9 +77,10 @@ export default function MonthOverviewChart({
             <Tooltip
               contentStyle={{
                 background: "var(--bg-card)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
+                border: "none",
+                borderRadius: 0,
                 fontSize: 13,
+                boxShadow: "var(--shadow-md)"
               }}
             />
 
@@ -124,9 +125,10 @@ export default function MonthOverviewChart({
               labelFormatter={(label) => String(label ?? "")}
               contentStyle={{
                 background: "var(--bg-card)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
+                border: "none",
+                borderRadius: 0,
                 fontSize: 13,
+                boxShadow: "var(--shadow-md)"
               }}
             />
 

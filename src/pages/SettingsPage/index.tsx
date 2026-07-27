@@ -14,11 +14,25 @@ export default function SettingsPage({ onLogout }: SettingsPageProps) {
     return localStorage.getItem("attendance_force_camera") === "true";
   });
   const [stampGPS, setStampGPS] = useState(true);
+  const [testMode, setTestMode] = useState(() => {
+    return localStorage.getItem("attendance_test_mode") === "true";
+  });
 
   function toggleForceCamera() {
     const newVal = !forceCamera;
     setForceCamera(newVal);
     localStorage.setItem("attendance_force_camera", newVal.toString());
+  }
+
+  function toggleTestMode() {
+    const newVal = !testMode;
+    setTestMode(newVal);
+    if (newVal) {
+      localStorage.setItem("attendance_test_mode", "true");
+    } else {
+      localStorage.removeItem("attendance_test_mode");
+      delete (window as any).__MOCK_DATA__;
+    }
   }
 
   const { t } = useTranslation();
@@ -92,6 +106,23 @@ export default function SettingsPage({ onLogout }: SettingsPageProps) {
               </span>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <div className="settings-section-title">{t("dev.title")}</div>
+        <div className="settings-group">
+          <div className="setting-row">
+            <span className="setting-icon">🧪</span>
+            <div className="setting-info">
+              <div className="setting-label">{t("dev.generateData")}</div>
+              <div className="setting-desc">{t("dev.testDesc")}</div>
+            </div>
+            <div
+              className={`toggle ${testMode ? "on" : ""}`}
+              onClick={toggleTestMode}
+            />
+          </div>
         </div>
       </div>
 

@@ -85,9 +85,10 @@ export default function WeeklyChart({
             labelFormatter={(label) => `Ngày ${label ?? ""}`}
             contentStyle={{
               background: "var(--bg-card)",
-              border: "1px solid var(--border)",
-              borderRadius: 8,
+              border: "none",
+              borderRadius: 0,
               fontSize: 13,
+              boxShadow: "var(--shadow-md)"
             }}
           />
           <Bar dataKey="count" radius={[3, 3, 0, 0]}>

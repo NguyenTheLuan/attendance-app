@@ -1,4 +1,5 @@
 import { supabase } from "~/services/supabase";
+import { generateMockDataArray } from "~/utils/mockData";
 import type { AttendanceRecord } from "~/types";
 
 const TABLE = "records";
@@ -21,7 +22,30 @@ export async function addRecord(
   return inserted.id;
 }
 
+export async function addMultipleRecords(
+  dataList: Omit<AttendanceRecord, "id" | "createdAt">[]
+) {
+  const insertData = dataList.map((d) => ({
+    ...d,
+    createdAt: Date.now(),
+  }));
+
+  const { error } = await supabase.from(TABLE).insert(insertData);
+  if (error) throw error;
+}
+
 export async function getAllRecords(): Promise<AttendanceRecord[]> {
+  const isTestMode = localStorage.getItem("attendance_test_mode") === "true";
+  if (isTestMode) {
+    // Generate mock data on the fly (it's deterministic-ish or generated once per reload)
+    // Wait, generating every time will change it constantly. 
+    // We should cache it in memory.
+    if (!(window as any).__MOCK_DATA__) {
+      (window as any).__MOCK_DATA__ = generateMockDataArray();
+    }
+    return (window as any).__MOCK_DATA__;
+  }
+
   const { data, error } = await supabase
     .from(TABLE)
     .select("*")
