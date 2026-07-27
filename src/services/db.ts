@@ -1,44 +1,45 @@
-import {
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  doc,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import { db } from "~/services/firebase";
+import { supabase } from "~/services/supabase";
 import type { AttendanceRecord } from "~/types";
 
-const COLLECTION = "records";
+const TABLE = "records";
 
 export async function addRecord(
   data: Omit<AttendanceRecord, "id" | "createdAt">
 ) {
-  const docRef = await addDoc(collection(db, COLLECTION), {
-    ...data,
-    createdAt: Date.now(),
-  });
-  return docRef.id;
+  const { data: inserted, error } = await supabase
+    .from(TABLE)
+    .insert([
+      {
+        ...data,
+        createdAt: Date.now(),
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return inserted.id;
 }
 
 export async function getAllRecords(): Promise<AttendanceRecord[]> {
-  const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
-  })) as AttendanceRecord[];
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select("*")
+    .order("createdAt", { ascending: false });
+
+  if (error) throw error;
+  return data as AttendanceRecord[];
 }
 
 export async function deleteRecordById(id: string) {
-  await deleteDoc(doc(db, COLLECTION, id));
+  const { error } = await supabase.from(TABLE).delete().eq("id", id);
+  if (error) throw error;
 }
 
 export async function updateRecordById(
   id: string,
   data: { name: string; date: string; imageUrl?: string; note?: string }
 ) {
-  await updateDoc(doc(db, COLLECTION, id), data);
+  const { error } = await supabase.from(TABLE).update(data).eq("id", id);
+  if (error) throw error;
 }
