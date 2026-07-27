@@ -4,6 +4,9 @@ import type { AttendanceRecord } from "~/types";
 import Field from "~/components/Field";
 import "~/components/EditModal/styles.css";
 import ImageUploader from "~/components/ImageUploader";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "~/components/DateSelector/styles.css";
 
 interface EditModalProps {
   record: AttendanceRecord;
@@ -88,14 +91,25 @@ export default function EditModal({ record, onSave, onClose }: EditModalProps) {
               disabled={saving}
             />
 
-            <Field
-              label="Ngày"
-              row
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              disabled={saving}
-            />
+            <div className="field row">
+              <span>Ngày</span>
+              <div className="custom-datepicker-wrapper" style={{ flex: 1 }}>
+                <DatePicker
+                  selected={date ? new Date(date) : null}
+                  onChange={(d: Date | null) => {
+                    if (d) {
+                      const offset = d.getTimezoneOffset();
+                      const adjusted = new Date(d.getTime() - (offset * 60 * 1000));
+                      setDate(adjusted.toISOString().split("T")[0]);
+                    }
+                  }}
+                  dateFormat="dd/MM/yyyy"
+                  locale="vi"
+                  disabled={saving}
+                  popperPlacement="bottom-start"
+                />
+              </div>
+            </div>
 
             <Field
               as="textarea"

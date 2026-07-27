@@ -1,3 +1,10 @@
+import DatePicker, { registerLocale } from "react-datepicker";
+import { vi } from "date-fns/locale";
+import "react-datepicker/dist/react-datepicker.css";
+import "./styles.css";
+
+registerLocale("vi", vi);
+
 interface DateSelectorProps {
   dateType: "today" | "tomorrow" | "custom";
   customDate: string;
@@ -6,25 +13,6 @@ interface DateSelectorProps {
   disabled?: boolean;
 }
 
-function getTodayStr() {
-  const d = new Date();
-  return d.toISOString().split("T")[0];
-}
-
-function getTomorrowStr() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().split("T")[0];
-}
-
-export function getDateString(
-  dateType: "today" | "tomorrow" | "custom",
-  customDate: string
-) {
-  if (dateType === "today") return getTodayStr();
-  if (dateType === "tomorrow") return getTomorrowStr();
-  return customDate;
-}
 
 export default function DateSelector({
   dateType,
@@ -63,12 +51,24 @@ export default function DateSelector({
         </button>
       </div>
       {dateType === "custom" && (
-        <input
-          type="date"
-          value={customDate}
-          onChange={(e) => onCustomDateChange(e.target.value)}
-          disabled={disabled}
-        />
+        <div className="custom-datepicker-wrapper">
+          <DatePicker
+            selected={customDate ? new Date(customDate) : null}
+            onChange={(date: Date | null) => {
+              if (date) {
+                // Ensure local timezone doesn't mess up the date string
+                const offset = date.getTimezoneOffset();
+                const adjustedDate = new Date(date.getTime() - (offset*60*1000));
+                onCustomDateChange(adjustedDate.toISOString().split("T")[0]);
+              }
+            }}
+            dateFormat="dd/MM/yyyy"
+            locale="vi"
+            disabled={disabled}
+            placeholderText="Chọn ngày..."
+            popperPlacement="bottom-start"
+          />
+        </div>
       )}
     </label>
   );
