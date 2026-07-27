@@ -169,13 +169,13 @@
   }
 
   .modal-actions {
-    flex-direction: column-reverse;
-    gap: 8px;
+    flex-direction: row;
+    gap: 12px;
   }
 
   .modal-actions .btn-primary,
   .modal-actions .btn-cancel {
-    width: 100%;
+    flex: 1;
     text-align: center;
     padding: 12px 16px;
   }

@@ -12,8 +12,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "firebase": "^12.13.0",
+    "@supabase/supabase-js": "^2.110.8",
+    "@types/react-datepicker": "^6.2.0",
+    "date-fns": "^4.4.0",
     "react": "^19.2.5",
+    "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.15.0",
     "recharts": "^3.8.1"

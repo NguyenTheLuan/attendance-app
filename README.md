@@ -1,6 +1,6 @@
 # 📋 Attendance App — Điểm Danh Trực Nhật
 
-Ứng dụng quản lý điểm danh trực nhật cho lớp học, với đầy đủ tính năng **nhập điểm danh**, **xem lịch trực**, và **thống kê trực quan**.
+Ứng dụng quản lý điểm danh trực nhật cho lớp học, với đầy đủ tính năng **nhập điểm danh**, **chụp ảnh camera**, **xem lịch trực**, và **thống kê trực quan**. Hỗ trợ đa giao diện (Military, Dark OLED, Glassmorphism...).
 
 🌐 **Demo**: [https://nguyentheluan.github.io/attendance-app](https://nguyentheluan.github.io/attendance-app)
 
@@ -10,9 +10,10 @@
 
 | Trang                            | Mô tả                                                                                     |
 | -------------------------------- | ----------------------------------------------------------------------------------------- |
-| 👁️ **Xem lịch trực** (`/view`)   | Xem danh sách trực nhật theo ngày, có ảnh và tên                                          |
-| ✏️ **Nhập điểm danh** (`/admin`) | Thêm người trực mới (cần đăng nhập)                                                       |
-| 📊 **Thống kê** (`/stats`)       | Biểu đồ xu hướng, bar chart phân bố người, so sánh theo tháng/tuần, xem chi tiết vắng mặt |
+| 👁️ **Xem lịch trực** (`/view`)   | Xem danh sách trực nhật theo ngày, có ảnh và tên, giao diện avatar xếp chồng hiện đại.    |
+| ✏️ **Nhập điểm danh** (`/admin`) | Thêm người trực mới, tích hợp **chụp ảnh trực tiếp từ Camera thiết bị** (cần đăng nhập).  |
+| 📊 **Thống kê** (`/stats`)       | Biểu đồ xu hướng, bar chart phân bố người, so sánh theo tháng/tuần, xem chi tiết vắng mặt.|
+| ⚙️ **Cài đặt** (`/settings`)     | Chọn 5 chế độ giao diện màu (Themes), đổi ngôn ngữ và bật/tắt **Dữ liệu mẫu (Demo)**.     |
 
 ### 🔐 Đăng nhập
 
@@ -24,39 +25,34 @@
 ## 🛠️ Công nghệ
 
 - **React 19** + **TypeScript**
-- **Vite** — build tool
-- **Recharts** — biểu đồ thống kê
-- **Cloudinary** — lưu trữ ảnh
-- **Firebase** — database backend
-- **GitHub Pages** — deploy web
+- **Vite** — Build tool
+- **Recharts** — Biểu đồ thống kê
+- **Cloudinary** — Lưu trữ ảnh
+- **Supabase (PostgreSQL)** — Database backend
+- **GitHub Pages & Actions** — Deploy web tự động
+- **CodeRabbit AI** — Trợ lý AI tự động review code trên các Pull Request
 
 ---
 
 ## 🔧 Cấu hình môi trường
 
-Tạo file `.env` ở thư mục gốc:
+Tạo file `.env.local` ở thư mục gốc:
 
 ```env
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### GitHub Secrets
+*(Chi tiết xem hướng dẫn cấu hình database tại [docs/guides/supabase-setup.md](./docs/guides/supabase-setup.md))*
 
-Khi deploy qua GitHub Actions, các biến trên cần được đặt trong **GitHub Secrets** của repository:
+### GitHub Secrets (Dành cho CI/CD)
+
+Khi deploy qua GitHub Actions, các biến trên cần được đặt trong **Settings > Secrets and variables > Actions** của repository:
 
 | Secret                              | Tương ứng                           |
 | ----------------------------------- | ----------------------------------- |
-| `VITE_FIREBASE_API_KEY`             | `VITE_FIREBASE_API_KEY`             |
-| `VITE_FIREBASE_AUTH_DOMAIN`         | `VITE_FIREBASE_AUTH_DOMAIN`         |
-| `VITE_FIREBASE_PROJECT_ID`          | `VITE_FIREBASE_PROJECT_ID`          |
-| `VITE_FIREBASE_STORAGE_BUCKET`      | `VITE_FIREBASE_STORAGE_BUCKET`      |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | `VITE_FIREBASE_MESSAGING_SENDER_ID` |
-| `VITE_FIREBASE_APP_ID`              | `VITE_FIREBASE_APP_ID`              |
+| `VITE_SUPABASE_URL`                 | `VITE_SUPABASE_URL`                 |
+| `VITE_SUPABASE_ANON_KEY`            | `VITE_SUPABASE_ANON_KEY`            |
 
 ---
 
@@ -66,36 +62,37 @@ Khi deploy qua GitHub Actions, các biến trên cần được đặt trong **G
 git clone https://github.com/NguyenTheLuan/attendance-app.git
 cd attendance-app
 npm install
-cp .env.example .env   # điền Firebase config
+# Tạo file .env.local và điền config Supabase
 npm run dev
 ```
 
 ---
 
-## 📦 Deploy
+## 📦 Quy trình CI/CD & AI Review
 
-### GitHub Pages (CI/CD)
+### 1. CodeRabbit AI Reviewer
+- Dự án đã cài đặt **CodeRabbit App**. 
+- Bất cứ khi nào có một Pull Request mới, CodeRabbit sẽ tự động quét code, tóm tắt PR, tìm bug và comment góp ý cách sửa lỗi.
 
+### 2. Tự động Deploy (GitHub Pages)
 **Tự động** khi push vào nhánh `main` — workflow sẽ:
-
 1. Bump version (tạo tag mới)
 2. Cập nhật `CHANGELOG.md` với các commit mới
 3. Tạo GitHub Release
-4. Build và deploy lên GitHub Pages
+4. Build và deploy web lên GitHub Pages
 
-> Cần set **6 GitHub Secrets** (ở trên) để build có Firebase config.
+> ⚠️ Cần set **2 GitHub Secrets** của Supabase (ở trên) để bản build có thể kết nối database.
 
 ---
 
 ## 📜 Quy trình commit
 
+Tuân thủ định dạng chuẩn (Conventional Commits) có chứa Emoji:
 ```bash
 git add .
-git commit -m "chore: mô tả thay đổi"
+git commit -m "✨ feat(auth): thêm đăng nhập"
 git push origin main
 ```
-
-> Workflow GitHub Actions sẽ tự động build + deploy khi push lên `main`.
 
 ---
 

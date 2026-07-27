@@ -6,7 +6,6 @@ interface CardGroupProps {
   title: string;
   records: AttendanceRecord[];
   onViewDetail?: (record: AttendanceRecord) => void;
-  hideImages?: boolean;
 }
 
 /**
@@ -17,7 +16,6 @@ export default function CardGroup({
   title,
   records,
   onViewDetail,
-  hideImages = false,
 }: CardGroupProps) {
   return (
     <div className="card-group">
@@ -29,7 +27,6 @@ export default function CardGroup({
             record={record}
             viewOnly
             onViewDetail={onViewDetail}
-            hideImages={hideImages}
           />
         ))}
       </div>
