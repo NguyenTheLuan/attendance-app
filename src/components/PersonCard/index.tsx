@@ -1,6 +1,12 @@
-import PersonImage from "~/components/PersonImage";
 import type { AttendanceRecord } from "~/types";
 import "./styles.css";
+
+// Extract initials for fallback avatar
+function getInitials(name: string) {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 interface PersonCardProps {
   record: AttendanceRecord;
@@ -8,7 +14,6 @@ interface PersonCardProps {
   onEdit?: (record: AttendanceRecord) => void;
   onViewDetail?: (record: AttendanceRecord) => void;
   viewOnly?: boolean;
-  hideImages?: boolean;
 }
 
 export default function PersonCard({
@@ -17,7 +22,6 @@ export default function PersonCard({
   onEdit,
   onViewDetail,
   viewOnly = false,
-  hideImages = false,
 }: PersonCardProps) {
   const handleImageClick = () => {
     if (onEdit) {
@@ -27,30 +31,54 @@ export default function PersonCard({
     }
   };
 
+  const hasImage = !!record.imageUrl;
+  
+  // Calculate a consistent color based on name length for fallback avatar
+  const colorIndex = (record.name.length % 8) + 1;
+
   return (
-    <div className={`person-card ${viewOnly ? "view-card" : ""}`}>
-      {!hideImages && (
-        <PersonImage
-          src={record.imageUrl ?? ""}
-          alt={record.name}
-          square={!viewOnly}
-          className={viewOnly ? "" : "person-card-image"}
-          onClick={onEdit || onViewDetail ? handleImageClick : undefined}
-        />
-      )}
-      <div className="person-info">
-        <strong className="person-name">{record.name}</strong>
-        {record.note && <p className="person-note">{record.note}</p>}
+    <div className="person-row">
+      <div 
+        className="person-avatar"
+        style={{ 
+          backgroundColor: hasImage ? "transparent" : `var(--chart-${colorIndex})`,
+          backgroundImage: hasImage ? `url(${record.imageUrl})` : "none",
+          cursor: (onEdit || onViewDetail) ? "pointer" : "default"
+        }}
+        onClick={(onEdit || onViewDetail) ? handleImageClick : undefined}
+        title={(onEdit || onViewDetail) ? "Nhấn để xem chi tiết" : ""}
+      >
+        {!hasImage && getInitials(record.name)}
       </div>
-      {!viewOnly && onDelete && (
-        <button
-          className="btn-delete"
-          onClick={() => onDelete(record.id)}
-          title="Xóa"
-          aria-label={`Xóa ${record.name}`}
-        >
-          🗑
-        </button>
+      
+      <div className="person-row-info">
+        <div className="person-row-name">{record.name}</div>
+        {record.note && <div className="person-row-note">{record.note}</div>}
+      </div>
+      
+      {!viewOnly && (
+        <div className="person-row-actions">
+          {onEdit && (
+            <button
+              type="button"
+              className="btn-icon"
+              onClick={() => onEdit(record)}
+              title="Sửa"
+            >
+              ✏️
+            </button>
+          )}
+          {onDelete && (
+            <button
+              type="button"
+              className="btn-icon delete-icon"
+              onClick={() => onDelete(record.id)}
+              title="Xóa"
+            >
+              🗑️
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

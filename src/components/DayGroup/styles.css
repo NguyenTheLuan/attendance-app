@@ -1,50 +1,99 @@
-/* ===========================
-   Day Group
-   =========================== */
-.day-group {
-  margin-bottom: 16px;
+.day-group-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-fast);
 }
 
-.day-summary {
-  list-style: none;
-  padding: 14px 18px;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  cursor: pointer;
-  user-select: none;
+.day-group-item:hover {
+  box-shadow: var(--shadow);
+}
+
+.day-group-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: background 0.2s;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-surface);
+  transition: background var(--transition-fast);
 }
 
-.day-summary:hover {
-  background: var(--bg-card-hover);
+.day-group-header:hover {
+  background: var(--bg-surface-2);
 }
 
-.day-summary::before {
-  content: "📅";
-  margin-right: 6px;
-  font-size: 16px;
+.day-group-item.expanded .day-group-header {
+  border-bottom: 1px solid var(--border-light);
 }
 
-.day-summary::-webkit-details-marker {
-  display: none;
+.day-info {
+  flex: 1;
 }
 
-.day-group[open] .day-summary {
-  border-radius: var(--radius) var(--radius) 0 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.day-title {
-  font-size: 16px;
+.day-date {
+  font-size: 15px;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--border);
+  margin-bottom: 2px;
+}
+
+.day-weekday {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.avatar-stack {
+  display: flex;
+  margin-right: 12px;
+}
+
+.avatar-stack .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-surface);
+  margin-left: -12px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.avatar-stack .avatar:first-child {
+  margin-left: 0;
+}
+
+.avatar-stack .extra-avatar {
+  background-color: var(--bg-muted);
+  color: var(--text-secondary);
+}
+
+.count-badge {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.chevron {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-left: 12px;
+  transition: transform var(--transition-fast);
+}
+
+.person-cards {
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
 }
