@@ -4,10 +4,82 @@ import AdminPage from "~/pages/AdminPage";
 import ViewPage from "~/pages/ViewPage";
 import StatsPage from "~/pages/StatsPage";
 import LoginPage from "~/pages/LoginPage";
+import SettingsPage from "~/pages/SettingsPage";
 import ErrorBoundary from "~/components/ErrorBoundary";
-import Navbar from "~/components/Navbar";
+import BottomNav from "~/components/BottomNav";
 import "~/App.css";
 import "~/components/Button/styles.css";
+
+// A wrapper to hide BottomNav on Login page
+import { useLocation } from "react-router-dom";
+
+function AppContent({
+  isLoggedIn,
+  onLogout,
+  onLogin
+}: {
+  isLoggedIn: boolean;
+  onLogout: () => void;
+  onLogin: () => void;
+}) {
+  const location = useLocation();
+  const showNav = location.pathname !== "/login";
+
+  return (
+    <>
+      <main>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <ErrorBoundary>
+                <LoginPage onLogin={onLogin} />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ErrorBoundary>
+                <AdminPage />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/view"
+            element={
+              <ErrorBoundary>
+                <ViewPage isLoggedIn={isLoggedIn} />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/stats"
+            element={
+              <ErrorBoundary>
+                <StatsPage isLoggedIn={isLoggedIn} />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ErrorBoundary>
+                {isLoggedIn ? (
+                  <SettingsPage onLogout={onLogout} />
+                ) : (
+                  <Navigate to="/login" replace />
+                )}
+              </ErrorBoundary>
+            }
+          />
+          <Route path="*" element={<Navigate to="/view" replace />} />
+        </Routes>
+      </main>
+      {showNav && <BottomNav />}
+    </>
+  );
+}
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,7 +104,6 @@ export default function App() {
     setIsLoggedIn(false);
   }
 
-  // Show minimal loading while checking login state
   if (loading) {
     return (
       <div className="page" style={{ textAlign: "center", paddingTop: "2rem" }}>
@@ -44,48 +115,11 @@ export default function App() {
   return (
     <HashRouter>
       <ErrorBoundary>
-        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-        <main>
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <ErrorBoundary>
-                  <LoginPage onLogin={() => setIsLoggedIn(true)} />
-                </ErrorBoundary>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ErrorBoundary>
-                  {isLoggedIn ? (
-                    <AdminPage />
-                  ) : (
-                    <Navigate to="/login" replace />
-                  )}
-                </ErrorBoundary>
-              }
-            />
-            <Route
-              path="/view"
-              element={
-                <ErrorBoundary>
-                  <ViewPage isLoggedIn={isLoggedIn} />
-                </ErrorBoundary>
-              }
-            />
-            <Route
-              path="/stats"
-              element={
-                <ErrorBoundary>
-                  <StatsPage isLoggedIn={isLoggedIn} />
-                </ErrorBoundary>
-              }
-            />
-            <Route path="*" element={<Navigate to="/view" replace />} />
-          </Routes>
-        </main>
+        <AppContent
+          isLoggedIn={isLoggedIn}
+          onLogin={() => setIsLoggedIn(true)}
+          onLogout={handleLogout}
+        />
       </ErrorBoundary>
     </HashRouter>
   );
