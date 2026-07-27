@@ -18,15 +18,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: AI PR Reviewer
-        uses: coderabbitai/ai-pr-reviewer@latest
+        uses: anc95/ChatGPT-CodeReview@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.GROK_API_KEY }}
-        with:
-          debug: false
-          review_simple_changes: false
-          review_comment_lgtm: false
-          openai_base_url: "https://api.x.ai/v1"
-          openai_light_model: "grok-beta"
-          openai_heavy_model: "grok-2-latest"
-          language: vi-VN
+          OPENAI_API_ENDPOINT: "https://api.x.ai/v1"
+          MODEL: "grok-2-latest"
+          LANGUAGE: "Vietnamese"
