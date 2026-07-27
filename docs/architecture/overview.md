@@ -1,92 +1,76 @@
-# 🏗️ System Architecture Overview
+# 🏗️ Technical Architecture Document (TAD)
 
-This document describes the structure, technology stack, and data flow of the **Attendance App**. The system is designed using a lightweight **Feature-Sliced Design (FSD)** approach, combined with Backend-as-a-Service (BaaS) solutions to optimize costs and development speed.
-
----
-
-## 1. 🛠️ Tech Stack
-
-### Frontend (User Interface)
-- **Framework:** React 19
-- **Language:** TypeScript (Strict Mode)
-- **Build Tool:** Vite (Optimized for HMR speed and production builds)
-- **Styling:** Vanilla CSS combined with CSS Variables (Supports 5 dynamic themes without reloading)
-- **Charts:** Recharts (Lazy loading)
-
-### Backend & Storage
-- **Database:** Supabase (PostgreSQL) — Stores attendance records (`records`).
-- **Image Storage:** Cloudinary — Stores and optimizes photos taken from the camera, returning a CDN URL (reduces load on Supabase).
-
-### CI/CD & DevOps
-- **Auto-Review:** CodeRabbit AI (GitHub App) for automated code reviews.
-- **Deployment:** GitHub Actions automatically builds and deploys to GitHub Pages whenever code is pushed to the `main` branch.
+This document dives deep into the technical design, architectural patterns, and database schema of the **Attendance App**. Unlike the README (which focuses on getting started), this document explains *how* and *why* the system is built the way it is.
 
 ---
 
-## 2. 📂 Project Structure
+## 1. System Context & Infrastructure
 
-The project follows a component-driven architecture:
+The application uses a lightweight Serverless / Backend-as-a-Service (BaaS) architecture to minimize DevOps overhead while maximizing scalability.
 
-```text
-src/
-├── components/         # Reusable UI primitives (Button, Card, Chart...)
-│   └── stats/          # Specific components for the Stats page (Lazy loaded)
-├── pages/              # Route-level page components (Admin, View, Stats, Settings...)
-├── hooks/              # Custom React Hooks containing business logic (useRecords, useTheme)
-├── services/           # External API integration layer (Supabase API, Cloudinary API)
-├── utils/              # Pure utility functions (exportCSV, Date utils)
-├── types/              # Global TypeScript interface definitions
-└── locales/            # i18n translation files (vi.ts)
-```
+*   **Client (Frontend):** React 19 SPA built with Vite. Hosted on GitHub Pages.
+*   **Primary Database (Supabase):** PostgreSQL database used via Supabase's REST API (PostgREST). Handles all structured data (attendance records).
+*   **Media Storage (Cloudinary):** Handles image uploads (Base64 from device cameras). Offloading images to Cloudinary prevents database bloat and leverages a global CDN for faster image delivery.
 
 ---
 
-## 3. 🔄 Data Flow
+## 2. Database Schema (Supabase PostgreSQL)
 
-### 3.1. Check-in Flow
-1. **User (Admin):** Opens `/admin`, enters a name, and clicks the capture button from the integrated Camera.
-2. **Frontend:** Captures the image from the video stream and converts it to a Base64 format.
-3. **Cloudinary Service:** Uploads the Base64 string to Cloudinary via API. Cloudinary returns a `secure_url`.
-4. **Supabase Service:** Sends the `secure_url`, `name`, `date`, and `note` to be stored in the `records` table in Supabase's PostgreSQL database.
-5. **UI Update:** The application automatically refreshes the list (State) without reloading the page.
+The core data model is intentionally simple, revolving around a single `records` table.
 
-### 3.2. Statistics Flow
-1. **User:** Visits `/stats`.
-2. **Frontend:** Triggers `React.lazy` to asynchronously load the chart chunks (Recharts).
-3. **useRecords Hook:** Fetches all data from Supabase (or uses Mock Data if Test mode is enabled).
-4. **Data Aggregation:** Utility functions (like `getMonthlyDailyData`) group the data by day/week/month.
-5. **Charts:** Renders the Line Chart and Bar Chart.
+### Table: `records`
+| Column Name | Data Type | Constraints / Notes | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `uuid` | Primary Key, Default: `gen_random_uuid()` | Unique identifier for each check-in. |
+| `name` | `text` | Not Null | The name of the person checking in. |
+| `imageUrl` | `text` | Nullable | Cloudinary Secure URL of the captured photo. |
+| `date` | `text` | Not Null | Formatted as `YYYY-MM-DD` (e.g., `2025-09-01`). Used for grouping and charting. |
+| `note` | `text` | Nullable | Optional notes (e.g., "vắng", "hỗ trợ", "trực thay"). |
+| `createdAt` | `int8` | Not Null | Unix timestamp in milliseconds (`Date.now()`). Used for chronological sorting. |
 
----
-
-## 4. 🎨 Design System
-
-The project intentionally avoids heavy CSS frameworks (like Tailwind or Bootstrap) to keep the bundle size extremely lightweight.
-Instead, all color rules are managed using **CSS Variables** in `src/index.css`.
-
-The system supports 5 display modes (Themes) based on the `data-theme` attribute attached to the `<html>` tag:
-- `light-classic`: Basic light theme
-- `light-warm`: Warm light theme (Eye-friendly)
-- `dark-premium`: Premium dark theme (Navy/Gold - Military style)
-- `dark-oled`: True black (Battery saving for OLED screens)
-- `glass`: Frosted glass effect (iOS style Glassmorphism)
-
-*(For detailed color and class rules, see `.agents/rules/design-system.md`)*
+> **Design Decision:** `date` is stored as a `text` string (`YYYY-MM-DD`) rather than a strict PostgreSQL `DATE` type to simplify client-side timezone handling and grouping logic without complex date parsing.
 
 ---
 
-## 5. 🔐 Authentication
+## 3. Frontend Architecture & Patterns
 
-The authentication system is designed to be minimal and exclusively for the internal Admin team:
-- No JWT or OAuth is used to avoid unnecessary complexity.
-- The login status is stored temporarily as a flag in `localStorage`.
-- Authorization:
-  - **Admin:** Has access to `/admin`, `/stats`, can Add/Edit/Delete records, and Export CSV.
-  - **Public (Guest):** Can only view the attendance schedule at `/view` (sensitive absence notes are hidden).
+The frontend strictly adheres to a **Feature-Sliced / Component-Driven** approach.
+
+### 3.1. State Management Strategy
+We intentionally avoid heavy state management libraries like Redux or Zustand.
+*   **Global UI State (Theme):** Managed via React Context API (`ThemeContext` + `useTheme` hook). It manipulates the `data-theme` attribute on the `<html>` tag.
+*   **Server State (Data Fetching):** Managed via dedicated custom hooks (e.g., `useRecords`). These hooks encapsulate the Supabase API calls and expose `data`, `loading`, and `error` states to the UI.
+*   **Local UI State:** Managed via standard `useState` and `useReducer` at the component level.
+
+### 3.2. Performance Optimizations
+*   **Lazy Loading for Charts:** Data visualization libraries (Recharts) are heavy. Chart components (`MonthOverviewChart`, `WeeklyChart`) are wrapped in `React.lazy()` and `<Suspense>`. They are only downloaded when the user navigates to the `/stats` route.
+*   **Image Optimization:** The native camera captures raw Base64. Cloudinary automatically compresses and converts these to WebP/AVIF formats before serving them to the client.
 
 ---
 
-## 6. 🛣️ Roadmap
-- [ ] Migrate auth state from LocalStorage to Supabase Auth for strict security.
-- [ ] Integrate Push Notifications (Service Worker) for attendance reminders.
-- [ ] Implement multi-level role-based access control (Super Admin, Manager, User).
+## 4. Design System & Theming Engine
+
+We use **Vanilla CSS with CSS Variables** instead of utility-first frameworks like TailwindCSS.
+
+### Why Vanilla CSS + CSS Variables?
+1.  **Zero-Runtime Overhead:** No CSS-in-JS parsing costs.
+2.  **Instant Theme Switching:** Themes are defined as CSS Variable maps under specific `data-theme` selectors. Switching a theme only requires updating one attribute on the root HTML element.
+    ```css
+    /* Example Implementation */
+    html[data-theme="dark-oled"] {
+      --bg-page: #000000;
+      --text-primary: #ffffff;
+      --primary: #FFD700; /* Gold */
+    }
+    ```
+3.  **Strict Component Scoping:** CSS is co-located with its component (e.g., `PersonCard/styles.css`).
+
+---
+
+## 5. Security & Authentication Model
+
+Currently, the app uses a **Client-Side Flag** for authentication (Admin mode).
+
+*   **Current State:** A `localStorage` flag determines if the user sees the Admin UI. This is a deliberate "soft-lock" for convenience in a trusted internal environment.
+*   **Data Protection:** The `utils/absence.ts` utility filters out sensitive notes (e.g., medical reasons) when rendering the public `/view` page.
+*   **Future Migration (Supabase Auth & RLS):** The roadmap includes migrating to Supabase Auth. We will implement PostgreSQL Row Level Security (RLS) policies so that `INSERT`, `UPDATE`, and `DELETE` operations are strictly rejected at the database level unless accompanied by a valid Admin JWT.
