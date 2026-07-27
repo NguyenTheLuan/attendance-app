@@ -4,9 +4,11 @@ import { uploadImage } from "~/services/cloudinary";
 import Field from "~/components/Field";
 import DateSelector, { getDateString } from "~/components/DateSelector";
 import { addRecord } from "~/services/db";
+import { useTranslation } from "~/hooks/useTranslation";
 import type { AttendanceRecord } from "~/types";
 
 export default function AdminPage() {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
   const [dateType, setDateType] = useState<"today" | "tomorrow" | "custom">("today");
@@ -51,11 +53,11 @@ export default function AdminPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) {
-      setMessage("Vui lòng nhập tên");
+      setMessage(t("admin.nameError"));
       return;
     }
     if (!isAbsent && !file) {
-      setMessage("Vui lòng chụp hoặc chọn ảnh");
+      setMessage(t("admin.photoError"));
       return;
     }
     setUploading(true);
@@ -85,11 +87,11 @@ export default function AdminPage() {
       if (galleryInputRef.current) galleryInputRef.current.value = "";
       
       const count = names.length;
-      setMessage(`✅ Đã lưu điểm danh ${count} người thành công!`);
+      setMessage(t("common.success", { count }));
       setIsSuccess(true);
     } catch (err) {
       console.error("Lỗi khi lưu record:", err);
-      setMessage("❌ Lỗi khi lưu. Thử lại nhé.");
+      setMessage(t("common.error"));
       setIsSuccess(false);
     } finally {
       setUploading(false);
@@ -98,13 +100,13 @@ export default function AdminPage() {
 
   return (
     <div className="page" style={{ paddingBottom: "100px" }}>
-      <h1>📋 Điểm Danh Trực</h1>
+      <h1>{t("admin.title")}</h1>
 
       <form className="card form" onSubmit={handleSubmit}>
         {!isAbsent && (
           <div style={{ marginBottom: "20px" }}>
             <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: 600, color: "var(--text-secondary)" }}>
-              Ảnh người trực
+              {t("admin.photoLabel")}
             </label>
             
             <input
@@ -117,14 +119,16 @@ export default function AdminPage() {
               disabled={uploading}
             />
             
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              ref={galleryInputRef}
-              style={{ display: "none" }}
-              disabled={uploading}
-            />
+            {!forceCamera && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                ref={galleryInputRef}
+                style={{ display: "none" }}
+                disabled={uploading}
+              />
+            )}
 
             {preview ? (
               <div style={{ position: "relative" }}>
@@ -145,7 +149,7 @@ export default function AdminPage() {
                   style={{ position: "absolute", top: "10px", right: "10px", background: "rgba(0,0,0,0.6)", color: "#fff", border: "none", padding: "8px 14px", borderRadius: "var(--radius-sm)", fontWeight: "bold" }}
                   disabled={uploading}
                 >
-                  ✕ Xóa ảnh
+                  {t("admin.deletePhoto")}
                 </button>
               </div>
             ) : (
@@ -170,41 +174,43 @@ export default function AdminPage() {
                     boxShadow: "var(--shadow-sm)"
                   }}
                 >
-                  <span style={{ fontSize: "20px" }}>📸</span> Chụp ảnh (Camera)
+                  {t("admin.takePhoto")}
                 </button>
                 
-                <button
-                  type="button"
-                  onClick={() => galleryInputRef.current?.click()}
-                  disabled={uploading}
-                  style={{
-                    background: "var(--bg-surface-2)",
-                    color: "var(--text-primary)",
-                    border: "1px solid var(--border)",
-                    padding: "12px",
-                    borderRadius: "var(--radius-md)",
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px"
-                  }}
-                >
-                  <span style={{ fontSize: "18px" }}>🖼️</span> Chọn từ thư viện
-                </button>
+                {!forceCamera && (
+                  <button
+                    type="button"
+                    onClick={() => galleryInputRef.current?.click()}
+                    disabled={uploading}
+                    style={{
+                      background: "var(--bg-surface-2)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border)",
+                      padding: "12px",
+                      borderRadius: "var(--radius-md)",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px"
+                    }}
+                  >
+                    {t("admin.chooseGallery")}
+                  </button>
+                )}
               </div>
             )}
           </div>
         )}
 
         <Field
-          label="Tên người trực"
+          label={t("admin.nameLabel")}
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nhập tên... (cách nhau bằng dấu phẩy)"
+          placeholder={t("admin.namePlaceholder")}
           disabled={uploading}
         />
 

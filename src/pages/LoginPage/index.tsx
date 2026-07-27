@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "~/hooks/useTranslation";
 import "~/pages/LoginPage/styles.css";
 
 const PASSWORD = "123456";
@@ -10,6 +11,7 @@ interface LoginPageProps {
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
@@ -32,12 +34,12 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <path d="M12 7l-3 3h2v4h2v-4h2l-3-3z" />
         </svg>
       </div>
-      <h1 className="login-title">Hệ Thống Điểm Danh</h1>
-      <p className="login-sub">Khu phố 3 - 6</p>
+      <h1 className="login-title">{t("login.title")}</h1>
+      <p className="login-sub">{t("login.sub")}</p>
 
       <div className="login-card">
         <form onSubmit={handleSubmit}>
-          <label className="login-label">Mật khẩu</label>
+          <label className="login-label">{t("login.passwordLabel")}</label>
           <input
             className="login-input"
             type="password"
@@ -46,12 +48,12 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               setPassword(e.target.value);
               setError(false);
             }}
-            placeholder="Nhập mật khẩu..."
+            placeholder={t("login.passwordPlaceholder")}
             autoFocus
           />
-          {error && <div className="login-error">Mật khẩu không đúng</div>}
+          {error && <div className="login-error">{t("login.error")}</div>}
           <button type="submit" className="login-btn">
-            ĐĂNG NHẬP
+            {t("login.submit")}
           </button>
         </form>
         <div style={{ marginTop: "16px", textAlign: "center" }}>
@@ -60,7 +62,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
             className="login-back-btn" 
             onClick={() => navigate("/view")}
           >
-            ← Quay lại trang chủ
+            {t("common.backToHome")}
           </button>
         </div>
       </div>

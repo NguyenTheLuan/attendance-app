@@ -1,5 +1,5 @@
-.settings-page {
-  padding-bottom: 80px; /* Space for bottom nav */
+.page.settings-page {
+  padding-bottom: 120px; /* Space for bottom nav */
 }
 
 .settings-section {
