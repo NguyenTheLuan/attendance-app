@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "~/hooks/useTranslation";
+import { signIn } from "~/services/auth";
 import "~/pages/LoginPage/styles.css";
-
-const PASSWORD = "123456";
 
 interface LoginPageProps {
   onLogin: () => void;
@@ -12,17 +11,24 @@ interface LoginPageProps {
 export default function LoginPage({ onLogin }: LoginPageProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password === PASSWORD) {
-      localStorage.setItem("attendance_logged_in", "true");
+    setLoading(true);
+    setError(false);
+    try {
+      await signIn(username, password);
       onLogin();
       navigate("/settings");
-    } else {
+    } catch (err) {
+      console.error(err);
       setError(true);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -39,6 +45,20 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       <div className="login-card">
         <form onSubmit={handleSubmit}>
+          <label className="login-label">Tài khoản</label>
+          <input
+            className="login-input"
+            type="text"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setError(false);
+            }}
+            placeholder="Ví dụ: admin"
+            autoFocus
+            style={{ marginBottom: "16px" }}
+          />
+
           <label className="login-label">{t("login.passwordLabel")}</label>
           <input
             className="login-input"
@@ -49,11 +69,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               setError(false);
             }}
             placeholder={t("login.passwordPlaceholder")}
-            autoFocus
           />
-          {error && <div className="login-error">{t("login.error")}</div>}
-          <button type="submit" className="login-btn">
-            {t("login.submit")}
+          {error && <div className="login-error">Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu.</div>}
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? "Đang xử lý..." : t("login.submit")}
           </button>
         </form>
         <div style={{ marginTop: "16px", textAlign: "center" }}>
@@ -69,3 +88,4 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     </div>
   );
 }
+

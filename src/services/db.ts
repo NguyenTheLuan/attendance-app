@@ -67,3 +67,35 @@ export async function updateRecordById(
   const { error } = await supabase.from(TABLE).update(data).eq("id", id);
   if (error) throw error;
 }
+
+export interface Member {
+  id: string;
+  name: string;
+}
+
+export async function getMembers(): Promise<Member[]> {
+  const { data, error } = await supabase
+    .from("members")
+    .select("*")
+    .order("name", { ascending: true });
+    
+  if (error) {
+    console.error("Error fetching members:", error);
+    return []; // Return empty if error or RLS fails (so the app doesn't crash)
+  }
+  return data as Member[];
+}
+
+export async function addMember(name: string): Promise<Member | null> {
+  const { data, error } = await supabase
+    .from("members")
+    .insert([{ name }])
+    .select()
+    .single();
+    
+  if (error) {
+    console.error("Error adding member:", error);
+    throw error;
+  }
+  return data as Member;
+}

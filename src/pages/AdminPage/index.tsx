@@ -3,18 +3,40 @@ import { isAbsentNote } from "~/utils/absence";
 import { uploadImage } from "~/services/cloudinary";
 import Field from "~/components/Field";
 import DateSelector, { getDateString } from "~/components/DateSelector";
-import { addRecord } from "~/services/db";
+import { addRecord, getMembers, addMember, type Member } from "~/services/db";
 import { useTranslation } from "~/hooks/useTranslation";
 import type { AttendanceRecord } from "~/types";
+import { useEffect } from "react";
 
 export default function AdminPage() {
   const { t } = useTranslation();
   const [name, setName] = useState("");
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(true);
+  const [isAddingNewMember, setIsAddingNewMember] = useState(false);
+  const [newMemberName, setNewMemberName] = useState("");
+  
   const [note, setNote] = useState("");
   const [dateType, setDateType] = useState<"today" | "tomorrow" | "custom">("today");
   const [customDate, setCustomDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  
+  useEffect(() => {
+    async function loadMembers() {
+      try {
+        const data = await getMembers();
+        setMembers(data);
+        if (data.length > 0) setName(data[0].name);
+      } catch (err) {
+        console.error("Error loading members:", err);
+      } finally {
+        setLoadingMembers(false);
+      }
+    }
+    loadMembers();
+  }, []);
+
   
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -52,7 +74,31 @@ export default function AdminPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name.trim()) {
+    
+    let targetName = name;
+    
+    // If adding a new member
+    if (isAddingNewMember) {
+      if (!newMemberName.trim()) {
+        setMessage(t("admin.nameError"));
+        return;
+      }
+      try {
+        setUploading(true);
+        const newMember = await addMember(newMemberName.trim());
+        if (newMember) {
+          setMembers((prev) => [...prev, newMember].sort((a, b) => a.name.localeCompare(b.name)));
+          targetName = newMember.name;
+          setName(newMember.name);
+        }
+      } catch (err) {
+        setMessage("Lỗi khi thêm thành viên mới!");
+        setUploading(false);
+        return;
+      }
+    }
+    
+    if (!targetName.trim()) {
       setMessage(t("admin.nameError"));
       return;
     }
@@ -68,7 +114,7 @@ export default function AdminPage() {
         imageUrl = await uploadImage(file);
       }
       
-      const names = name.split(",").map((n) => n.trim()).filter(Boolean);
+      const names = targetName.split(",").map((n) => n.trim()).filter(Boolean);
       for (const n of names) {
         await handleAdd({
           name: n,
@@ -78,11 +124,12 @@ export default function AdminPage() {
         });
       }
       
-      // Reset form
-      setName("");
+      // Reset form (giữ nguyên name đã chọn)
       setNote("");
       setFile(null);
       setPreview(null);
+      setIsAddingNewMember(false);
+      setNewMemberName("");
       if (cameraInputRef.current) cameraInputRef.current.value = "";
       if (galleryInputRef.current) galleryInputRef.current.value = "";
       
@@ -205,14 +252,67 @@ export default function AdminPage() {
           </div>
         )}
 
-        <Field
-          label={t("admin.nameLabel")}
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder={t("admin.namePlaceholder")}
-          disabled={uploading}
-        />
+        <div style={{ marginBottom: "16px" }}>
+          <label style={{ display: "block", marginBottom: "8px", fontSize: "13px", fontWeight: 600, color: "var(--text-secondary)" }}>
+            {t("admin.nameLabel")}
+          </label>
+          
+          {!isAddingNewMember ? (
+            <div style={{ display: "flex", gap: "8px" }}>
+              <select
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={uploading || loadingMembers}
+                className="input-field"
+                style={{ flex: 1, padding: "12px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text-primary)" }}
+              >
+                {loadingMembers ? (
+                  <option>Đang tải danh sách...</option>
+                ) : members.length === 0 ? (
+                  <option value="">Chưa có dữ liệu</option>
+                ) : (
+                  members.map((m) => (
+                    <option key={m.id} value={m.name}>
+                      {m.name}
+                    </option>
+                  ))
+                )}
+              </select>
+              <button
+                type="button"
+                onClick={() => setIsAddingNewMember(true)}
+                disabled={uploading}
+                style={{ padding: "0 16px", background: "var(--bg-surface-2)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", color: "var(--text-primary)", cursor: "pointer" }}
+              >
+                + Mới
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", gap: "8px", flexDirection: "column" }}>
+              <input
+                type="text"
+                value={newMemberName}
+                onChange={(e) => setNewMemberName(e.target.value)}
+                placeholder="Nhập tên thành viên mới..."
+                disabled={uploading}
+                className="input-field"
+                style={{ padding: "12px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text-primary)", width: "100%" }}
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAddingNewMember(false);
+                  setNewMemberName("");
+                }}
+                disabled={uploading}
+                style={{ padding: "8px", background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", textAlign: "left", fontSize: "13px" }}
+              >
+                Hủy thêm mới (Chọn từ danh sách)
+              </button>
+            </div>
+          )}
+        </div>
 
         <DateSelector
           dateType={dateType}

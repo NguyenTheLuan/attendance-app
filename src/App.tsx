@@ -86,22 +86,39 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    function checkLogin() {
+    let subscription: { unsubscribe: () => void } | null = null;
+    
+    async function checkLogin() {
       try {
-        const val = localStorage.getItem("attendance_logged_in");
-        setIsLoggedIn(val === "true");
-      } catch {
+        const { getSession, onAuthStateChange } = await import("~/services/auth");
+        const session = await getSession();
+        setIsLoggedIn(!!session);
+        
+        subscription = onAuthStateChange((status) => {
+          setIsLoggedIn(status);
+        });
+      } catch (err) {
+        console.error("Auth init error", err);
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
       }
     }
     checkLogin();
+    
+    return () => {
+      if (subscription) subscription.unsubscribe();
+    };
   }, []);
 
-  function handleLogout() {
-    localStorage.removeItem("attendance_logged_in");
-    setIsLoggedIn(false);
+  async function handleLogout() {
+    try {
+      const { signOut } = await import("~/services/auth");
+      await signOut();
+      setIsLoggedIn(false);
+    } catch (err) {
+      console.error("Logout error", err);
+    }
   }
 
   if (loading) {
